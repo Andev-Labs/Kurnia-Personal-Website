@@ -1,17 +1,145 @@
-
 @import "tailwindcss";
 
-* {
-  box-sizing: border-box;
+@import "@fontsource/archivo-black/400.css";
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+
+@theme {
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Archivo Black", sans-serif;
+
+  --color-ink: #121212;
+  --color-graphite: #1e1e1e;
+  --color-cream: #fdf3e7;
+  --color-sand: #f6e9da;
+  --color-pink: #ff5c9e;
+  --color-pink-deep: #e0457b;
+  --color-sun: #ffd23f;
+  --color-lavender: #9aa3f5;
+  --color-teal: #0fa38c;
+  --color-mint: #a9f5b5;
+
+  --shadow-hard-2: 2px 2px 0 var(--color-ink);
+  --shadow-hard-3: 3px 3px 0 var(--color-ink);
+  --shadow-hard-4: 4px 4px 0 var(--color-ink);
+  --shadow-hard-5: 5px 5px 0 var(--color-ink);
+  --shadow-hard-6: 6px 6px 0 var(--color-ink);
+  --shadow-hard-7: 7px 7px 0 var(--color-ink);
+  --shadow-hard-8: 8px 8px 0 var(--color-ink);
+  --shadow-hard-10: 10px 10px 0 var(--color-ink);
+
+  --animate-marquee: marquee 26s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-draw: draw 6s ease-in-out infinite;
+  --animate-scan: scan 6s linear infinite;
+  --animate-flow: flow 2.6s linear infinite;
+  --animate-shrink: shrink 5s ease-in-out infinite;
+  --animate-tick: tick 3s ease-in-out infinite;
+  --animate-bubble: bubble 2.4s ease-in infinite;
+  --animate-bubble-slow: bubble 3.4s ease-in infinite;
+  --animate-grow: grow 2.8s ease-out infinite;
+  --animate-pulse-ring: pulse-ring 2.2s ease-out infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-spin-slower: spin 18s linear infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    50% { transform: translateY(-10px) rotate(-2deg); }
+  }
+  @keyframes bubble {
+    0% { transform: translateY(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(-16px); opacity: 0; }
+  }
+  @keyframes draw {
+    0% { stroke-dashoffset: var(--len); }
+    45%, 75% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes scan {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(720px); }
+  }
+  @keyframes grow {
+    0% { transform: scaleY(0.12); }
+    55%, 100% { transform: scaleY(1); }
+  }
+  @keyframes flow {
+    0% { transform: translateY(-18px); }
+    100% { transform: translateY(34px); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.55); opacity: 1; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+  @keyframes shrink {
+    0%, 14% { width: 100%; }
+    58%, 100% { width: 33%; }
+  }
+  @keyframes tick {
+    0%, 40% { stroke-dashoffset: 40; }
+    70%, 100% { stroke-dashoffset: 0; }
+  }
 }
 
-html,
-body,
-#app {
-  min-height: 100%;
+/* Horizontal gutter shared by every full-bleed band: 26px min, content capped at 1280px. */
+@utility page-x {
+  padding-inline: max(26px, calc((100% - 1280px) / 2));
 }
 
-body {
-  margin: 0;
+/* Neo-brutalist "press" hover used by buttons and cards. */
+@utility press-sm {
+  transition: transform 0.12s, box-shadow 0.12s;
+  &:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--press-shadow, var(--color-ink));
+  }
+}
+@utility press {
+  transition: transform 0.12s, box-shadow 0.12s;
+  &:hover {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0 var(--color-ink);
+  }
 }
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+    background: var(--color-cream);
+    line-height: normal;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-pink-deep);
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+    }
+  }
+}
