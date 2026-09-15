@@ -1,6 +1,14 @@
 const CTA_CLASS =
   'press-sm rounded-[14px] border-3 border-ink px-[26px] py-[15px] font-display text-[15px] shadow-hard-5'
 
+const PORTRAIT_WIDTHS = [480, 800, 1200]
+/** Frame caps at 400px wide; the photo sits inside ~42px of padding and border. */
+const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 82px), 358px'
+
+function portraitSrcSet(ext: 'avif' | 'webp' | 'jpg') {
+  return PORTRAIT_WIDTHS.map((w) => `/images/kurnia-portrait-${w}.${ext} ${w}w`).join(', ')
+}
+
 export function Hero() {
   return (
     <header
@@ -34,13 +42,21 @@ export function Hero() {
       <div className="flex min-w-0 justify-center">
         <div className="relative w-full max-w-[400px]">
           <div className="relative rounded-[22px] border-3 border-ink bg-pink p-[18px] shadow-hard-8">
-            <div className="grid aspect-[4/5] place-items-center rounded-[14px] border-3 border-dashed border-ink bg-cream p-5 text-center">
-              <div>
-                <div className="mx-auto mb-3.5 size-[66px] rounded-full border-3 border-ink bg-lavender" />
-                <p className="font-display text-[14px] leading-[1.3]">PLACEHOLDER FOTO</p>
-                <p className="mt-1.5 text-[12.5px] leading-[1.4] opacity-65">Taruh foto portrait di sini</p>
-              </div>
-            </div>
+            <picture>
+              <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
+              <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
+              <img
+                src="/images/kurnia-portrait-800.jpg"
+                srcSet={portraitSrcSet('jpg')}
+                sizes={PORTRAIT_SIZES}
+                width={800}
+                height={1000}
+                alt="Kurnia Dewi Budicantika berdiri di depan Sechenov University, Moskow"
+                fetchPriority="high"
+                decoding="async"
+                className="block aspect-[4/5] w-full rounded-[14px] border-3 border-ink bg-cream object-cover"
+              />
+            </picture>
           </div>
           <div className="absolute -top-[26px] -left-[22px] -rotate-7 rounded-xl border-3 border-ink bg-teal px-3.5 py-[9px] font-display text-[12.5px] text-white shadow-hard-4">
             HPLC ✓
