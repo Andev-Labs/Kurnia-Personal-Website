@@ -1,4 +1,8 @@
+import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
+
+/** Covers sit in a narrow card grid, so the 540px export is always enough. */
+const COVER_SIZES = '270px'
 
 export function ProgramGallery() {
   const { items, dispatch } = useGallery()
@@ -15,10 +19,18 @@ export function ProgramGallery() {
               onClick={() => dispatch({ type: 'open', index })}
               className="block w-full cursor-pointer overflow-hidden rounded-[14px] border-3 border-cream bg-graphite p-0 text-left transition-transform duration-120 hover:-translate-y-[3px]"
             >
-              <span className="relative block aspect-[4/3] border-b-3 border-cream">
-                <span className="absolute inset-2.5 grid place-items-center rounded-[10px] border-[2.5px] border-dashed border-cream/60">
-                  <span className="block size-[26px] rounded-[7px] border-[2.5px] border-cream bg-lavender" />
-                </span>
+              <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-cream">
+                {item.shots?.[0]?.photo ? (
+                  <GalleryPhoto
+                    photo={item.shots[0].photo}
+                    sizes={COVER_SIZES}
+                    className="absolute inset-0 size-full object-cover"
+                  />
+                ) : (
+                  <span className="absolute inset-2.5 grid place-items-center rounded-[10px] border-[2.5px] border-dashed border-cream/60">
+                    <span className="block size-[26px] rounded-[7px] border-[2.5px] border-cream bg-lavender" />
+                  </span>
+                )}
               </span>
               <span className="block px-3 py-[11px] text-[12px] leading-[1.35] font-bold text-cream">{item.title}</span>
             </button>

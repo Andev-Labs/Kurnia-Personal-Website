@@ -1,9 +1,26 @@
 export type GalleryGroup = 'kerja' | 'intl'
 
+export interface GalleryPhoto {
+  /** Path without the `-<width>.<ext>` suffix, e.g. `/images/gallery/sechenov-lecture`. */
+  src: string
+  width: number
+  height: number
+  alt: string
+}
+
 export interface GalleryShot {
   label: string
   caption: string
+  /** Shots without a photo render a placeholder slot. */
+  photo?: GalleryPhoto
 }
+
+const sechenovPhoto = (name: string, width: number, height: number, alt: string): GalleryPhoto => ({
+  src: `/images/gallery/sechenov-${name}`,
+  width,
+  height,
+  alt,
+})
 
 export interface GalleryItem {
   group: GalleryGroup
@@ -64,10 +81,56 @@ export const GALLERY: GalleryItem[] = [
     caption:
       'Program musim panas bertema Innovative Drugs di Sechenov University, Moskow — pengenalan riset dan pengembangan obat inovatif.',
     shots: [
-      { label: 'Kelas Innovative Drugs', caption: 'Sesi materi pengembangan obat inovatif bersama dosen Sechenov University.' },
-      { label: 'Kunjungan laboratorium', caption: 'Melihat fasilitas riset farmasi dan instrumentasi analitik kampus.' },
-      { label: 'Peserta internasional', caption: 'Diskusi kelompok dengan peserta dari berbagai negara.' },
-      { label: 'Sertifikat program', caption: 'Penyerahan sertifikat kelulusan Summer School Program.' },
+      {
+        label: 'Peserta di depan kampus',
+        caption: 'Foto bersama peserta Summer School Program di depan gedung Sechenov University.',
+        photo: sechenovPhoto(
+          'campus-group',
+          1080,
+          812,
+          'Peserta Summer School Program berfoto bersama di depan gedung Sechenov University',
+        ),
+      },
+      {
+        label: 'Kelas Innovative Drugs',
+        caption: 'Sesi materi pengembangan obat inovatif bersama dosen Sechenov University.',
+        photo: sechenovPhoto('lecture', 1080, 608, 'Dosen mempresentasikan materi Innovative Drugs di depan layar proyektor'),
+      },
+      {
+        label: 'Kunjungan laboratorium',
+        caption: 'Melihat fasilitas riset farmasi dan instrumentasi analitik kampus.',
+        photo: sechenovPhoto('lab-hplc', 1080, 720, 'Peserta mengamati sistem kromatografi di laboratorium Sechenov University'),
+      },
+      {
+        label: 'Instrumen analitik',
+        caption: 'Sistem kromatografi cair Agilent yang digunakan untuk riset farmasi di laboratorium kampus.',
+        photo: sechenovPhoto('lab-instrument', 1080, 1440, 'Instrumen kromatografi cair Agilent dengan panel terbuka'),
+      },
+      {
+        label: 'Diskusi di laboratorium',
+        caption: 'Diskusi bersama peneliti dan peserta internasional di depan instrumen analitik.',
+        photo: sechenovPhoto('lab-discussion', 1080, 722, 'Peserta berdiskusi dengan peneliti berjas lab di laboratorium'),
+      },
+      {
+        label: 'Peserta internasional',
+        caption: 'Foto bersama peserta dari berbagai negara di gedung Sechenov University.',
+        photo: sechenovPhoto('participants', 1080, 720, 'Peserta internasional berfoto bersama di dalam gedung kampus'),
+      },
+      {
+        label: 'Institut Farmasi',
+        caption: 'Di depan gedung Institut Farmasi Sechenov University, Moskow.',
+        photo: sechenovPhoto(
+          'institute-pharmacy',
+          1080,
+          1440,
+          'Kurnia berpose di depan gedung Institut Farmasi Sechenov University',
+        ),
+      },
+      {
+        label: 'Sechenov University',
+        caption: 'Berfoto di depan logo Sechenov University.',
+        photo: sechenovPhoto('university-sign', 1080, 1440, 'Kurnia berdiri di depan logo Sechenov University'),
+      },
     ],
   },
   {
