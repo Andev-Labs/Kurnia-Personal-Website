@@ -7,10 +7,10 @@ import { GALLERY } from './gallery'
 const photos = GALLERY.flatMap((item) => item.shots ?? []).flatMap((shot) => (shot.photo ? [shot.photo] : []))
 
 describe('GALLERY photos', () => {
-  it('fills every Sechenov University shot with a photo', () => {
-    const sechenov = GALLERY.find((item) => item.title.startsWith('Sechenov'))
-    expect(sechenov?.shots?.length).toBeGreaterThan(0)
-    expect(sechenov?.shots?.every((shot) => shot.photo)).toBe(true)
+  it.each(['Sechenov University', 'China Pharmaceutical University'])('fills every %s shot with a photo', (title) => {
+    const item = GALLERY.find((entry) => entry.title.startsWith(title))
+    expect(item?.shots?.length).toBeGreaterThan(0)
+    expect(item?.shots?.every((shot) => shot.photo)).toBe(true)
   })
 
   it.each(photos.map((photo) => [photo.src, photo] as const))('ships every size and format for %s', (_, photo) => {

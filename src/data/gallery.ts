@@ -15,12 +15,18 @@ export interface GalleryShot {
   photo?: GalleryPhoto
 }
 
-const sechenovPhoto = (name: string, width: number, height: number, alt: string): GalleryPhoto => ({
-  src: `/images/gallery/sechenov-${name}`,
+const galleryPhoto = (name: string, width: number, height: number, alt: string): GalleryPhoto => ({
+  src: `/images/gallery/${name}`,
   width,
   height,
   alt,
 })
+
+const sechenovPhoto = (name: string, width: number, height: number, alt: string) =>
+  galleryPhoto(`sechenov-${name}`, width, height, alt)
+
+const cpuPhoto = (name: string, width: number, height: number, alt: string) =>
+  galleryPhoto(`cpu-${name}`, width, height, alt)
 
 export interface GalleryItem {
   group: GalleryGroup
@@ -140,10 +146,51 @@ export const GALLERY: GalleryItem[] = [
     caption:
       'Riset obat herbal/simplisia dan Traditional Chinese Medicine (TCM) bersama peserta internasional di China Pharmaceutical University.',
     shots: [
-      { label: 'Riset simplisia', caption: 'Identifikasi dan penanganan simplisia bahan obat herbal.' },
-      { label: 'Praktik TCM', caption: 'Pengenalan prinsip dan praktik Traditional Chinese Medicine.' },
-      { label: 'Kampus CPU', caption: 'Suasana kampus China Pharmaceutical University.' },
-      { label: 'Presentasi kelompok', caption: 'Presentasi hasil riset kelompok di akhir program.' },
+      {
+        label: 'Kelas internasional',
+        caption: 'Suasana kelas bersama peserta internasional Summer School di China Pharmaceutical University.',
+        photo: cpuPhoto('class-participants', 1080, 720, 'Peserta internasional berseragam hijau berpose di ruang kelas'),
+      },
+      {
+        label: 'Upacara pembukaan',
+        caption: 'Foto bersama seluruh peserta pada pembukaan “Discover Jiangsu” International Summer School, Nanjing, 16 Agustus 2023.',
+        photo: cpuPhoto('opening-ceremony', 1080, 345, 'Foto bersama ratusan peserta pada upacara pembukaan program musim panas internasional'),
+      },
+      {
+        label: 'Kelas TCM',
+        caption: 'Materi diagnosis Traditional Chinese Medicine, termasuk teknik palpasi denyut nadi.',
+        photo: cpuPhoto('tcm-lecture', 1080, 608, 'Dosen menjelaskan materi diagnosis TCM dan jenis denyut nadi di depan layar'),
+      },
+      {
+        label: 'Teman sekelas',
+        caption: 'Kebersamaan dengan peserta dari berbagai negara selama sesi kelas.',
+        photo: cpuPhoto('classmates', 1080, 720, 'Kurnia dan teman peserta internasional membentuk tanda hati dengan tangan'),
+      },
+      {
+        label: 'Kampus CPU',
+        caption: 'Gedung perpustakaan China Pharmaceutical University.',
+        photo: cpuPhoto('campus-library', 1080, 1920, 'Gedung perpustakaan China Pharmaceutical University di bawah langit cerah'),
+      },
+      {
+        label: 'The Most Outstanding Team',
+        caption: 'Penghargaan tim terbaik pada program “Discover Jiangsu” International Summer Program 2023.',
+        photo: cpuPhoto('best-team-award', 1080, 1920, 'Sertifikat penghargaan The Most Outstanding Team dari China Pharmaceutical University'),
+      },
+      {
+        label: 'Penganugerahan',
+        caption: 'Foto bersama peserta penerima penghargaan di akhir program.',
+        photo: cpuPhoto('awarding', 1080, 608, 'Peserta penerima penghargaan berfoto bersama di panggung China Pharmaceutical University'),
+      },
+      {
+        label: 'Kunjungan budaya',
+        caption: 'Mengenal sejarah dan budaya Tiongkok melalui kunjungan museum.',
+        photo: cpuPhoto('cultural-visit', 1080, 1920, 'Kurnia berdiri di depan mural besar bersejarah di dalam museum'),
+      },
+      {
+        label: 'Menjelajah Nanjing',
+        caption: 'Jalan-jalan malam menikmati suasana kota Nanjing.',
+        photo: cpuPhoto('night-walk', 1080, 1920, 'Kurnia berpose di jalan pertokoan Nanjing pada malam hari'),
+      },
     ],
   },
 ]
