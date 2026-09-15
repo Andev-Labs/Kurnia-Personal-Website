@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 
 import { RevealGroup, RevealItem, revealVariants } from '#/components/motion/Reveal'
+import { RichText } from '#/components/ui/RichText'
+import { m } from '#/paraglide/messages.js'
 
 const CTA_CLASS =
   'press-sm rounded-[14px] border-3 border-ink px-[26px] py-[15px] font-display text-[15px] shadow-hard-5'
@@ -29,24 +31,22 @@ export function Hero() {
     >
       <RevealGroup stagger={0.12} className="min-w-0">
         <motion.p variants={FADE_UP} className="mb-[18px] inline-block rounded-full border-3 border-ink bg-white px-3.5 py-[7px] text-[13.5px] font-bold shadow-hard-3">
-          Hai, saya Kurnia Dewi Budicantika.
+          {m.hero_greeting()}
         </motion.p>
         <motion.h1 variants={FADE_UP} className="mb-5 font-display text-[clamp(40px,6.4vw,80px)] leading-[0.94] tracking-[-0.035em] text-balance">
-          ANALIS QC
+          {m.hero_title_line1()}
           <br />
-          KIMIA-FISIKA.
+          {m.hero_title_line2()}
         </motion.h1>
         <motion.p variants={FADE_UP} className="mb-7 max-w-[44ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.6] text-pretty">
-          <strong>3+ tahun</strong> menguji bahan baku sampai produk jadi di industri farmasi —{' '}
-          <strong>HPLC, GC, AAS, FTIR, ICP-OES, UV-Vis</strong> — dengan standar{' '}
-          <strong>GMP, GLP, dan ISO 17025</strong>.
+          <RichText message={m.hero_summary} />
         </motion.p>
         <RevealItem className="flex flex-wrap items-center gap-3.5">
           <a href="#kontak" className={`${CTA_CLASS} bg-sun`}>
-            Hubungi saya
+            {m.hero_cta_contact()}
           </a>
           <a href="#pengalaman" className={`${CTA_CLASS} bg-white`}>
-            Lihat pengalaman
+            {m.hero_cta_experience()}
           </a>
         </RevealItem>
       </RevealGroup>
@@ -63,7 +63,7 @@ export function Hero() {
                 sizes={PORTRAIT_SIZES}
                 width={800}
                 height={1000}
-                alt="Kurnia Dewi Budicantika berdiri di depan Sechenov University, Moskow"
+                alt={m.hero_portrait_alt()}
                 fetchPriority="high"
                 decoding="async"
                 className="block aspect-[4/5] w-full rounded-[14px] border-3 border-ink bg-cream object-cover"
@@ -86,7 +86,7 @@ export function Hero() {
             variants={STICKER_VARIANTS}
             className="absolute right-1.5 -bottom-5 rotate-3 rounded-full border-3 border-ink bg-mint px-[15px] py-[9px] text-[12.5px] font-bold shadow-hard-4"
           >
-            Terbuka untuk peluang baru
+            {m.hero_open_badge()}
           </motion.div>
         </RevealGroup>
       </div>

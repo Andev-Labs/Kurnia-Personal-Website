@@ -1,37 +1,33 @@
 import type { CSSProperties } from 'react'
 
 import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
+import { RichText } from '#/components/ui/RichText'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { cn } from '#/lib/cn'
-
-const STATS = [
-  { value: '3+', label: 'tahun pengalaman', className: 'bg-sun' },
-  { value: '10', label: 'anggota tim QCC yang dipimpin', className: 'bg-pink' },
-  { value: 'Top 10', label: 'Konvensi QCC Kalbe Consumer Health 2025', className: 'bg-lavender' },
-]
+import { m } from '#/paraglide/messages.js'
 
 export function About() {
+  const stats = [
+    { value: '3+', label: m.about_stat_years(), className: 'bg-sun' },
+    { value: '10', label: m.about_stat_team(), className: 'bg-pink' },
+    { value: 'Top 10', label: m.about_stat_award(), className: 'bg-lavender' },
+  ]
+
   return (
     <Section id="tentang">
       <SectionHeading number="01" badgeClassName="bg-pink">
-        Ringkasan profesional
+        {m.about_heading()}
       </SectionHeading>
 
       <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
         <RevealItem className="rounded-[18px] border-3 border-ink bg-white p-[26px] shadow-hard-6">
           <p className="text-[16px] leading-[1.65] text-pretty">
-            Analis QC Kimia-Fisika dengan <strong>3+ tahun pengalaman</strong> di industri farmasi (Kalbe Consumer
-            Health, Kalbe Group), mahir menguji bahan baku, produk antara, dan produk jadi menggunakan HPLC, GC, AAS,
-            FTIR, ICP-OES, Spektrofotometer UV-Vis, dan TLC UV Scanner sesuai standar{' '}
-            <strong>GMP, GLP, dan ISO 17025</strong>. Berpengalaman memimpin tim continuous improvement (Quality Control
-            Circle) yang menurunkan <strong>lead time analisa 67%</strong> dan menghasilkan efisiensi biaya{' '}
-            <strong>Rp59,6 juta per tahun</strong>. Saat ini menyelesaikan studi{' '}
-            <strong>Sarjana Farmasi di Binawan University</strong> (wisuda Desember 2026).
+            <RichText message={m.about_body} />
           </p>
         </RevealItem>
 
         <RevealGroup stagger={0.1} className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] content-start gap-[18px]">
-          {STATS.map((stat) => (
+          {stats.map((stat) => (
             <RevealItem
               key={stat.value}
               direction="pop"

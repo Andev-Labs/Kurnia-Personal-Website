@@ -1,7 +1,7 @@
 import { createContext, use, useCallback, useEffect, useMemo, useReducer } from 'react'
 import type { Dispatch, ReactNode } from 'react'
 
-import { GALLERY } from '#/data/gallery'
+import { getGallery } from '#/data/gallery'
 import type { GalleryItem } from '#/data/gallery'
 import { galleryReducer, getGalleryView, initialGalleryState } from '#/lib/gallery'
 import type { GalleryAction, GalleryView } from '#/lib/gallery'
@@ -26,11 +26,13 @@ export function useGallery() {
 
 /** Owns the lightbox state shared by the work gallery and the international program gallery. */
 export function GalleryProvider({ children }: { children: ReactNode }) {
+  // The locale is fixed for the lifetime of a page (switching reloads), so the items never change.
+  const items = useMemo(() => getGallery(), [])
   const [state, dispatch] = useReducer(
-    (current: typeof initialGalleryState, action: GalleryAction) => galleryReducer(GALLERY, current, action),
+    (current: typeof initialGalleryState, action: GalleryAction) => galleryReducer(items, current, action),
     initialGalleryState,
   )
-  const view = useMemo(() => getGalleryView(GALLERY, state), [state])
+  const view = useMemo(() => getGalleryView(items, state), [items, state])
   const isOpen = view.active !== null
   const isShotOpen = view.isShotOpen
   // The full-screen photo viewer is desktop-only; mobile visitors only get the album overview.
@@ -41,11 +43,11 @@ export function GalleryProvider({ children }: { children: ReactNode }) {
       if (!canViewFullscreen) {
         if (action.type === 'openShot' || action.type === 'stepShot') return
         // Single photos have no album, so opening one would go straight to the full-screen viewer.
-        if (action.type === 'open' && !GALLERY[action.index]?.shots) return
+        if (action.type === 'open' && !items[action.index]?.shots) return
       }
       dispatch(action)
     },
-    [canViewFullscreen],
+    [canViewFullscreen, items],
   )
 
   // Shrinking the window to mobile size while a photo is open drops back to the album (or closes).
@@ -72,8 +74,8 @@ export function GalleryProvider({ children }: { children: ReactNode }) {
   }, [isOpen, isShotOpen, guardedDispatch])
 
   const value = useMemo(
-    () => ({ items: GALLERY, view, dispatch: guardedDispatch, canViewFullscreen }),
-    [view, guardedDispatch, canViewFullscreen],
+    () => ({ items, view, dispatch: guardedDispatch, canViewFullscreen }),
+    [items, view, guardedDispatch, canViewFullscreen],
   )
 
   return (

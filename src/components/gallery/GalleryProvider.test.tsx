@@ -2,11 +2,12 @@ import { act, cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { GALLERY } from '#/data/gallery'
+import { getGallery } from '#/data/gallery'
 import { GalleryProvider } from './GalleryProvider'
 import { ProgramGallery } from './ProgramGallery'
 import { WorkGallery } from './WorkGallery'
 
+const GALLERY = getGallery()
 const album = GALLERY.find((item) => item.shots?.length)!
 const firstShot = album.shots![0]
 const workItem = GALLERY.find((item) => item.group === 'kerja')!

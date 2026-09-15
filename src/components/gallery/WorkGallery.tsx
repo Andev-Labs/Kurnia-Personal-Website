@@ -1,6 +1,7 @@
 import type { GalleryItem } from '#/data/gallery'
 import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { cn } from '#/lib/cn'
+import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
 
@@ -15,9 +16,9 @@ export function WorkGallery() {
   return (
     <div className="mt-10">
       <div className="mb-[18px] flex flex-wrap items-baseline justify-between gap-3">
-        <h3 className="font-display text-[clamp(19px,2.2vw,26px)] tracking-[-0.02em]">Galeri kerja</h3>
+        <h3 className="font-display text-[clamp(19px,2.2vw,26px)] tracking-[-0.02em]">{m.gallery_work_heading()}</h3>
         <p className="text-[13px] font-semibold opacity-60">
-          {canViewFullscreen && 'Klik untuk melihat foto & keterangan · '}sebagian masih placeholder
+          {canViewFullscreen ? m.gallery_work_hint() : m.gallery_work_hint_mobile()}
         </p>
       </div>
       <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
@@ -64,7 +65,7 @@ function WorkCardContent({ item }: { item: GalleryItem }) {
           </span>
         )}
         <span className="absolute top-2.5 right-2.5 rounded-full border-[2.5px] border-ink bg-sun px-[9px] py-1 text-[10.5px] font-bold">
-          FOTO
+          {m.gallery_photo_badge()}
         </span>
       </span>
       <span className="block px-[18px] py-4">

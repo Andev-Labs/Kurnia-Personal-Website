@@ -1,4 +1,5 @@
 import type { GalleryGroup, GalleryItem, GalleryShot } from '#/data/gallery'
+import { m } from '#/paraglide/messages.js'
 
 /**
  * `openIndex` selects a gallery item; `shotIndex` selects the photo shown full-screen.
@@ -91,7 +92,7 @@ export function getGalleryView(items: GalleryItem[], state: GalleryState): Galle
           label: active.title,
           caption: active.caption,
           photo: active.photo,
-          heading: 'Galeri kerja',
+          heading: m.gallery_work_heading(),
           meta: active.meta,
           counter,
         }
@@ -101,7 +102,7 @@ export function getGalleryView(items: GalleryItem[], state: GalleryState): Galle
     active,
     isAlbumOpen: Boolean(active.shots) && shotIndex === null,
     isShotOpen: shot !== null,
-    groupLabel: active.group === 'intl' ? 'GALERI PROGRAM INTERNASIONAL' : 'GALERI KERJA',
+    groupLabel: active.group === 'intl' ? m.gallery_program_label() : m.gallery_work_label(),
     counter,
     shot,
   }
