@@ -3,6 +3,9 @@ import type { ReactNode } from 'react'
 import { WorkGallery } from '#/components/gallery/WorkGallery'
 import { Bullet } from '#/components/ui/Bullet'
 import type { MarkerColor } from '#/components/ui/Bullet'
+import { motion } from 'framer-motion'
+
+import { RevealGroup, RevealItem, revealVariants } from '#/components/motion/Reveal'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { cn } from '#/lib/cn'
 
@@ -179,11 +182,20 @@ export function Experience({ showAllEntries = true }: { showAllEntries?: boolean
   )
 }
 
+/** The card rises in, then hands off to its bullet list's stagger. */
+const CARD_VARIANTS = revealVariants('up')
+
 function JobCard({ job, showAllEntries }: { job: Job; showAllEntries: boolean }) {
   const entries = showAllEntries && job.moreEntries ? [...job.entries, ...job.moreEntries] : job.entries
 
   return (
-    <article className="overflow-hidden rounded-[20px] border-3 border-ink bg-white shadow-hard-8">
+    <motion.article
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+      variants={CARD_VARIANTS}
+      className="overflow-hidden rounded-[20px] border-3 border-ink bg-white shadow-hard-8"
+    >
       <div
         className={cn(
           'flex flex-wrap items-center justify-between gap-3 border-b-3 border-ink px-6 py-5',
@@ -198,18 +210,20 @@ function JobCard({ job, showAllEntries }: { job: Job; showAllEntries: boolean })
           {job.period}
         </span>
       </div>
-      <div className="flex flex-col gap-3.5 p-6 text-[15.5px] leading-[1.6]">
+      <RevealGroup stagger={0.07} delay={0.2} className="flex flex-col gap-3.5 p-6 text-[15.5px] leading-[1.6]">
         {entries.map((entry, index) =>
           'chart' in entry ? (
-            <LeadTimeChart key={`chart-${index}`} />
+            <RevealItem key={`chart-${index}`}>
+              <LeadTimeChart />
+            </RevealItem>
           ) : (
-            <Bullet key={index} marker={entry.marker}>
-              {entry.content}
-            </Bullet>
+            <RevealItem key={index} direction="left">
+              <Bullet marker={entry.marker}>{entry.content}</Bullet>
+            </RevealItem>
           ),
         )}
-      </div>
-    </article>
+      </RevealGroup>
+    </motion.article>
   )
 }
 

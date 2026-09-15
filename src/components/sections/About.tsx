@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 
+import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { cn } from '#/lib/cn'
 
@@ -16,8 +17,8 @@ export function About() {
         Ringkasan profesional
       </SectionHeading>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
-        <div className="rounded-[18px] border-3 border-ink bg-white p-[26px] shadow-hard-6">
+      <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-white p-[26px] shadow-hard-6">
           <p className="text-[16px] leading-[1.65] text-pretty">
             Analis QC Kimia-Fisika dengan <strong>3+ tahun pengalaman</strong> di industri farmasi (Kalbe Consumer
             Health, Kalbe Group), mahir menguji bahan baku, produk antara, dan produk jadi menggunakan HPLC, GC, AAS,
@@ -27,24 +28,25 @@ export function About() {
             <strong>Rp59,6 juta per tahun</strong>. Saat ini menyelesaikan studi{' '}
             <strong>Sarjana Farmasi di Binawan University</strong> (wisuda Desember 2026).
           </p>
-        </div>
+        </RevealItem>
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] content-start gap-[18px]">
+        <RevealGroup stagger={0.1} className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] content-start gap-[18px]">
           {STATS.map((stat) => (
-            <div
+            <RevealItem
               key={stat.value}
+              direction="pop"
               className={cn('rounded-[18px] border-3 border-ink p-5 shadow-hard-6', stat.className)}
             >
               <p className="mb-1.5 font-display text-[clamp(28px,3.6vw,40px)] leading-none">{stat.value}</p>
               <p className="text-[13.5px] leading-[1.4] font-semibold">{stat.label}</p>
-            </div>
+            </RevealItem>
           ))}
-        </div>
-      </div>
+        </RevealGroup>
+      </RevealGroup>
 
-      <div className="mt-6 overflow-hidden rounded-[18px] border-3 border-ink bg-white px-6 py-[22px] shadow-hard-6">
+      <Reveal className="mt-6 overflow-hidden rounded-[18px] border-3 border-ink bg-white px-6 py-[22px] shadow-hard-6">
         <Chromatogram />
-      </div>
+      </Reveal>
     </Section>
   )
 }
