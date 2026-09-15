@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={m.language_switcher_label()}
-      className="flex items-center rounded-full border-3 border-ink bg-white p-[3px] shadow-hard-3"
+      className="inline-flex items-center rounded-full border-3 border-ink bg-white p-[3px] shadow-hard-3"
     >
       {locales.map((locale) => {
         const { label, name } = LOCALE_OPTIONS[locale]

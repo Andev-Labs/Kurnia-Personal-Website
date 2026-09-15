@@ -6,7 +6,13 @@ import type { GalleryAction, GalleryState } from './gallery'
 
 const items: GalleryItem[] = [
   { group: 'kerja', title: 'A', meta: 'meta A', caption: 'caption A' },
-  { group: 'kerja', title: 'B', meta: 'meta B', caption: 'caption B' },
+  {
+    group: 'kerja',
+    title: 'B',
+    meta: 'meta B',
+    caption: 'caption B',
+    photo: { src: '/images/b', width: 16, height: 9, alt: 'alt B' },
+  },
   {
     group: 'intl',
     title: 'Album 1',
@@ -102,6 +108,11 @@ describe('getGalleryView', () => {
       meta: 'meta C',
       counter: '3 / 3',
     })
+  })
+
+  it('carries a single work photo into the viewer', () => {
+    const view = getGalleryView(items, { openIndex: 1, shotIndex: 0 })
+    expect(view.shot?.photo).toEqual({ src: '/images/b', width: 16, height: 9, alt: 'alt B' })
   })
 
   it('describes an album overview and an album shot', () => {

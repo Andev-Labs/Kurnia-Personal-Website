@@ -8,6 +8,8 @@ export interface GalleryPhoto {
   width: number
   height: number
   alt: string
+  /** CSS `object-position` for cropped covers, e.g. `left` for slides whose content sits on the left. */
+  coverPosition?: string
 }
 
 export interface GalleryShot {
@@ -17,11 +19,18 @@ export interface GalleryShot {
   photo?: GalleryPhoto
 }
 
-const galleryPhoto = (name: string, width: number, height: number, alt: string): GalleryPhoto => ({
+const galleryPhoto = (
+  name: string,
+  width: number,
+  height: number,
+  alt: string,
+  coverPosition?: string,
+): GalleryPhoto => ({
   src: `/images/gallery/${name}`,
   width,
   height,
   alt,
+  ...(coverPosition && { coverPosition }),
 })
 
 const sechenovPhoto = (name: string, width: number, height: number, alt: string) =>
@@ -30,11 +39,16 @@ const sechenovPhoto = (name: string, width: number, height: number, alt: string)
 const cpuPhoto = (name: string, width: number, height: number, alt: string) =>
   galleryPhoto(`cpu-${name}`, width, height, alt)
 
+const qccPhoto = (name: string, width: number, height: number, alt: string, coverPosition?: string) =>
+  galleryPhoto(`qcc-${name}`, width, height, alt, coverPosition)
+
 export interface GalleryItem {
   group: GalleryGroup
   title: string
   meta: string
   caption: string
+  /** Single work photo shown on the card and in the viewer; items without one render a placeholder slot. */
+  photo?: GalleryPhoto
   /** Items with shots open as an album first; items without open straight into the photo viewer. */
   shots?: GalleryShot[]
 }
@@ -56,12 +70,14 @@ export function getGallery(): GalleryItem[] {
       title: m.gallery_qcc_convention_title(),
       meta: 'Top 10 · Kalbe Consumer Health',
       caption: m.gallery_qcc_convention_caption(),
+      photo: qccPhoto('convention-title', 1080, 602, m.gallery_qcc_convention_alt(), 'left'),
     },
     {
       group: 'kerja',
       title: m.gallery_qcc_team_title(),
       meta: m.gallery_qcc_team_meta(),
       caption: m.gallery_qcc_team_caption(),
+      photo: qccPhoto('team', 1080, 601, m.gallery_qcc_team_alt(), 'left'),
     },
     {
       group: 'kerja',

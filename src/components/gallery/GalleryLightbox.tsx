@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react'
 
+import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
@@ -22,7 +23,7 @@ export function GalleryLightbox() {
 
 /** Overview of an album item (e.g. an international program) with its photo grid. */
 function AlbumModal() {
-  const { view, dispatch } = useGallery()
+  const { view, dispatch, canViewFullscreen } = useGallery()
   const { active } = view
   if (!view.isAlbumOpen || !active?.shots) return null
 
@@ -63,35 +64,50 @@ function AlbumModal() {
 
         <div className="px-[22px] py-6">
           <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5">
-            {active.shots.map((shot, shotIndex) => (
-              <button
-                key={shot.label}
-                type="button"
-                onClick={() => dispatch({ type: 'openShot', shotIndex })}
-                className="press-sm block w-full cursor-zoom-in overflow-hidden rounded-2xl border-3 border-ink bg-white p-0 text-left shadow-hard-5"
-              >
-                <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-ink bg-cream">
-                  {shot.photo ? (
-                    <GalleryPhoto
-                      photo={shot.photo}
-                      sizes={ALBUM_THUMB_SIZES}
-                      className="absolute inset-0 size-full object-cover"
-                    />
-                  ) : (
-                    <span className="absolute inset-3 grid place-items-center rounded-xl border-[2.5px] border-dashed border-ink">
-                      <span className="block size-[30px] rounded-lg border-[2.5px] border-ink bg-lavender" />
+            {active.shots.map((shot, shotIndex) => {
+              const content = (
+                <>
+                  <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-ink bg-cream">
+                    {shot.photo ? (
+                      <GalleryPhoto
+                        photo={shot.photo}
+                        sizes={ALBUM_THUMB_SIZES}
+                        className="absolute inset-0 size-full object-cover"
+                      />
+                    ) : (
+                      <span className="absolute inset-3 grid place-items-center rounded-xl border-[2.5px] border-dashed border-ink">
+                        <span className="block size-[30px] rounded-lg border-[2.5px] border-ink bg-lavender" />
+                      </span>
+                    )}
+                    <span className="absolute top-2.5 right-2.5 rounded-full border-[2.5px] border-ink bg-sun px-[9px] py-1 text-[10.5px] font-bold">
+                      {m.gallery_photo_badge()}
                     </span>
-                  )}
-                  <span className="absolute top-2.5 right-2.5 rounded-full border-[2.5px] border-ink bg-sun px-[9px] py-1 text-[10.5px] font-bold">
-                    {m.gallery_photo_badge()}
                   </span>
-                </span>
-                <span className="block px-4 py-3.5">
-                  <span className="mb-[5px] block font-display text-[13.5px] leading-[1.3]">{shot.label}</span>
-                  <span className="block text-[13px] leading-[1.55] text-pretty opacity-70">{shot.caption}</span>
-                </span>
-              </button>
-            ))}
+                  <span className="block px-4 py-3.5">
+                    <span className="mb-[5px] block font-display text-[13.5px] leading-[1.3]">{shot.label}</span>
+                    <span className="block text-[13px] leading-[1.55] text-pretty opacity-70">{shot.caption}</span>
+                  </span>
+                </>
+              )
+              const cardClassName =
+                'block w-full overflow-hidden rounded-2xl border-3 border-ink bg-white p-0 text-left shadow-hard-5'
+
+              // Mobile viewports have no full-screen viewer, so the photo card is display-only there.
+              return canViewFullscreen ? (
+                <button
+                  key={shot.label}
+                  type="button"
+                  onClick={() => dispatch({ type: 'openShot', shotIndex })}
+                  className={cn(cardClassName, 'press-sm cursor-zoom-in')}
+                >
+                  {content}
+                </button>
+              ) : (
+                <div key={shot.label} className={cardClassName}>
+                  {content}
+                </div>
+              )
+            })}
           </div>
         </div>
 
@@ -119,9 +135,9 @@ function AlbumModal() {
 
 /** Full-screen viewer for a single photo, either an album shot or a standalone work photo. */
 function ShotViewer() {
-  const { view, dispatch } = useGallery()
+  const { view, dispatch, canViewFullscreen } = useGallery()
   const { shot } = view
-  if (!shot) return null
+  if (!shot || !canViewFullscreen) return null
 
   const closeShot = () => dispatch({ type: 'closeShot' })
 
