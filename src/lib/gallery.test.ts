@@ -15,7 +15,7 @@ const items: GalleryItem[] = [
     shots: [
       { label: 's1', caption: 'c1' },
       { label: 's2', caption: 'c2' },
-      { label: 's3', caption: 'c3' },
+      { label: 's3', caption: 'c3', photo: { src: '/images/s3', width: 4, height: 3, alt: 'alt s3' } },
     ],
   },
   { group: 'kerja', title: 'C', meta: 'meta C', caption: 'caption C' },
@@ -114,5 +114,8 @@ describe('getGalleryView', () => {
     const shot = getGalleryView(items, { openIndex: 2, shotIndex: 1 })
     expect(shot.isAlbumOpen).toBe(false)
     expect(shot.shot).toEqual({ label: 's2', caption: 'c2', heading: 'Album 1', meta: '', counter: '2 / 3' })
+
+    const photoShot = getGalleryView(items, { openIndex: 2, shotIndex: 2 })
+    expect(photoShot.shot?.photo).toEqual({ src: '/images/s3', width: 4, height: 3, alt: 'alt s3' })
   })
 })
