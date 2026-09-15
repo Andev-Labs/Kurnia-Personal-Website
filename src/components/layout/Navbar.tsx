@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { LanguageSwitcher } from '#/components/i18n/LanguageSwitcher'
+import { ScrollProgress } from '#/components/motion/Reveal'
 import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 
@@ -66,6 +67,7 @@ export function Navbar() {
           </span>
         </button>
       </nav>
+      <ScrollProgress />
 
       <div
         onClick={close}

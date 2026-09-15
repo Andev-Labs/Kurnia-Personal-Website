@@ -1,4 +1,5 @@
 import type { GalleryItem } from '#/data/gallery'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
@@ -20,27 +21,29 @@ export function WorkGallery() {
           {canViewFullscreen ? m.gallery_work_hint() : m.gallery_work_hint_mobile()}
         </p>
       </div>
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
+      <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
         {items.map((item, index) =>
           item.group === 'kerja' ? (
-            // Work photos open straight into the full-screen viewer, which mobile viewports don't get.
-            canViewFullscreen ? (
-              <button
-                key={item.title}
-                type="button"
-                onClick={() => dispatch({ type: 'open', index })}
-                className={cn(CARD_CLASS_NAME, 'press cursor-pointer')}
-              >
-                <WorkCardContent item={item} />
-              </button>
-            ) : (
-              <div key={item.title} className={CARD_CLASS_NAME}>
-                <WorkCardContent item={item} />
-              </div>
-            )
+            // The motion wrapper sits outside the card so it doesn't override the `press` hover transform.
+            <RevealItem key={item.title} direction="pop">
+              {/* Work photos open straight into the full-screen viewer, which mobile viewports don't get. */}
+              {canViewFullscreen ? (
+                <button
+                  type="button"
+                  onClick={() => dispatch({ type: 'open', index })}
+                  className={cn(CARD_CLASS_NAME, 'press cursor-pointer')}
+                >
+                  <WorkCardContent item={item} />
+                </button>
+              ) : (
+                <div className={CARD_CLASS_NAME}>
+                  <WorkCardContent item={item} />
+                </div>
+              )}
+            </RevealItem>
           ) : null,
         )}
-      </div>
+      </RevealGroup>
     </div>
   )
 }

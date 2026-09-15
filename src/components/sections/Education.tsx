@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 import { ProgramGallery } from '#/components/gallery/ProgramGallery'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { RichText } from '#/components/ui/RichText'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { m } from '#/paraglide/messages.js'
@@ -12,8 +13,8 @@ export function Education() {
         {m.education_heading()}
       </SectionHeading>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
-        <div className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
+      <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
+        <RevealItem className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
           <span className="mb-3.5 inline-block rounded-full border-3 border-ink bg-sun px-[13px] py-[7px] text-[12.5px] font-bold">
             {m.education_bachelor_period()}
           </span>
@@ -38,10 +39,10 @@ export function Education() {
               </ExtractionCard>
             </div>
           </div>
-        </div>
+        </RevealItem>
 
-        <div className="flex flex-col gap-6">
-          <div className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
+        <RevealGroup stagger={0.14} className="flex flex-col gap-6">
+          <RevealItem className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
             <span className="mb-3.5 inline-block rounded-full border-3 border-ink bg-mint px-[13px] py-[7px] text-[12.5px] font-bold">
               {m.education_vocational_period()}
             </span>
@@ -55,9 +56,9 @@ export function Education() {
                 <RichText message={m.education_vocational_certificate} />
               </p>
             </div>
-          </div>
+          </RevealItem>
 
-          <div className="rounded-[20px] border-3 border-ink bg-ink p-[26px] text-cream shadow-[7px_7px_0_var(--color-lavender)]">
+          <RevealItem className="rounded-[20px] border-3 border-ink bg-ink p-[26px] text-cream shadow-[7px_7px_0_var(--color-lavender)]">
             <h3 className="mb-4 font-display text-[17px]">{m.education_international_heading()}</h3>
             <div className="flex flex-col gap-3.5 text-[15px] leading-[1.6]">
               <p className="text-pretty">
@@ -68,9 +69,9 @@ export function Education() {
               </p>
             </div>
             <ProgramGallery />
-          </div>
-        </div>
-      </div>
+          </RevealItem>
+        </RevealGroup>
+      </RevealGroup>
     </Section>
   )
 }

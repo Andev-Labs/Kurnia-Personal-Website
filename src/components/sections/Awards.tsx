@@ -1,3 +1,4 @@
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { RichText } from '#/components/ui/RichText'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { m } from '#/paraglide/messages.js'
@@ -11,8 +12,8 @@ export function Awards() {
         {m.awards_heading()}
       </SectionHeading>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[22px]">
-        <div className="rounded-[18px] border-3 border-ink bg-sun p-6 shadow-hard-6">
+      <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[22px]">
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-sun p-6 shadow-hard-6">
           <svg viewBox="0 0 64 64" className="mb-4 block size-16" aria-hidden="true">
             <circle
               cx="32"
@@ -33,9 +34,9 @@ export function Awards() {
           <p className="text-[14.5px] leading-[1.6] text-pretty">
             <RichText message={m.awards_qcc_body} />
           </p>
-        </div>
+        </RevealItem>
 
-        <div className="rounded-[18px] border-3 border-ink bg-white p-6 shadow-hard-6">
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-white p-6 shadow-hard-6">
           <svg viewBox="0 0 64 64" className="mb-4 block size-16" aria-hidden="true">
             <g className="origin-center animate-spin-slower [transform-box:fill-box]">
               <g stroke="#121212" strokeWidth="3">
@@ -56,9 +57,9 @@ export function Awards() {
           <p className="text-[14.5px] leading-[1.6] text-pretty">
             <RichText message={m.awards_training_certificate} />
           </p>
-        </div>
+        </RevealItem>
 
-        <div className="rounded-[18px] border-3 border-ink bg-lavender p-6 shadow-hard-6">
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-lavender p-6 shadow-hard-6">
           <span className="mb-4 inline-block rounded-full border-3 border-ink bg-cream px-[13px] py-[7px] font-display text-[12px]">
             {m.awards_publication_badge()}
           </span>
@@ -76,8 +77,8 @@ export function Awards() {
           >
             {m.awards_publication_cta()} <span className="text-[15px]">↗</span>
           </a>
-        </div>
-      </div>
+        </RevealItem>
+      </RevealGroup>
     </Section>
   )
 }

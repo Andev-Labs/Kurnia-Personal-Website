@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { MotionConfig } from 'framer-motion'
 
 import { GalleryProvider } from '#/components/gallery/GalleryProvider'
 import { Footer } from '#/components/layout/Footer'
@@ -16,17 +17,20 @@ export const Route = createFileRoute('/')({ component: Home })
 
 function Home() {
   return (
-    <GalleryProvider>
-      <Navbar />
-      <Hero />
-      <Marquee />
-      <About />
-      <Skills />
-      <Experience />
-      <Education />
-      <Awards />
-      <Contact />
-      <Footer />
-    </GalleryProvider>
+    // `user` honours prefers-reduced-motion: transforms are skipped and only opacity fades remain.
+    <MotionConfig reducedMotion="user">
+      <GalleryProvider>
+        <Navbar />
+        <Hero />
+        <Marquee />
+        <About />
+        <Skills />
+        <Experience />
+        <Education />
+        <Awards />
+        <Contact />
+        <Footer />
+      </GalleryProvider>
+    </MotionConfig>
   )
 }
