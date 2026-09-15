@@ -17,6 +17,14 @@ To build this application for production:
 pnpm build
 ```
 
+## Languages
+
+The site ships in Bahasa Indonesia (default, served at `/`), English (`/en`), Russian (`/ru`) and Chinese (`/zh`) using [Paraglide JS](https://inlang.com/m/gerre34r/library-inlang-paraglideJs). The switcher lives in the navbar.
+
+- Copy lives in `messages/<locale>.json`; every locale must have the same keys (enforced by `src/lib/messages.test.ts`).
+- Wrap emphasis in `{#b}…{/b}` and render the message with `<RichText message={m.key} />`; plain strings use `m.key()`.
+- `src/paraglide` is generated on `pnpm dev` / `pnpm build`; run `pnpm i18n:compile` to regenerate it on its own.
+
 ## Styling
 
 This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.

@@ -1,7 +1,7 @@
 import { createContext, use, useEffect, useMemo, useReducer } from 'react'
 import type { Dispatch, ReactNode } from 'react'
 
-import { GALLERY } from '#/data/gallery'
+import { getGallery } from '#/data/gallery'
 import type { GalleryItem } from '#/data/gallery'
 import { galleryReducer, getGalleryView, initialGalleryState } from '#/lib/gallery'
 import type { GalleryAction, GalleryView } from '#/lib/gallery'
@@ -23,11 +23,13 @@ export function useGallery() {
 
 /** Owns the lightbox state shared by the work gallery and the international program gallery. */
 export function GalleryProvider({ children }: { children: ReactNode }) {
+  // The locale is fixed for the lifetime of a page (switching reloads), so the items never change.
+  const items = useMemo(() => getGallery(), [])
   const [state, dispatch] = useReducer(
-    (current: typeof initialGalleryState, action: GalleryAction) => galleryReducer(GALLERY, current, action),
+    (current: typeof initialGalleryState, action: GalleryAction) => galleryReducer(items, current, action),
     initialGalleryState,
   )
-  const view = useMemo(() => getGalleryView(GALLERY, state), [state])
+  const view = useMemo(() => getGalleryView(items, state), [items, state])
   const isOpen = view.active !== null
   const isShotOpen = view.isShotOpen
 
@@ -49,7 +51,7 @@ export function GalleryProvider({ children }: { children: ReactNode }) {
     }
   }, [isOpen, isShotOpen])
 
-  const value = useMemo(() => ({ items: GALLERY, view, dispatch }), [view])
+  const value = useMemo(() => ({ items, view, dispatch }), [items, view])
 
   return (
     <GalleryContext value={value}>

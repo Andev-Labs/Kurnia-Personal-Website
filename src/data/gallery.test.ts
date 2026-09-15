@@ -2,7 +2,9 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-import { GALLERY } from './gallery'
+import { getGallery } from './gallery'
+
+const GALLERY = getGallery()
 
 const photos = GALLERY.flatMap((item) => item.shots ?? []).flatMap((shot) => (shot.photo ? [shot.photo] : []))
 

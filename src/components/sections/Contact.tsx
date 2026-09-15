@@ -1,5 +1,7 @@
+import { RichText } from '#/components/ui/RichText'
 import { Section } from '#/components/ui/Section'
 import { cn } from '#/lib/cn'
+import { m } from '#/paraglide/messages.js'
 
 const CONTACT_LINKS = [
   {
@@ -22,14 +24,14 @@ export function Contact() {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-9">
         <div>
           <h2 className="mb-4 font-display text-[clamp(30px,4.4vw,54px)] leading-none tracking-[-0.03em]">
-            MARI
+            {m.contact_heading_line1()}
             <br />
-            BEKERJA
+            {m.contact_heading_line2()}
             <br />
-            SAMA.
+            {m.contact_heading_line3()}
           </h2>
           <p className="max-w-[34ch] text-[16px] leading-[1.6] text-pretty">
-            Terbuka untuk peran <strong>QC, analytical development, dan quality assurance</strong> di industri farmasi.
+            <RichText message={m.contact_body} />
           </p>
         </div>
 

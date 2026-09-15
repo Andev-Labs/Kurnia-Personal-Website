@@ -1,3 +1,4 @@
+import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
 
@@ -9,7 +10,7 @@ export function ProgramGallery() {
 
   return (
     <div className="mt-5 border-t-3 border-cream/30 pt-5">
-      <p className="mb-3.5 font-display text-[12px] tracking-[0.06em]">GALERI PROGRAM</p>
+      <p className="mb-3.5 font-display text-[12px] tracking-[0.06em]">{m.gallery_program_heading()}</p>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-3.5">
         {items.map((item, index) =>
           item.group === 'intl' ? (

@@ -1,37 +1,39 @@
 import type { ReactNode } from 'react'
 
 import { ProgramGallery } from '#/components/gallery/ProgramGallery'
+import { RichText } from '#/components/ui/RichText'
 import { Section, SectionHeading } from '#/components/ui/Section'
+import { m } from '#/paraglide/messages.js'
 
 export function Education() {
   return (
     <Section id="pendidikan" className="border-t-3 border-ink bg-sand">
       <SectionHeading number="04" badgeClassName="bg-lavender">
-        Pendidikan
+        {m.education_heading()}
       </SectionHeading>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
         <div className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
           <span className="mb-3.5 inline-block rounded-full border-3 border-ink bg-sun px-[13px] py-[7px] text-[12.5px] font-bold">
-            September 2022 – Desember 2026
+            {m.education_bachelor_period()}
           </span>
-          <h3 className="mb-1.5 font-display text-[20px] leading-[1.2]">Sarjana Farmasi (S.Farm)</h3>
+          <h3 className="mb-1.5 font-display text-[20px] leading-[1.2]">{m.education_bachelor_degree()}</h3>
           <p className="mb-4 text-[14.5px] font-semibold">Binawan University</p>
           <div className="flex flex-col gap-3 text-[15px] leading-[1.6]">
             <p className="text-pretty">
-              Telah menyelesaikan seluruh studi (<strong>SKL telah terbit</strong>); wisuda dijadwalkan{' '}
-              <strong>Desember 2026</strong>.
+              <RichText message={m.education_bachelor_status} />
             </p>
             <p className="rounded-[14px] border-[2.5px] border-ink bg-cream p-4 text-pretty">
-              <strong className="mb-[5px] block font-display text-[12.5px] font-normal tracking-[0.04em]">SKRIPSI</strong>
-              “Perbandingan Ekstraksi Maserasi dan Ultrasonic-Assisted Extraction (UAE) terhadap Aktivitas Antioksidan
-              pada Ekstrak Daun Pelawan Merah (Tristaniopsis merguensis Griff.)”.
+              <strong className="mb-[5px] block font-display text-[12.5px] font-normal tracking-[0.04em]">
+                {m.education_thesis_label()}
+              </strong>
+              {m.education_thesis_title()}
             </p>
             <div className="flex flex-wrap gap-3.5">
-              <ExtractionCard label="Maserasi">
+              <ExtractionCard label={m.education_extraction_maceration()}>
                 <MacerationIcon />
               </ExtractionCard>
-              <ExtractionCard label="UAE (ultrasonik)">
+              <ExtractionCard label={m.education_extraction_ultrasonic()}>
                 <UltrasonicIcon />
               </ExtractionCard>
             </div>
@@ -41,30 +43,28 @@ export function Education() {
         <div className="flex flex-col gap-6">
           <div className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
             <span className="mb-3.5 inline-block rounded-full border-3 border-ink bg-mint px-[13px] py-[7px] text-[12.5px] font-bold">
-              Juli 2018 – November 2022
+              {m.education_vocational_period()}
             </span>
-            <h3 className="mb-1.5 font-display text-[20px] leading-[1.2]">Kimia Analisis</h3>
+            <h3 className="mb-1.5 font-display text-[20px] leading-[1.2]">{m.education_vocational_major()}</h3>
             <p className="mb-4 text-[14.5px] font-semibold">SMK-SMAK Bogor</p>
             <div className="flex flex-col gap-2.5 text-[15px] leading-[1.6]">
               <p className="text-pretty">
-                <strong>Program Pendidikan Sistem Ganda (PSG)</strong>, tahun ajaran 2019–2022.
+                <RichText message={m.education_vocational_dual_system} />
               </p>
               <p className="text-pretty">
-                <strong>Sertifikat Kompetensi LSP-P1 SMAKBO</strong>: Gravimetri, Volumetri, Proksimat, Spektrofotometer
-                UV-Vis, AAS, Mikrobiologi, dan Elektrokimia (2018–2021).
+                <RichText message={m.education_vocational_certificate} />
               </p>
             </div>
           </div>
 
           <div className="rounded-[20px] border-3 border-ink bg-ink p-[26px] text-cream shadow-[7px_7px_0_var(--color-lavender)]">
-            <h3 className="mb-4 font-display text-[17px]">Program internasional</h3>
+            <h3 className="mb-4 font-display text-[17px]">{m.education_international_heading()}</h3>
             <div className="flex flex-col gap-3.5 text-[15px] leading-[1.6]">
               <p className="text-pretty">
-                <strong>Summer School Program, Sechenov University, Rusia</strong> — Innovative Drugs.
+                <RichText message={m.education_international_sechenov} />
               </p>
               <p className="text-pretty">
-                <strong>Summer International School Program, China Pharmaceutical University</strong> (2023) — riset
-                obat herbal/simplisia dan Traditional Chinese Medicine (TCM).
+                <RichText message={m.education_international_cpu} />
               </p>
             </div>
             <ProgramGallery />

@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react'
 
+import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
 
@@ -41,7 +42,7 @@ function AlbumModal() {
           <button
             type="button"
             onClick={close}
-            aria-label="Tutup galeri"
+            aria-label={m.gallery_close_album()}
             autoFocus
             className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-display text-[15px] text-ink shadow-hard-3"
           >
@@ -82,7 +83,7 @@ function AlbumModal() {
                     </span>
                   )}
                   <span className="absolute top-2.5 right-2.5 rounded-full border-[2.5px] border-ink bg-sun px-[9px] py-1 text-[10.5px] font-bold">
-                    FOTO
+                    {m.gallery_photo_badge()}
                   </span>
                 </span>
                 <span className="block px-4 py-3.5">
@@ -100,7 +101,7 @@ function AlbumModal() {
             onClick={() => dispatch({ type: 'step', delta: -1 })}
             className="cursor-pointer rounded-xl border-3 border-ink bg-white px-5 py-3 font-display text-[13.5px] text-ink shadow-hard-4"
           >
-            ← Program lain
+            ← {m.gallery_previous_program()}
           </button>
           <span className="text-[13px] font-bold">{view.counter}</span>
           <button
@@ -108,7 +109,7 @@ function AlbumModal() {
             onClick={() => dispatch({ type: 'step', delta: 1 })}
             className="cursor-pointer rounded-xl border-3 border-ink bg-pink px-5 py-3 font-display text-[13.5px] text-ink shadow-hard-4"
           >
-            Program lain →
+            {m.gallery_next_program()} →
           </button>
         </div>
       </div>
@@ -139,7 +140,7 @@ function ShotViewer() {
         <button
           type="button"
           onClick={closeShot}
-          aria-label="Tutup foto"
+          aria-label={m.gallery_close_photo()}
           autoFocus
           className="grid size-[42px] cursor-pointer place-items-center rounded-xl border-3 border-cream bg-cream font-display text-[17px] text-ink shadow-[3px_3px_0_var(--color-pink)]"
         >
@@ -151,7 +152,7 @@ function ShotViewer() {
         <button
           type="button"
           onClick={() => dispatch({ type: 'stepShot', delta: -1 })}
-          aria-label="Foto sebelumnya"
+          aria-label={m.gallery_previous_photo()}
           className="grid size-[50px] flex-none cursor-pointer place-items-center rounded-full border-3 border-cream bg-cream font-display text-[17px] text-ink"
         >
           ←
@@ -171,9 +172,9 @@ function ShotViewer() {
             <div className="grid min-h-0 flex-1 place-items-center rounded-t-[18px] border-3 border-b-0 border-cream bg-graphite p-7 text-center">
               <div>
                 <div className="mx-auto mb-3.5 size-[62px] rounded-[14px] border-3 border-cream bg-lavender" />
-                <p className="font-display text-[14px] text-cream">PLACEHOLDER FOTO</p>
+                <p className="font-display text-[14px] text-cream">{m.gallery_placeholder_title()}</p>
                 <p className="mt-1.5 text-[12.5px] font-semibold text-cream opacity-60">
-                  Tampilan penuh · unggah foto asli untuk slot ini
+                  {m.gallery_placeholder_hint()}
                 </p>
               </div>
             </div>
@@ -191,7 +192,7 @@ function ShotViewer() {
         <button
           type="button"
           onClick={() => dispatch({ type: 'stepShot', delta: 1 })}
-          aria-label="Foto berikutnya"
+          aria-label={m.gallery_next_photo()}
           className="grid size-[50px] flex-none cursor-pointer place-items-center rounded-full border-3 border-cream bg-pink font-display text-[17px] text-ink"
         >
           →
