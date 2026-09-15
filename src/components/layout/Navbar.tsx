@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { ScrollProgress } from '#/components/motion/Reveal'
 import { cn } from '#/lib/cn'
 
 const NAV_LINKS = [
@@ -64,6 +65,7 @@ export function Navbar() {
           </span>
         </button>
       </nav>
+      <ScrollProgress />
 
       <div
         onClick={close}

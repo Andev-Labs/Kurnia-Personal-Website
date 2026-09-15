@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 
 import { ChecklistIcon, ColumnIcon, FlaskIcon, GrowthIcon } from '#/components/icons/SkillIcons'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { Tag, TagList } from '#/components/ui/Tag'
 
@@ -80,9 +81,9 @@ export function Skills() {
         Keahlian &amp; kompetensi
       </SectionHeading>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-[22px]">
+      <RevealGroup stagger={0.09} className="grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-[22px]">
         {SKILL_GROUPS.map(({ title, Icon, items }) => (
-          <div key={title} className="rounded-[18px] border-3 border-ink bg-white p-6 shadow-hard-6">
+          <RevealItem key={title} className="rounded-[18px] border-3 border-ink bg-white p-6 shadow-hard-6">
             <Icon />
             <h3 className="mb-3 font-display text-[17px]">{title}</h3>
             <TagList>
@@ -90,10 +91,10 @@ export function Skills() {
                 <Tag key={item}>{item}</Tag>
               ))}
             </TagList>
-          </div>
+          </RevealItem>
         ))}
 
-        <div className="rounded-[18px] border-3 border-ink bg-ink p-6 text-cream shadow-[6px_6px_0_var(--color-pink)]">
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-ink p-6 text-cream shadow-[6px_6px_0_var(--color-pink)]">
           <h3 className="mb-3 font-display text-[17px]">Sistem data</h3>
           <TagList className="mb-[22px]">
             {DATA_SYSTEMS.map((item) => (
@@ -110,8 +111,8 @@ export function Skills() {
               </Tag>
             ))}
           </TagList>
-        </div>
-      </div>
+        </RevealItem>
+      </RevealGroup>
     </Section>
   )
 }
