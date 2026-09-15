@@ -112,6 +112,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Keep anchor targets clear of the sticky navbar (its bottom border overlaps the section border). */
+    scroll-padding-top: 74px;
+    @media (width >= 48rem) {
+      scroll-padding-top: 82px;
+    }
   }
 
   body {
