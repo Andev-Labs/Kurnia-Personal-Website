@@ -15,7 +15,12 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Kurnia Dewi Budicantika — Analis QC Kimia-Fisika',
+      },
+      {
+        name: 'description',
+        content:
+          'Analis QC Kimia-Fisika dengan 3+ tahun pengalaman di industri farmasi — HPLC, GC, AAS, FTIR, ICP-OES, UV-Vis — dengan standar GMP, GLP, dan ISO 17025.',
       },
     ],
     links: [
@@ -30,7 +35,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="id">
       <head>
         <HeadContent />
       </head>
