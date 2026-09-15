@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react'
+
 import type { GalleryPhoto as GalleryPhotoData } from '#/data/gallery'
 
 /** Every gallery photo is exported at these widths, as `<src>-<width>.<ext>`. */
@@ -11,9 +13,10 @@ interface GalleryPhotoProps {
   photo: GalleryPhotoData
   sizes: string
   className?: string
+  style?: CSSProperties
 }
 
-export function GalleryPhoto({ photo, sizes, className }: GalleryPhotoProps) {
+export function GalleryPhoto({ photo, sizes, className, style }: GalleryPhotoProps) {
   return (
     <picture>
       <source type="image/avif" srcSet={photoSrcSet(photo.src, 'avif')} sizes={sizes} />
@@ -28,6 +31,7 @@ export function GalleryPhoto({ photo, sizes, className }: GalleryPhotoProps) {
         loading="lazy"
         decoding="async"
         className={className}
+        style={style}
       />
     </picture>
   )

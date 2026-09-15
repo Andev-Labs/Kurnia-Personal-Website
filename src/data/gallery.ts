@@ -6,6 +6,8 @@ export interface GalleryPhoto {
   width: number
   height: number
   alt: string
+  /** CSS `object-position` for cropped covers, e.g. `left` for slides whose content sits on the left. */
+  coverPosition?: string
 }
 
 export interface GalleryShot {
@@ -15,11 +17,18 @@ export interface GalleryShot {
   photo?: GalleryPhoto
 }
 
-const galleryPhoto = (name: string, width: number, height: number, alt: string): GalleryPhoto => ({
+const galleryPhoto = (
+  name: string,
+  width: number,
+  height: number,
+  alt: string,
+  coverPosition?: string,
+): GalleryPhoto => ({
   src: `/images/gallery/${name}`,
   width,
   height,
   alt,
+  ...(coverPosition && { coverPosition }),
 })
 
 const sechenovPhoto = (name: string, width: number, height: number, alt: string) =>
@@ -28,11 +37,16 @@ const sechenovPhoto = (name: string, width: number, height: number, alt: string)
 const cpuPhoto = (name: string, width: number, height: number, alt: string) =>
   galleryPhoto(`cpu-${name}`, width, height, alt)
 
+const qccPhoto = (name: string, width: number, height: number, alt: string, coverPosition?: string) =>
+  galleryPhoto(`qcc-${name}`, width, height, alt, coverPosition)
+
 export interface GalleryItem {
   group: GalleryGroup
   title: string
   meta: string
   caption: string
+  /** Single work photo shown on the card and in the viewer; items without one render a placeholder slot. */
+  photo?: GalleryPhoto
   /** Items with shots open as an album first; items without open straight into the photo viewer. */
   shots?: GalleryShot[]
 }
@@ -51,6 +65,13 @@ export const GALLERY: GalleryItem[] = [
     meta: 'Top 10 · Kalbe Consumer Health',
     caption:
       'Presentasi proyek “Menurunkan Waktu Pra Pengujian Sampel Ruah Produk Obat Sebesar 60%” sebagai ketua tim pada konvensi Quality Control Circle.',
+    photo: qccPhoto(
+      'convention-title',
+      1080,
+      602,
+      'Slide judul proyek QCC Kalbe: Menurunkan Waktu Pra Pengujian Sampel pada Analisa Ruah Produk Obat Sebesar 60% di PT Saka Farma Tahun 2025',
+      'left',
+    ),
   },
   {
     group: 'kerja',
@@ -58,6 +79,13 @@ export const GALLERY: GalleryItem[] = [
     meta: 'Oktober 2024 – Agustus 2025',
     caption:
       'Memimpin 10 anggota tim lintas fungsi dengan pendekatan 8 Steps Problem Solving dan 7 QC Tools hingga lead time analisa pra-pengujian turun 67%.',
+    photo: qccPhoto(
+      'team',
+      1080,
+      601,
+      'Slide Meet The Team QCC Kalbe berisi advisor, fasilitator, dan 10 anggota tim dengan Kurnia Dewi Budicantika sebagai ketua',
+      'left',
+    ),
   },
   {
     group: 'kerja',

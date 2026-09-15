@@ -87,7 +87,14 @@ export function getGalleryView(items: GalleryItem[], state: GalleryState): Galle
           meta: '',
           counter: `${shotIndex + 1} / ${active.shots.length}`,
         }
-      : { label: active.title, caption: active.caption, heading: 'Galeri kerja', meta: active.meta, counter }
+      : {
+          label: active.title,
+          caption: active.caption,
+          photo: active.photo,
+          heading: 'Galeri kerja',
+          meta: active.meta,
+          counter,
+        }
   }
 
   return {
