@@ -1,64 +1,51 @@
-import type { GalleryItem } from '#/data/gallery'
 import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
 
-/** Cards sit in a 210px+ grid that tops out around 360px, so the 540px export covers 1x and most 1.5x screens. */
-const COVER_SIZES = '(max-width: 640px) calc(100vw - 40px), 360px'
+/** Cards sit in a 260px+ grid that tops out around 400px, so the 540px export covers 1x and most 1.5x screens. */
+const COVER_SIZES = '(max-width: 640px) calc(100vw - 40px), 400px'
 
 export function WorkGallery() {
-  const { items, dispatch } = useGallery()
+  const { items, dispatch, originRect } = useGallery()
 
   return (
-    <div className="mt-10">
-      <div className="mb-[18px] flex flex-wrap items-baseline justify-between gap-3">
-        <h3 className="font-display text-[clamp(19px,2.2vw,26px)] tracking-[-0.02em]">{m.gallery_work_heading()}</h3>
-        <p className="text-[13px] font-semibold opacity-60">{m.gallery_work_hint()}</p>
+    <div className="mt-16">
+      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
+        <h3 className="font-serif text-[clamp(20px,2.2vw,24px)] font-medium">{m.gallery_work_heading()}</h3>
+        <p className="text-[13.5px] text-muted">{m.gallery_work_hint()}</p>
       </div>
-      <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
+      <RevealGroup className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-5">
         {items.map((item, index) =>
-          item.group === 'kerja' ? (
-            // The motion wrapper sits outside the card so it doesn't override the `press` hover transform.
-            <RevealItem key={item.title} direction="pop">
+          item.group === 'kerja' && item.photo ? (
+            // The motion wrapper sits outside the card so it doesn't override the hover transform.
+            <RevealItem key={item.title}>
               <button
                 type="button"
-                onClick={() => dispatch({ type: 'open', index })}
-                className="press block w-full cursor-pointer overflow-hidden rounded-[18px] border-3 border-ink bg-white p-0 text-left shadow-hard-6"
+                onClick={(event) => {
+                  originRect.current = event.currentTarget.querySelector('img')?.getBoundingClientRect() ?? null
+                  dispatch({ type: 'open', index })
+                }}
+                className="group block w-full cursor-zoom-in overflow-hidden rounded-2xl border border-line bg-surface p-0 text-left"
               >
-                <WorkCardContent item={item} />
+                {/* Slides carry text to the edges, so the thumbnail letterboxes the whole frame instead of cropping it. */}
+                <span className="relative block aspect-[16/10] overflow-hidden bg-teal-soft/50">
+                  <GalleryPhoto
+                    photo={item.photo}
+                    sizes={COVER_SIZES}
+                    className="absolute inset-0 size-full object-contain transition-transform duration-500 ease-out-soft group-hover:scale-[1.03]"
+                  />
+                </span>
+                <span className="block border-t border-line px-5 py-4">
+                  <span className="block font-medium text-ink">{item.title}</span>
+                  <span className="mt-1 block font-mono text-[12px] text-muted">{item.meta}</span>
+                  <span className="mt-2 block text-[13.5px] leading-[1.55] text-pretty text-muted">{item.caption}</span>
+                </span>
               </button>
             </RevealItem>
           ) : null,
         )}
       </RevealGroup>
     </div>
-  )
-}
-
-function WorkCardContent({ item }: { item: GalleryItem }) {
-  return (
-    <>
-      {/* Slides carry text to the edges, so the thumbnail letterboxes the whole frame instead of cropping it. */}
-      <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-ink bg-cream">
-        {item.photo ? (
-          <GalleryPhoto photo={item.photo} sizes={COVER_SIZES} className="absolute inset-0 size-full object-contain" />
-        ) : (
-          <span className="absolute inset-3 grid place-items-center rounded-xl border-[2.5px] border-dashed border-ink">
-            <span className="block size-[34px] rounded-lg border-[2.5px] border-ink bg-lavender" />
-          </span>
-        )}
-        <span className="absolute top-2.5 right-2.5 rounded-full border-[2.5px] border-ink bg-sun px-[9px] py-1 text-[10.5px] font-bold">
-          {m.gallery_photo_badge()}
-        </span>
-      </span>
-      <span className="block px-[18px] py-4">
-        <span className="block font-display text-[14.5px] leading-[1.3] text-ink">{item.title}</span>
-        <span className="mt-1.5 block text-[12.5px] font-semibold text-ink opacity-60">{item.meta}</span>
-        <span className="mt-2.5 block text-[12.5px] leading-[1.55] text-pretty text-ink opacity-75">
-          {item.caption}
-        </span>
-      </span>
-    </>
   )
 }

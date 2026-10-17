@@ -6,31 +6,36 @@ import { cn } from '#/lib/cn'
 interface SectionProps {
   id: string
   className?: string
+  /** Id of the heading that names this landmark. */
+  labelledBy?: string
   children: ReactNode
 }
 
-export function Section({ id, className, children }: SectionProps) {
+export function Section({ id, className, labelledBy, children }: SectionProps) {
   return (
-    <section id={id} className={cn('page-x py-14', className)}>
+    <section id={id} aria-labelledby={labelledBy} className={cn('page-x py-16 md:py-24', className)}>
       {children}
     </section>
   )
 }
 
 interface SectionHeadingProps {
+  id: string
+  /** Two-digit index shown in mono above the title. */
   number: string
-  /** Tailwind background class for the number badge. */
-  badgeClassName: string
   children: ReactNode
+  className?: string
 }
 
-export function SectionHeading({ number, badgeClassName, children }: SectionHeadingProps) {
+export function SectionHeading({ id, number, children, className }: SectionHeadingProps) {
   return (
-    <Reveal direction="left" className="mb-[26px] flex flex-wrap items-baseline gap-3.5">
-      <span className={cn('rounded-lg border-3 border-ink px-3 py-1.5 font-display text-[12px]', badgeClassName)}>
+    <Reveal className={cn('mb-10 md:mb-12', className)}>
+      <p aria-hidden="true" className="mb-3 font-mono text-[12px] tracking-[0.12em] text-teal uppercase">
         {number}
-      </span>
-      <h2 className="font-display text-[clamp(26px,3.4vw,40px)] tracking-[-0.03em]">{children}</h2>
+      </p>
+      <h2 id={id} className="font-serif text-[clamp(28px,3.6vw,42px)] leading-[1.1] font-medium tracking-[-0.02em]">
+        {children}
+      </h2>
     </Reveal>
   )
 }

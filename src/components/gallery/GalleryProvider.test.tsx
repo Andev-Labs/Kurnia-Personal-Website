@@ -103,6 +103,19 @@ describe('gallery full-screen viewer', () => {
   })
 })
 
+describe('gallery keyboard support', () => {
+  it('closes with Escape and returns focus to the card that opened it', async () => {
+    renderGallery()
+
+    const card = screen.getByRole('button', { name: new RegExp(workItem.title) })
+    await userEvent.click(card)
+    await userEvent.keyboard('{Escape}')
+
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(document.activeElement).toBe(card)
+  })
+})
+
 describe('work gallery cards', () => {
   it('shows the caption next to the title', () => {
     renderGallery()

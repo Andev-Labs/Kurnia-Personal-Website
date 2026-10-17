@@ -20,24 +20,24 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={m.language_switcher_label()}
-      className="inline-flex items-center rounded-full border-3 border-ink bg-white p-[3px] shadow-hard-3"
+      className="inline-flex items-center rounded-full border border-line bg-surface p-[3px]"
     >
       {locales.map((locale) => {
-        const { label, name } = LOCALE_OPTIONS[locale]
+        const { label, name, tag } = LOCALE_OPTIONS[locale]
         const isActive = locale === current
         return (
           <a
             key={locale}
             href={localizeHref('/', { locale })}
-            hrefLang={locale}
-            lang={locale}
+            hrefLang={tag}
+            lang={tag}
             title={name}
             aria-label={name}
             aria-current={isActive ? 'true' : undefined}
             onClick={(event) => switchTo(event, locale)}
             className={cn(
-              'rounded-full px-2.5 py-[5px] text-[12.5px] leading-none font-bold transition-colors duration-120',
-              isActive ? 'bg-ink text-cream hover:text-cream' : 'text-ink hover:bg-sun hover:text-ink',
+              'rounded-full px-2.5 py-[7px] font-mono text-[12px] leading-none transition-colors duration-200',
+              isActive ? 'bg-teal text-paper' : 'text-ink/75 hover:bg-teal-soft hover:text-ink',
             )}
           >
             {label}

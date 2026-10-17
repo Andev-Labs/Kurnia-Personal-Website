@@ -3,18 +3,18 @@ import type { ReactNode } from 'react'
 import { cn } from '#/lib/cn'
 
 export function TagList({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn('flex flex-wrap gap-2 text-[13px] font-semibold', className)}>{children}</div>
+  return <ul className={cn('flex flex-wrap gap-2 text-[13.5px]', className)}>{children}</ul>
 }
 
-export function Tag({ tone = 'light', children }: { tone?: 'light' | 'dark'; children: ReactNode }) {
+export function Tag({ tone = 'light', children }: { tone?: 'light' | 'teal'; children: ReactNode }) {
   return (
-    <span
+    <li
       className={cn(
-        'rounded-full border-2 px-[11px] py-1.5',
-        tone === 'light' ? 'border-ink bg-cream' : 'border-cream',
+        'rounded-full border px-3 py-1',
+        tone === 'light' ? 'border-line bg-surface text-ink' : 'border-teal/20 bg-teal-soft text-teal-deep',
       )}
     >
       {children}
-    </span>
+    </li>
   )
 }

@@ -5,41 +5,36 @@ import { GalleryPhoto } from './GalleryPhoto'
 import { useGallery } from './GalleryProvider'
 
 /** Covers sit in a narrow card grid, so the 540px export is always enough. */
-const COVER_SIZES = '270px'
+const COVER_SIZES = '300px'
 
 export function ProgramGallery() {
   const { items, dispatch } = useGallery()
 
   return (
-    <div className="mt-5 border-t-3 border-cream/30 pt-5">
-      <p className="mb-3.5 font-display text-[12px] tracking-[0.06em]">{m.gallery_program_heading()}</p>
-      <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-3.5">
-        {items.map((item, index) =>
-          item.group === 'intl' ? (
-            <RevealItem key={item.title} direction="pop">
+    <div className="mt-6">
+      <p className="mb-3 font-mono text-[11.5px] tracking-[0.12em] text-teal uppercase">{m.gallery_program_heading()}</p>
+      <RevealGroup className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-4">
+        {items.map((item, index) => {
+          const cover = item.shots?.[0]?.photo
+          return item.group === 'intl' && cover ? (
+            <RevealItem key={item.title}>
               <button
                 type="button"
                 onClick={() => dispatch({ type: 'open', index })}
-                className="block w-full cursor-pointer overflow-hidden rounded-[14px] border-3 border-cream bg-graphite p-0 text-left transition-transform duration-120 hover:-translate-y-[3px]"
+                className="group block w-full cursor-pointer overflow-hidden rounded-xl border border-line bg-surface p-0 text-left"
               >
-                <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-cream">
-                  {item.shots?.[0]?.photo ? (
-                    <GalleryPhoto
-                      photo={item.shots[0].photo}
-                      sizes={COVER_SIZES}
-                      className="absolute inset-0 size-full object-cover"
-                    />
-                  ) : (
-                    <span className="absolute inset-2.5 grid place-items-center rounded-[10px] border-[2.5px] border-dashed border-cream/60">
-                      <span className="block size-[26px] rounded-[7px] border-[2.5px] border-cream bg-lavender" />
-                    </span>
-                  )}
+                <span className="relative block aspect-[4/3] overflow-hidden">
+                  <GalleryPhoto
+                    photo={cover}
+                    sizes={COVER_SIZES}
+                    className="absolute inset-0 size-full object-cover transition-transform duration-500 ease-out-soft group-hover:scale-[1.04]"
+                  />
                 </span>
-                <span className="block px-3 py-[11px] text-[12px] leading-[1.35] font-bold text-cream">{item.title}</span>
+                <span className="block px-3 py-2.5 text-[13px] leading-[1.35] font-medium">{item.title}</span>
               </button>
             </RevealItem>
-          ) : null,
-        )}
+          ) : null
+        })}
       </RevealGroup>
     </div>
   )
