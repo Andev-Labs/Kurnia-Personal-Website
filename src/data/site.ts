@@ -24,8 +24,7 @@ export const WHATSAPP = { enabled: false, number: '' } as const
 
 /**
  * Hero photo. Exported at 480/800/1200 px wide as `<base>-<width>.{avif,webp,jpg}`, 4:5 crop.
- * TODO(Kurnia): replace with a lab/instrument photo. The current file is the Sechenov University photo,
- * which also appears in the international program gallery (`sechenov-portrait`).
+ * Current file: photo in front of the Sechenov University sign (Sept 2026), cropped so the body is centred.
  */
 export const HERO_PORTRAIT = { base: '/images/kurnia-portrait', widths: [480, 800, 1200], width: 800, height: 1000 }
 
