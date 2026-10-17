@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { GalleryItem } from '#/data/gallery'
 import { galleryReducer, getGalleryView, groupIndices, initialGalleryState } from './gallery'
+import { m } from '#/paraglide/messages.js'
 import type { GalleryAction, GalleryState } from './gallery'
 
 const items: GalleryItem[] = [
@@ -100,7 +101,7 @@ describe('getGalleryView', () => {
   it('describes a single photo with the item caption and group position', () => {
     const view = getGalleryView(items, { openIndex: 3, shotIndex: 0 })
     expect(view.isAlbumOpen).toBe(false)
-    expect(view.groupLabel).toBe('GALERI KERJA')
+    expect(view.groupLabel).toBe(m.gallery_work_label())
     expect(view.shot).toEqual({
       label: 'C',
       caption: 'caption C',
@@ -119,7 +120,7 @@ describe('getGalleryView', () => {
     const album = getGalleryView(items, { openIndex: 4, shotIndex: null })
     expect(album.isAlbumOpen).toBe(true)
     expect(album.isShotOpen).toBe(false)
-    expect(album.groupLabel).toBe('GALERI PROGRAM INTERNASIONAL')
+    expect(album.groupLabel).toBe(m.gallery_program_label())
     expect(album.counter).toBe('2 / 2')
 
     const shot = getGalleryView(items, { openIndex: 2, shotIndex: 1 })
