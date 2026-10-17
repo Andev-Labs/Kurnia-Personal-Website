@@ -2,41 +2,83 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
+import { EMAIL, HERO_PORTRAIT, LINKEDIN_URL, PERSON_NAME, SITE_URL } from '#/data/site'
+import { LOCALE_OPTIONS } from '#/lib/locales'
 import { m } from '#/paraglide/messages.js'
-import { getLocale } from '#/paraglide/runtime.js'
+import { getLocale, locales, localizeHref } from '#/paraglide/runtime.js'
 import appCss from '../styles.css?url'
 
+const OG_IMAGE = `${SITE_URL}/og-image.png`
+
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: m.meta_title(),
-      },
-      {
-        name: 'description',
-        content: m.meta_description(),
-      },
-    ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss,
-      },
-    ],
-  }),
+  head: () => {
+    const locale = getLocale()
+    const url = `${SITE_URL}${localizeHref('/', { locale })}`
+    const title = m.meta_title()
+    const description = m.meta_description()
+
+    const person = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: PERSON_NAME,
+      jobTitle: 'Analytical Chemistry Analyst',
+      email: `mailto:${EMAIL}`,
+      url: SITE_URL,
+      image: `${SITE_URL}${HERO_PORTRAIT.base}-800.jpg`,
+      sameAs: [LINKEDIN_URL],
+      address: { '@type': 'PostalAddress', addressLocality: 'Bekasi', addressRegion: 'Jawa Barat', addressCountry: 'ID' },
+      alumniOf: [
+        { '@type': 'CollegeOrUniversity', name: 'Binawan University' },
+        { '@type': 'EducationalOrganization', name: 'SMK-SMAK Bogor' },
+      ],
+      knowsAbout: ['HPLC', 'GC', 'ICP-OES', 'AAS', 'FTIR', 'UV-Vis', 'GMP', 'GLP', 'ISO 17025'],
+    }
+
+    return {
+      meta: [
+        { charSet: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { title },
+        { name: 'description', content: description },
+        { name: 'theme-color', content: '#f6f7f5' },
+        { property: 'og:type', content: 'profile' },
+        { property: 'og:site_name', content: PERSON_NAME },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { property: 'og:url', content: url },
+        { property: 'og:locale', content: LOCALE_OPTIONS[locale].ogLocale },
+        { property: 'og:image', content: OG_IMAGE },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { property: 'og:image:alt', content: m.og_image_alt() },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: OG_IMAGE },
+        { name: 'twitter:image:alt', content: m.og_image_alt() },
+      ],
+      links: [
+        { rel: 'canonical', href: url },
+        ...locales.map((l) => ({
+          rel: 'alternate',
+          hrefLang: LOCALE_OPTIONS[l].tag,
+          href: `${SITE_URL}${localizeHref('/', { locale: l })}`,
+        })),
+        { rel: 'alternate', hrefLang: 'x-default', href: `${SITE_URL}/` },
+        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        { rel: 'icon', href: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        { rel: 'stylesheet', href: appCss },
+      ],
+      scripts: [{ type: 'application/ld+json', children: JSON.stringify(person) }],
+    }
+  },
   shellComponent: RootDocument,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={getLocale()}>
+    <html lang={LOCALE_OPTIONS[getLocale()].tag}>
       <head>
         <HeadContent />
       </head>
