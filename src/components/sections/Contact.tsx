@@ -1,21 +1,28 @@
 import { Mascot } from '#/components/mascot/Mascot'
 import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { buttonClassName } from '#/components/ui/Button'
+import { CvButton } from '#/components/ui/CvButton'
 import { RichText } from '#/components/ui/RichText'
+import { EMAIL, LINKEDIN_URL, WHATSAPP } from '#/data/site'
 import { m } from '#/paraglide/messages.js'
 
-const CONTACT_LINKS = [
-  {
-    href: 'mailto:kurniadewi2003@gmail.com',
-    label: 'kurniadewi2003@gmail.com',
-    external: false,
-  },
-  {
-    href: 'https://linkedin.com/in/kurnia-dewi-budicantika-27b1a9216',
-    label: 'LinkedIn',
-    external: true,
-  },
-]
+interface ContactLink {
+  href: string
+  label: string
+  external: boolean
+}
+
+function getContactLinks(): ContactLink[] {
+  const links: ContactLink[] = [
+    { href: `mailto:${EMAIL}`, label: EMAIL, external: false },
+    { href: LINKEDIN_URL, label: 'LinkedIn', external: true },
+  ]
+  // Off by default (see `WHATSAPP` in data/site.ts), so no phone number is published.
+  if (WHATSAPP.enabled && WHATSAPP.number) {
+    links.push({ href: `https://wa.me/${WHATSAPP.number}`, label: m.contact_whatsapp(), external: true })
+  }
+  return links
+}
 
 /** A white card on a deep violet panel, after Ahead's welcome screen. */
 export function Contact() {
@@ -50,7 +57,7 @@ export function Contact() {
             </p>
 
             <RevealGroup stagger={0.12} delay={0.15} className="flex flex-wrap justify-center gap-3 md:justify-start">
-              {CONTACT_LINKS.map((link, index) => (
+              {getContactLinks().map((link, index) => (
                 // The link keeps its CSS `lift` hover transform, so the motion wrapper stays outside it.
                 <RevealItem key={link.href} direction="pop" className="max-w-full">
                   <a
@@ -65,6 +72,9 @@ export function Contact() {
                   </a>
                 </RevealItem>
               ))}
+              <RevealItem direction="pop" className="max-w-full print:hidden">
+                <CvButton variant="secondary" />
+              </RevealItem>
             </RevealGroup>
             <p className="mt-5 text-[14px] font-bold text-ink-soft">Bekasi, Indonesia 17411</p>
           </div>

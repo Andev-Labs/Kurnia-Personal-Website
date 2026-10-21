@@ -17,8 +17,10 @@ describe('GALLERY photos', () => {
     expect(item?.shots?.every((shot) => shot.photo)).toBe(true)
   })
 
-  it.each(['Konvensi QCC 2025', 'Tim Finish Good QCC'])('fills the %s work card with a photo', (title) => {
-    expect(GALLERY.find((entry) => entry.title === title)?.photo).toBeDefined()
+  it('never renders a work card without a photo', () => {
+    const work = GALLERY.filter((entry) => entry.group === 'kerja')
+    expect(work.length).toBeGreaterThan(0)
+    expect(work.every((entry) => entry.photo)).toBe(true)
   })
 
   it.each(photos.map((photo) => [photo.src, photo] as const))('ships every size and format for %s', (_, photo) => {

@@ -2,10 +2,31 @@ import { Mascot } from '#/components/mascot/Mascot'
 import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { buttonClassName } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
+import type { RichMessage } from '#/components/ui/RichText'
 import { Section, SectionHeading } from '#/components/ui/Section'
+import { EFSET_URL, PAPER_DOI, PAPER_URL } from '#/data/site'
 import { m } from '#/paraglide/messages.js'
 
-const PAPER_URL = 'https://journal.unpak.ac.id/index.php/he_jsac/article/view/4541/2703'
+interface Certification {
+  year: string
+  message: RichMessage
+  /** Public verification page, if the issuer has one. */
+  href?: string
+}
+
+/** Newest first. */
+function getCertifications(): Certification[] {
+  return [
+    { year: '2026', message: m.awards_cert_efset, href: EFSET_URL },
+    { year: '2022–2025', message: m.awards_cert_vendor },
+    { year: '2024', message: m.awards_cert_gdp },
+    { year: '2023', message: m.awards_cert_ipsw },
+    { year: '2023', message: m.awards_cert_jgu },
+    { year: '2022', message: m.awards_cert_allround },
+    { year: '2022', message: m.awards_cert_bnsp },
+    { year: '2018–2021', message: m.awards_cert_lsp },
+  ]
+}
 
 export function Awards() {
   return (
@@ -44,7 +65,7 @@ export function Awards() {
           </p>
         </RevealItem>
 
-        <RevealItem className="rounded-card bg-lavender-50 p-6 shadow-soft">
+        <RevealItem className="rounded-card bg-mint-100 p-6 shadow-soft">
           <svg viewBox="0 0 64 64" className="mb-4 block size-16" aria-hidden="true">
             <g className="origin-center animate-spin-slower [transform-box:fill-box]">
               <g stroke="#5B3FE0" strokeWidth="2.5">
@@ -58,13 +79,10 @@ export function Awards() {
               <circle cx="14" cy="44" r="6" fill="#B9A2F5" stroke="#5B3FE0" strokeWidth="2.5" />
             </g>
           </svg>
-          <h3 className="mb-2.5 font-heading font-semibold text-[16.5px] leading-[1.3]">{m.awards_training_title()}</h3>
-          <p className="mb-3.5 text-[14.5px] leading-[1.6] text-pretty">
-            <RichText message={m.awards_training_hplc} />
-          </p>
-          <p className="text-[14.5px] leading-[1.6] text-pretty">
-            <RichText message={m.awards_training_certificate} />
-          </p>
+          <h3 className="mb-2.5 font-heading font-semibold text-[16.5px] leading-[1.3]">
+            {m.awards_cpu_title()} <span className="text-ink-soft">(2023)</span>
+          </h3>
+          <p className="text-[14.5px] leading-[1.6] text-pretty">{m.awards_cpu_body()}</p>
         </RevealItem>
 
         <RevealItem className="rounded-card bg-lavender-100 p-6 shadow-soft">
@@ -74,9 +92,13 @@ export function Awards() {
           <h3 className="mb-2.5 font-heading font-semibold text-[16.5px] leading-[1.35]">
             “Effects of Yeast Weight and Starter Volume on The Percentage Kepok Banana Based Bioethanol”
           </h3>
-          <p className="mb-5 text-[14.5px] leading-[1.6] text-pretty">
+          <p className="mb-1.5 text-[13.5px] font-semibold text-ink-soft">
+            Kurnia Dewi Budi Cantika, Anisa Sinta Nabila, Difa Afiyah Sucisatryani
+          </p>
+          <p className="mb-1.5 text-[14.5px] leading-[1.6] text-pretty">
             <RichText message={m.awards_publication_journal} />
           </p>
+          <p className="mb-5 text-[13px] font-bold text-violet">DOI: {PAPER_DOI}</p>
           <a
             href={PAPER_URL}
             target="_blank"
@@ -85,6 +107,35 @@ export function Awards() {
           >
             {m.awards_publication_cta()} <span className="text-[15px]">↗</span>
           </a>
+        </RevealItem>
+
+        <RevealItem className="col-span-full rounded-card-lg bg-white p-6 shadow-soft md:p-8">
+          <h3 className="mb-4 font-heading font-semibold text-[19px]">{m.awards_certifications_title()}</h3>
+          <ul className="flex flex-col divide-y divide-lavender-100">
+            {getCertifications().map((cert, index) => (
+              <li key={index} className="grid gap-1.5 py-3.5 sm:grid-cols-[110px_minmax(0,1fr)] sm:gap-5">
+                <span className="self-start justify-self-start rounded-full bg-lavender-50 px-3 py-1 text-[12.5px] font-bold whitespace-nowrap text-violet">
+                  {cert.year}
+                </span>
+                <p className="text-[14.5px] leading-[1.6] text-pretty text-ink-soft [&_strong]:text-ink">
+                  <RichText message={cert.message} />
+                  {cert.href ? (
+                    <>
+                      {' '}
+                      <a
+                        href={cert.href}
+                        target="_blank"
+                        rel="noopener"
+                        className="font-bold whitespace-nowrap text-violet underline decoration-lavender underline-offset-4 hover:decoration-violet"
+                      >
+                        {m.awards_verify()} <span aria-hidden="true">↗</span>
+                      </a>
+                    </>
+                  ) : null}
+                </p>
+              </li>
+            ))}
+          </ul>
         </RevealItem>
       </RevealGroup>
     </Section>

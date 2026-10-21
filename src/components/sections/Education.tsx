@@ -27,6 +27,10 @@ export function Education() {
           <h3 className="mb-1.5 font-heading font-semibold text-[20px] leading-[1.2]">{m.education_bachelor_degree()}</h3>
           <p className="mb-4 text-[14.5px] font-bold text-violet">Binawan University</p>
           <div className="flex flex-col gap-3 text-[15px] leading-[1.6]">
+            {/*
+             * TODO(Kurnia): confirm the status sentence below ("SKL issued, graduation December 2026") and make it
+             * match the CV, which only says "Binawan University, 2022–2026". Kept as-is until confirmed.
+             */}
             <p className="text-pretty">
               <RichText message={m.education_bachelor_status} />
             </p>

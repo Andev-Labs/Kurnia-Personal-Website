@@ -5,12 +5,15 @@ import { GalleryProvider } from '#/components/gallery/GalleryProvider'
 import { Footer } from '#/components/layout/Footer'
 import { Navbar } from '#/components/layout/Navbar'
 import { About } from '#/components/sections/About'
+import { Activities } from '#/components/sections/Activities'
 import { Awards } from '#/components/sections/Awards'
 import { Contact } from '#/components/sections/Contact'
 import { Education } from '#/components/sections/Education'
 import { Experience } from '#/components/sections/Experience'
 import { Hero } from '#/components/sections/Hero'
+import { ImpactStrip } from '#/components/sections/ImpactStrip'
 import { Skills } from '#/components/sections/Skills'
+import { m } from '#/paraglide/messages.js'
 
 export const Route = createFileRoute('/')({ component: Home })
 
@@ -19,17 +22,27 @@ function Home() {
     // `user` honours prefers-reduced-motion: transforms are skipped and only opacity fades remain.
     <MotionConfig reducedMotion="user">
       <GalleryProvider>
+        <a
+          href="#main"
+          className="fixed top-3 left-3 z-90 -translate-y-20 rounded-full bg-violet px-4 py-2 text-[14px] font-bold text-white focus:translate-y-0 print:hidden"
+        >
+          {m.skip_link()}
+        </a>
         {/* On desktop the navbar and hero together fill the first screen, so nothing looks unfinished below the fold. */}
         <div className="flex flex-col lg:min-h-[min(100svh,1080px)]">
           <Navbar />
           <Hero />
         </div>
-        <About />
-        <Skills />
-        <Experience />
-        <Education />
-        <Awards />
-        <Contact />
+        <main id="main" tabIndex={-1} className="outline-none">
+          <ImpactStrip />
+          <About />
+          <Skills />
+          <Experience />
+          <Education />
+          <Awards />
+          <Activities />
+          <Contact />
+        </main>
         <Footer />
       </GalleryProvider>
     </MotionConfig>
