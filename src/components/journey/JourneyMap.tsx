@@ -102,7 +102,7 @@ function MapCanvas({ stops, interactive, selectedId, onSelect, registerNode }: M
   return (
     <div
       ref={mapRef}
-      className="relative h-[980px] overflow-hidden rounded-card-lg shadow-soft sm:h-[900px] lg:h-[780px]"
+      className="relative h-[1160px] overflow-hidden rounded-card-lg shadow-soft sm:h-[1060px] lg:h-[920px]"
     >
       <JourneyLandscape />
       <svg

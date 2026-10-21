@@ -12,7 +12,6 @@ import { Contact } from '#/components/sections/Contact'
 import { Education } from '#/components/sections/Education'
 import { Experience } from '#/components/sections/Experience'
 import { Hero } from '#/components/sections/Hero'
-import { ImpactStrip } from '#/components/sections/ImpactStrip'
 import { Skills } from '#/components/sections/Skills'
 import { m } from '#/paraglide/messages.js'
 
@@ -36,7 +35,6 @@ function Home() {
           <Hero />
         </div>
         <main id="main" tabIndex={-1} className="outline-none">
-          <ImpactStrip />
           <About />
           <Skills />
           <Experience />

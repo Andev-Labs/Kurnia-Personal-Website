@@ -97,6 +97,21 @@ export function getStops(): JourneyStop[] {
         { label: m.case_validation_label(), message: m.case_validation() },
       ],
     },
+    // Source copy is Kurnia's English CV. TODO(Kurnia): review terjemahan (id/zh/ru).
+    {
+      id: 'unissula-research',
+      kind: 'passed',
+      title: m.experience_research_role(),
+      company: 'Universitas Islam Sultan Agung (UNISSULA)',
+      period: m.experience_research_period(),
+      bubble: m.journey_bubble_research(),
+      entriesLabel: m.experience_responsibilities_label(),
+      entries: [
+        { marker: 'lavender', message: m.experience_research_thesis },
+        { marker: 'mint', message: m.experience_research_literature },
+        { marker: 'blush', message: m.experience_research_editing },
+      ],
+    },
     {
       id: 'qcc-convention',
       kind: 'passed',

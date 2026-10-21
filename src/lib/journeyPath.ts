@@ -14,11 +14,12 @@ export const LANE_LEFT = 300
 export const LANE_RIGHT = 700
 
 export const STOP_POINTS: readonly MapPoint[] = [
-  { x: LANE_LEFT, y: 130 },
-  { x: LANE_RIGHT, y: 320 },
-  { x: LANE_LEFT, y: 510 },
-  { x: LANE_RIGHT, y: 700 },
-  { x: LANE_LEFT, y: 880 },
+  { x: LANE_LEFT, y: 110 },
+  { x: LANE_RIGHT, y: 265 },
+  { x: LANE_LEFT, y: 420 },
+  { x: LANE_RIGHT, y: 575 },
+  { x: LANE_LEFT, y: 730 },
+  { x: LANE_RIGHT, y: 885 },
 ]
 
 /** How far the S-curve control points reach towards the next stop, as a share of the vertical gap. */

@@ -17,6 +17,8 @@ interface Certification {
 /** Newest first. */
 function getCertifications(): Certification[] {
   return [
+    // TODO(Kurnia): review terjemahan judul pelatihan Ioda Academy (en/zh/ru).
+    { year: '2026', message: m.awards_cert_ioda },
     { year: '2026', message: m.awards_cert_efset, href: EFSET_URL },
     { year: '2022–2025', message: m.awards_cert_vendor },
     { year: '2024', message: m.awards_cert_gdp },
