@@ -53,9 +53,7 @@ export function Navbar() {
     <header className="page-x relative z-40 pt-3 md:pt-4 print:hidden">
       <nav className="flex items-center justify-between gap-4 py-2">
         <a href="#atas" className="flex items-center gap-2.5 rounded-full pr-2">
-          <span className="grid size-[38px] place-items-center rounded-full bg-violet font-heading font-semibold text-[17px] leading-none text-white">
-            K
-          </span>
+          <img src="/kurnia-icon.svg" alt="" width={38} height={38} className="size-[38px]" />
           <span className="font-heading font-semibold text-[15px] tracking-[-0.02em]">kurnia.qc</span>
         </a>
         <div className="hidden items-center gap-1 text-[14.5px] font-bold lg:flex">
