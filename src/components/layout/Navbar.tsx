@@ -39,7 +39,7 @@ export function Navbar() {
   }, [isOpen])
 
   return (
-    <header className="page-x relative z-40 pt-3 md:pt-4">
+    <header className="page-x relative z-40 pt-3 md:pt-4 print:hidden">
       <nav className="flex items-center justify-between gap-4 py-2">
         <a href="#atas" className="flex items-center gap-2.5 rounded-full pr-2">
           <span className="grid size-[38px] place-items-center rounded-full bg-violet font-heading font-semibold text-[17px] leading-none text-white">

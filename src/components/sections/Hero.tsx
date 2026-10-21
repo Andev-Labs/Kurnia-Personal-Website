@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
 import { Mascot } from '#/components/mascot/Mascot'
-import { RevealGroup, RevealItem, revealVariants } from '#/components/motion/Reveal'
+import { RevealGroup } from '#/components/motion/Reveal'
 import { Button } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
 import { cn } from '#/lib/cn'
@@ -14,7 +14,21 @@ const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 110px), 356px'
 /** Organic blob outline shared by the portrait frame and the photo inside it. */
 const BLOB_RADIUS = 'rounded-[46%_54%_42%_58%/54%_44%_56%_46%]'
 
-const FADE_UP = revealVariants('up')
+const EASE = [0.22, 1, 0.36, 1] as const
+
+/*
+ * Hero text and portrait are above the fold and hold the LCP, so they move without fading:
+ * starting at opacity 0 would keep them invisible until hydration and delay LCP by seconds.
+ */
+const SLIDE_UP = {
+  hidden: { y: 24 },
+  visible: { y: 0, transition: { duration: 0.6, ease: EASE } },
+} as const
+
+const SETTLE = {
+  hidden: { scale: 0.96 },
+  visible: { scale: 1, transition: { duration: 0.6, ease: EASE } },
+} as const
 
 /** Stickers and Kapsi land on the portrait after it has faded in. */
 const POP_VARIANTS = {
@@ -28,19 +42,19 @@ function portraitSrcSet(ext: 'avif' | 'webp' | 'jpg') {
 
 export function Hero() {
   return (
-    <header id="atas" className="page-x flex flex-1 flex-col pt-5 pb-12 md:pt-7 lg:pb-8">
-      <div className="relative isolate flex flex-1 flex-col justify-center overflow-hidden rounded-[36px] bg-[linear-gradient(140deg,var(--color-lavender-100)_0%,#f1e4f8_52%,var(--color-blush)_100%)] px-6 py-12 sm:px-10 md:py-16 lg:px-14">
+    <header id="atas" className="page-x flex flex-1 flex-col pt-5 pb-12 md:pt-7 lg:pb-8 print:pb-6">
+      <div className="relative isolate flex flex-1 flex-col justify-center overflow-hidden rounded-[36px] bg-[linear-gradient(140deg,var(--color-lavender-100)_0%,#f1e4f8_52%,var(--color-blush)_100%)] px-6 py-12 sm:px-10 md:py-16 lg:px-14 print:rounded-none print:bg-none print:p-0">
         <HeroDecorations />
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 print:grid-cols-[1fr_150px] print:gap-8">
           <RevealGroup stagger={0.12} className="@container min-w-0">
             <motion.p
-              variants={FADE_UP}
+              variants={SLIDE_UP}
               className="mb-5 inline-block rounded-full bg-white/80 px-4 py-2 text-[13.5px] font-bold text-violet shadow-soft-sm"
             >
               {m.hero_greeting()}
             </motion.p>
             <motion.h1
-              variants={FADE_UP}
+              variants={SLIDE_UP}
               className="mb-5 font-heading font-semibold text-[clamp(28px,11.5cqi,76px)] leading-[0.98] tracking-[-0.03em] text-balance [overflow-wrap:anywhere]"
             >
               {m.hero_title_line1()}
@@ -48,27 +62,27 @@ export function Hero() {
               <span className="text-violet">{m.hero_title_line2()}</span>
             </motion.h1>
             <motion.p
-              variants={FADE_UP}
+              variants={SLIDE_UP}
               className="mb-8 max-w-[46ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.65] text-ink-soft text-pretty [&_strong]:text-ink"
             >
               <RichText message={m.hero_summary} />
             </motion.p>
-            <RevealItem className="flex flex-wrap items-center gap-3">
+            <motion.div variants={SLIDE_UP} className="flex flex-wrap items-center gap-3 print:hidden">
               <Button href="#kontak">{m.hero_cta_contact()}</Button>
               <Button href="#pengalaman" variant="secondary">
                 {m.hero_cta_experience()}
               </Button>
-            </RevealItem>
+            </motion.div>
           </RevealGroup>
 
           <div className="flex min-w-0 justify-center">
-            <RevealGroup stagger={0.15} delay={0.15} className="relative w-full max-w-[380px] pb-6 pl-6 sm:pl-10">
-              <RevealItem direction="pop" className="relative">
+            <RevealGroup stagger={0.15} delay={0.15} className="relative w-full max-w-[380px] pb-6 pl-6 sm:pl-10 print:p-0">
+              <motion.div variants={SETTLE} className="relative">
                 <span
                   aria-hidden="true"
-                  className={cn('absolute inset-0 translate-x-4 translate-y-3 rotate-6 bg-lavender/60', BLOB_RADIUS)}
+                  className={cn('absolute inset-0 translate-x-4 translate-y-3 rotate-6 bg-lavender/60 print:hidden', BLOB_RADIUS)}
                 />
-                <div className={cn('relative bg-white p-3 shadow-soft-lg', BLOB_RADIUS)}>
+                <div className={cn('relative bg-white p-3 shadow-soft-lg print:p-0', BLOB_RADIUS)}>
                   <picture>
                     <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
                     <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
@@ -85,21 +99,21 @@ export function Hero() {
                     />
                   </picture>
                 </div>
-              </RevealItem>
+              </motion.div>
               <motion.div
                 variants={POP_VARIANTS}
-                className="absolute top-2 right-0 rotate-6 rounded-full bg-white px-3.5 py-2 font-heading font-semibold text-[12.5px] text-mint shadow-soft-sm"
+                className="absolute top-2 right-0 rotate-6 print:hidden rounded-full bg-white px-3.5 py-2 font-heading font-semibold text-[12.5px] text-mint-700 shadow-soft-sm"
               >
                 HPLC ✓
               </motion.div>
               <motion.div
                 variants={POP_VARIANTS}
-                className="absolute right-2 bottom-0 flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12.5px] font-bold shadow-soft"
+                className="absolute right-2 bottom-0 flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12.5px] font-bold shadow-soft print:hidden"
               >
                 <span aria-hidden="true" className="size-2 rounded-full bg-mint shadow-[0_0_0_4px_rgb(61_180_138/0.18)]" />
                 {m.hero_open_badge()}
               </motion.div>
-              <motion.div variants={POP_VARIANTS} className="absolute -bottom-2 -left-3 w-[96px] sm:-left-6 sm:w-[118px]">
+              <motion.div variants={POP_VARIANTS} className="absolute -bottom-2 -left-3 w-[96px] sm:-left-6 sm:w-[118px] print:hidden">
                 <p className="absolute bottom-[calc(100%-4px)] left-0 w-max max-w-[128px] rounded-2xl rounded-bl-[6px] bg-white px-3 py-2 font-heading font-semibold text-[12.5px] leading-[1.3] text-ink shadow-soft">
                   {m.hero_mascot_bubble()}
                 </p>
@@ -116,7 +130,7 @@ export function Hero() {
 /** Sparkles, clouds and dots scattered over the gradient. Purely decorative. */
 function HeroDecorations() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none print:hidden">
       <Cloud className="absolute -top-4 -left-10 w-[180px] opacity-80" />
       <Cloud className="absolute right-[8%] -bottom-6 w-[220px] opacity-70" />
       <Cloud className="absolute top-[38%] right-[44%] hidden w-[120px] opacity-50 lg:block" />

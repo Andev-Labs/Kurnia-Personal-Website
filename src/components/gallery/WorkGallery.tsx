@@ -11,7 +11,7 @@ export function WorkGallery() {
   const { items, dispatch } = useGallery()
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 print:hidden">
       <div className="mb-[18px] flex flex-wrap items-baseline justify-between gap-3">
         <h3 className="font-heading font-semibold text-[clamp(19px,2.2vw,26px)] tracking-[-0.02em]">{m.gallery_work_heading()}</h3>
         <p className="text-[13px] font-semibold text-ink-soft">{m.gallery_work_hint()}</p>

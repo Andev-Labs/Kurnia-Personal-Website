@@ -37,6 +37,7 @@
   /* Pale tints for pastel surfaces (stat cards, award cards, chips). */
   --color-butter-100: #fdf1c7;
   --color-mint-100: #d9f2e7;
+  --color-mint-700: #1d7a58;
   --color-bubblegum-100: #ffe3ee;
 
   --radius-card: 24px;
@@ -170,5 +171,99 @@
     *::after {
       animation: none !important;
     }
+  }
+}
+
+/*
+ * Print / "Save as PDF": a plain one-column CV. Decorations, mascots, galleries and navigation are
+ * hidden with `print:hidden` in the components; the rules here undo motion and flatten colour.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+
+  html {
+    font-size: 92%;
+  }
+
+  body {
+    background: #fff;
+    print-color-adjust: exact;
+  }
+
+  /* Motion leaves blocks that never scrolled into view transparent and offset. Print them in place. */
+  [style*="opacity"],
+  [style*="transform"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+  }
+
+  [data-pose] {
+    display: none !important;
+  }
+
+  .page-x {
+    padding-inline: 0;
+  }
+
+  section,
+  header {
+    padding-block: 0 !important;
+    margin-bottom: 1.25rem;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  [class*="rounded-card"],
+  .print-plain {
+    break-inside: avoid;
+  }
+
+  li,
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Dark violet cards print as outlined white cards. */
+  .print-plain {
+    background: #fff !important;
+    color: var(--color-ink) !important;
+    border: 1px solid var(--color-lavender-200);
+  }
+  .print-plain * {
+    color: inherit !important;
+  }
+  .print-plain [class*="bg-white/"] {
+    border: 1px solid var(--color-lavender-200);
+  }
+
+  /* Buttons become plain links that still show where they go. */
+  #kontak a,
+  #penghargaan a {
+    background: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    color: var(--color-ink) !important;
+  }
+  #kontak a [aria-hidden="true"] {
+    display: none;
+  }
+  #kontak a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-weight: 400;
   }
 }
