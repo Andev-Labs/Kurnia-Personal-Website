@@ -69,6 +69,7 @@
   --animate-blink: blink 4.8s ease-in-out infinite;
   --animate-wave: wave 2.4s ease-in-out infinite;
   --animate-bob: bob 1.6s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.2s ease-in-out infinite;
 
   @keyframes marquee {
     from { transform: translateX(0); }
@@ -125,6 +126,10 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
   }
+  @keyframes twinkle {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(0.7) rotate(20deg); opacity: 0.55; }
+  }
 }
 
 /* Horizontal gutter shared by every full-bleed band: 26px min, content capped at 1280px. */
@@ -145,9 +150,9 @@
   html {
     scroll-behavior: smooth;
     /* Keep anchor targets clear of the sticky navbar. */
-    scroll-padding-top: 74px;
+    scroll-padding-top: 84px;
     @media (width >= 48rem) {
-      scroll-padding-top: 82px;
+      scroll-padding-top: 92px;
     }
   }
 

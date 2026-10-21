@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={m.language_switcher_label()}
-      className="inline-flex items-center rounded-full border-3 border-ink bg-white p-[3px] shadow-soft-sm"
+      className="inline-flex items-center gap-0.5 rounded-full bg-lavender-50 p-1 ring-1 ring-lavender-100"
     >
       {locales.map((locale) => {
         const { label, name } = LOCALE_OPTIONS[locale]
@@ -36,8 +36,8 @@ export function LanguageSwitcher() {
             aria-current={isActive ? 'true' : undefined}
             onClick={(event) => switchTo(event, locale)}
             className={cn(
-              'rounded-full px-2.5 py-[5px] text-[12.5px] leading-none font-bold transition-colors duration-120',
-              isActive ? 'bg-ink text-cream hover:text-cream' : 'text-ink hover:bg-sun hover:text-ink',
+              'rounded-full px-2.5 py-[7px] text-[12.5px] leading-none font-extrabold transition-colors duration-150',
+              isActive ? 'bg-white text-violet shadow-soft-sm hover:text-violet' : 'text-ink-soft hover:bg-white/60 hover:text-violet',
             )}
           >
             {label}

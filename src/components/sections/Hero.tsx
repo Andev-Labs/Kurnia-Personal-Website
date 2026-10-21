@@ -1,22 +1,25 @@
 import { motion } from 'framer-motion'
 
+import { Mascot } from '#/components/mascot/Mascot'
 import { RevealGroup, RevealItem, revealVariants } from '#/components/motion/Reveal'
+import { Button } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
+import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 
-const CTA_CLASS =
-  'lift rounded-[14px] border-3 border-ink px-[26px] py-[15px] font-heading font-semibold text-[15px] shadow-soft'
-
 const PORTRAIT_WIDTHS = [480, 800, 1200]
-/** Frame caps at 400px wide; the photo sits inside ~42px of padding and border. */
-const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 82px), 358px'
+/** Frame caps at 380px wide; the photo sits inside 12px of white padding. */
+const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 110px), 356px'
+
+/** Organic blob outline shared by the portrait frame and the photo inside it. */
+const BLOB_RADIUS = 'rounded-[46%_54%_42%_58%/54%_44%_56%_46%]'
 
 const FADE_UP = revealVariants('up')
 
-/** Stickers land on the portrait after it has popped in. */
-const STICKER_VARIANTS = {
-  hidden: { opacity: 0, scale: 0.4 },
-  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 380, damping: 18 } },
+/** Stickers and Kapsi land on the portrait after it has faded in. */
+const POP_VARIANTS = {
+  hidden: { opacity: 0, scale: 0.6, y: 12 },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20 } },
 } as const
 
 function portraitSrcSet(ext: 'avif' | 'webp' | 'jpg') {
@@ -25,71 +28,121 @@ function portraitSrcSet(ext: 'avif' | 'webp' | 'jpg') {
 
 export function Hero() {
   return (
-    <header
-      id="atas"
-      className="page-x grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] items-center gap-10 pt-14 pb-12"
-    >
-      <RevealGroup stagger={0.12} className="min-w-0">
-        <motion.p variants={FADE_UP} className="mb-[18px] inline-block rounded-full border-3 border-ink bg-white px-3.5 py-[7px] text-[13.5px] font-bold shadow-soft-sm">
-          {m.hero_greeting()}
-        </motion.p>
-        <motion.h1 variants={FADE_UP} className="mb-5 font-heading font-semibold text-[clamp(40px,6.4vw,80px)] leading-[0.94] tracking-[-0.035em] text-balance">
-          {m.hero_title_line1()}
-          <br />
-          {m.hero_title_line2()}
-        </motion.h1>
-        <motion.p variants={FADE_UP} className="mb-7 max-w-[44ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.6] text-pretty">
-          <RichText message={m.hero_summary} />
-        </motion.p>
-        <RevealItem className="flex flex-wrap items-center gap-3.5">
-          <a href="#kontak" className={`${CTA_CLASS} bg-sun`}>
-            {m.hero_cta_contact()}
-          </a>
-          <a href="#pengalaman" className={`${CTA_CLASS} bg-white`}>
-            {m.hero_cta_experience()}
-          </a>
-        </RevealItem>
-      </RevealGroup>
+    <header id="atas" className="page-x pt-5 pb-12 md:pt-7">
+      <div className="relative isolate overflow-hidden rounded-[36px] bg-[linear-gradient(140deg,var(--color-lavender-100)_0%,#f1e4f8_52%,var(--color-blush)_100%)] px-6 py-12 sm:px-10 md:py-16 lg:px-14">
+        <HeroDecorations />
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+          <RevealGroup stagger={0.12} className="@container min-w-0">
+            <motion.p
+              variants={FADE_UP}
+              className="mb-5 inline-block rounded-full bg-white/80 px-4 py-2 text-[13.5px] font-bold text-violet shadow-soft-sm"
+            >
+              {m.hero_greeting()}
+            </motion.p>
+            <motion.h1
+              variants={FADE_UP}
+              className="mb-5 font-heading font-semibold text-[clamp(28px,11.5cqi,76px)] leading-[0.98] tracking-[-0.03em] text-balance [overflow-wrap:anywhere]"
+            >
+              {m.hero_title_line1()}
+              <br />
+              <span className="text-violet">{m.hero_title_line2()}</span>
+            </motion.h1>
+            <motion.p
+              variants={FADE_UP}
+              className="mb-8 max-w-[46ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.65] text-ink-soft text-pretty [&_strong]:text-ink"
+            >
+              <RichText message={m.hero_summary} />
+            </motion.p>
+            <RevealItem className="flex flex-wrap items-center gap-3">
+              <Button href="#kontak">{m.hero_cta_contact()}</Button>
+              <Button href="#pengalaman" variant="secondary">
+                {m.hero_cta_experience()}
+              </Button>
+            </RevealItem>
+          </RevealGroup>
 
-      <div className="flex min-w-0 justify-center">
-        <RevealGroup stagger={0.15} delay={0.15} className="relative w-full max-w-[400px]">
-          <RevealItem direction="pop" className="relative rounded-[22px] border-3 border-ink bg-pink p-[18px] shadow-soft-lg">
-            <picture>
-              <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
-              <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
-              <img
-                src="/images/kurnia-portrait-800.jpg"
-                srcSet={portraitSrcSet('jpg')}
-                sizes={PORTRAIT_SIZES}
-                width={800}
-                height={1000}
-                alt={m.hero_portrait_alt()}
-                fetchPriority="high"
-                decoding="async"
-                className="block aspect-[4/5] w-full rounded-[14px] border-3 border-ink bg-cream object-cover"
-              />
-            </picture>
-          </RevealItem>
-          <motion.div
-            variants={STICKER_VARIANTS}
-            className="absolute -top-[26px] -left-[22px] -rotate-7 rounded-xl border-3 border-ink bg-teal px-3.5 py-[9px] font-heading font-semibold text-[12.5px] text-white shadow-soft-sm"
-          >
-            HPLC ✓
-          </motion.div>
-          <motion.div
-            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
-            className="absolute top-[34%] -right-[30px] grid size-[74px] animate-float place-items-center rounded-full border-3 border-ink bg-sun text-center font-heading font-semibold text-[15px] leading-none shadow-soft-sm"
-          >
-            GMP
-          </motion.div>
-          <motion.div
-            variants={STICKER_VARIANTS}
-            className="absolute right-1.5 -bottom-5 rotate-3 rounded-full border-3 border-ink bg-mint px-[15px] py-[9px] text-[12.5px] font-bold shadow-soft-sm"
-          >
-            {m.hero_open_badge()}
-          </motion.div>
-        </RevealGroup>
+          <div className="flex min-w-0 justify-center">
+            <RevealGroup stagger={0.15} delay={0.15} className="relative w-full max-w-[380px] pb-6 pl-6 sm:pl-10">
+              <RevealItem direction="pop" className="relative">
+                <span
+                  aria-hidden="true"
+                  className={cn('absolute inset-0 translate-x-4 translate-y-3 rotate-6 bg-lavender/60', BLOB_RADIUS)}
+                />
+                <div className={cn('relative bg-white p-3 shadow-soft-lg', BLOB_RADIUS)}>
+                  <picture>
+                    <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
+                    <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
+                    <img
+                      src="/images/kurnia-portrait-800.jpg"
+                      srcSet={portraitSrcSet('jpg')}
+                      sizes={PORTRAIT_SIZES}
+                      width={800}
+                      height={1000}
+                      alt={m.hero_portrait_alt()}
+                      fetchPriority="high"
+                      decoding="async"
+                      className={cn('block aspect-[4/5] w-full bg-lavender-50 object-cover', BLOB_RADIUS)}
+                    />
+                  </picture>
+                </div>
+              </RevealItem>
+              <motion.div
+                variants={POP_VARIANTS}
+                className="absolute top-2 right-0 rotate-6 rounded-full bg-white px-3.5 py-2 font-heading font-semibold text-[12.5px] text-mint shadow-soft-sm"
+              >
+                HPLC ✓
+              </motion.div>
+              <motion.div
+                variants={POP_VARIANTS}
+                className="absolute right-2 bottom-0 flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[12.5px] font-bold shadow-soft"
+              >
+                <span aria-hidden="true" className="size-2 rounded-full bg-mint shadow-[0_0_0_4px_rgb(61_180_138/0.18)]" />
+                {m.hero_open_badge()}
+              </motion.div>
+              <motion.div variants={POP_VARIANTS} className="absolute -bottom-2 -left-3 w-[96px] sm:-left-6 sm:w-[118px]">
+                <p className="absolute bottom-[calc(100%-4px)] left-0 w-max max-w-[128px] rounded-2xl rounded-bl-[6px] bg-white px-3 py-2 font-heading font-semibold text-[12.5px] leading-[1.3] text-ink shadow-soft">
+                  {m.hero_mascot_bubble()}
+                </p>
+                <Mascot pose="wave" className="block w-full drop-shadow-[0_10px_14px_rgb(91_63_224/0.22)]" />
+              </motion.div>
+            </RevealGroup>
+          </div>
+        </div>
       </div>
     </header>
+  )
+}
+
+/** Sparkles, clouds and dots scattered over the gradient. Purely decorative. */
+function HeroDecorations() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
+      <Cloud className="absolute -top-4 -left-10 w-[180px] opacity-80" />
+      <Cloud className="absolute right-[8%] -bottom-6 w-[220px] opacity-70" />
+      <Cloud className="absolute top-[38%] right-[44%] hidden w-[120px] opacity-50 lg:block" />
+      <Sparkle className="top-[4%] right-[34%] text-[20px] text-violet/50" />
+      <Sparkle className="top-[8%] right-[10%] text-[28px] text-butter [animation-delay:0.8s]" />
+      <Sparkle className="bottom-[16%] left-[6%] text-[18px] text-bubblegum [animation-delay:1.6s]" />
+      <Sparkle className="right-[38%] bottom-[10%] hidden text-[16px] text-violet/50 [animation-delay:2.2s] lg:block" />
+      <Dot className="top-[3%] left-[52%] size-3 bg-bubblegum/70" />
+      <Dot className="bottom-[4%] left-[40%] size-2 bg-violet/40 [animation-delay:0.6s]" />
+      <Dot className="top-[60%] right-[6%] size-2.5 bg-butter/80 [animation-delay:1.2s]" />
+    </div>
+  )
+}
+
+function Sparkle({ className }: { className: string }) {
+  return <span className={cn('absolute animate-twinkle leading-none', className)}>✦</span>
+}
+
+function Dot({ className }: { className: string }) {
+  return <span className={cn('absolute animate-bob rounded-full', className)} />
+}
+
+function Cloud({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 120 60" className={className} fill="#fff">
+      <path d="M30 52 a18 18 0 0 1 -2 -36 a22 22 0 0 1 40 -6 a16 16 0 0 1 26 12 a15 15 0 0 1 -2 30z" />
+    </svg>
   )
 }
