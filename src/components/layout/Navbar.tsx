@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { LanguageSwitcher } from '#/components/i18n/LanguageSwitcher'
-import { ScrollProgress } from '#/components/motion/Reveal'
 import { buttonClassName } from '#/components/ui/Button'
 import { cn } from '#/lib/cn'
 import { useActiveSection } from '#/lib/useActiveSection'
@@ -40,8 +39,8 @@ export function Navbar() {
   }, [isOpen])
 
   return (
-    <header className="page-x sticky top-0 z-40 pt-3 md:pt-4">
-      <nav className="relative flex items-center justify-between gap-4 rounded-full bg-white/80 py-2 pr-2 pl-2.5 shadow-soft ring-1 ring-lavender-200/70 backdrop-blur-md">
+    <header className="page-x relative z-40 pt-3 md:pt-4">
+      <nav className="flex items-center justify-between gap-4 py-2">
         <a href="#atas" className="flex items-center gap-2.5 rounded-full pr-2">
           <span className="grid size-[38px] place-items-center rounded-full bg-violet font-heading font-semibold text-[17px] leading-none text-white">
             K
@@ -87,7 +86,6 @@ export function Navbar() {
             <span className="h-[2.5px] rounded-full bg-current" />
           </span>
         </button>
-        <ScrollProgress />
       </nav>
 
       <div

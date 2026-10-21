@@ -10,7 +10,6 @@ import { Contact } from '#/components/sections/Contact'
 import { Education } from '#/components/sections/Education'
 import { Experience } from '#/components/sections/Experience'
 import { Hero } from '#/components/sections/Hero'
-import { Marquee } from '#/components/sections/Marquee'
 import { Skills } from '#/components/sections/Skills'
 
 export const Route = createFileRoute('/')({ component: Home })
@@ -22,7 +21,6 @@ function Home() {
       <GalleryProvider>
         <Navbar />
         <Hero />
-        <Marquee />
         <About />
         <Skills />
         <Experience />
