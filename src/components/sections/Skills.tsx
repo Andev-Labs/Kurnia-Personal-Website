@@ -87,9 +87,9 @@ export function Skills() {
 
       <RevealGroup stagger={0.09} className="grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-[22px]">
         {getSkillGroups().map(({ title, Icon, items }) => (
-          <RevealItem key={title} className="rounded-[18px] border-3 border-ink bg-white p-6 shadow-hard-6">
+          <RevealItem key={title} className="rounded-[18px] border-3 border-ink bg-white p-6 shadow-soft">
             <Icon />
-            <h3 className="mb-3 font-display text-[17px]">{title}</h3>
+            <h3 className="mb-3 font-heading font-semibold text-[17px]">{title}</h3>
             <TagList>
               {items.map((item) => (
                 <Tag key={item}>{item}</Tag>
@@ -98,8 +98,8 @@ export function Skills() {
           </RevealItem>
         ))}
 
-        <RevealItem className="rounded-[18px] border-3 border-ink bg-ink p-6 text-cream shadow-[6px_6px_0_var(--color-pink)]">
-          <h3 className="mb-3 font-display text-[17px]">{m.skills_data_systems()}</h3>
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-ink p-6 text-cream shadow-soft">
+          <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_data_systems()}</h3>
           <TagList className="mb-[22px]">
             {DATA_SYSTEMS.map((item) => (
               <Tag key={item} tone="dark">
@@ -107,7 +107,7 @@ export function Skills() {
               </Tag>
             ))}
           </TagList>
-          <h3 className="mb-3 font-display text-[17px]">{m.skills_languages()}</h3>
+          <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_languages()}</h3>
           <TagList>
             {languages.map((item) => (
               <Tag key={item} tone="dark">

@@ -34,19 +34,19 @@ function getJobs(): Job[] {
       period: m.experience_kch_period(),
       headerClassName: 'bg-pink',
       entries: [
-        { marker: 'sun', message: m.experience_kch_analysis },
-        { marker: 'teal', message: m.experience_kch_oot_oos },
+        { marker: 'butter', message: m.experience_kch_analysis },
+        { marker: 'mint', message: m.experience_kch_oot_oos },
         { marker: 'lavender', message: m.experience_kch_qcc },
         { chart: 'lead-time' },
-        { marker: 'pink', message: m.experience_kch_savings },
+        { marker: 'blush', message: m.experience_kch_savings },
       ],
       moreEntries: [
-        { marker: 'sun', message: m.experience_kch_method_transfer },
-        { marker: 'teal', message: m.experience_kch_troubleshooting },
+        { marker: 'butter', message: m.experience_kch_method_transfer },
+        { marker: 'mint', message: m.experience_kch_troubleshooting },
         { marker: 'lavender', message: m.experience_kch_dissolution },
-        { marker: 'pink', message: m.experience_kch_working_standard },
-        { marker: 'sun', message: m.experience_kch_stock_opname },
-        { marker: 'teal', message: m.experience_kch_suggestion_system },
+        { marker: 'blush', message: m.experience_kch_working_standard },
+        { marker: 'butter', message: m.experience_kch_stock_opname },
+        { marker: 'mint', message: m.experience_kch_suggestion_system },
       ],
     },
     {
@@ -57,8 +57,8 @@ function getJobs(): Job[] {
       headerClassName: 'bg-teal',
       entries: [
         { marker: 'lavender', message: m.experience_intern_analysis },
-        { marker: 'sun', message: m.experience_intern_reagents },
-        { marker: 'pink', message: m.experience_intern_stock_opname },
+        { marker: 'butter', message: m.experience_intern_reagents },
+        { marker: 'blush', message: m.experience_intern_stock_opname },
       ],
     },
   ]
@@ -94,7 +94,7 @@ function JobCard({ job, showAllEntries }: { job: Job; showAllEntries: boolean })
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
       variants={CARD_VARIANTS}
-      className="overflow-hidden rounded-[20px] border-3 border-ink bg-white shadow-hard-8"
+      className="overflow-hidden rounded-[20px] border-3 border-ink bg-white shadow-soft-lg"
     >
       <div
         className={cn(
@@ -103,7 +103,7 @@ function JobCard({ job, showAllEntries }: { job: Job; showAllEntries: boolean })
         )}
       >
         <div>
-          <h3 className="mb-1 font-display text-[clamp(17px,2vw,22px)] leading-[1.2]">{job.role}</h3>
+          <h3 className="mb-1 font-heading font-semibold text-[clamp(17px,2vw,22px)] leading-[1.2]">{job.role}</h3>
           <p className="text-[14.5px] font-semibold">{job.company}</p>
         </div>
         <span className="rounded-full border-3 border-ink bg-cream px-3.5 py-2 text-[13px] font-bold whitespace-nowrap text-ink">
@@ -132,7 +132,7 @@ function JobCard({ job, showAllEntries }: { job: Job; showAllEntries: boolean })
 function LeadTimeChart() {
   return (
     <div className="ml-[34px] rounded-[14px] border-[2.5px] border-ink bg-cream px-5 py-[18px]">
-      <p className="mb-3.5 font-display text-[12.5px] tracking-[0.04em]">{m.experience_chart_title()}</p>
+      <p className="mb-3.5 font-heading font-semibold text-[12.5px] tracking-[0.04em]">{m.experience_chart_title()}</p>
       <div className="flex flex-col gap-2.5 text-[13px] font-bold">
         <div className="flex items-center gap-3">
           <span className="w-[74px] flex-none">{m.experience_chart_before()}</span>
@@ -144,7 +144,7 @@ function LeadTimeChart() {
             <span className="absolute inset-0 rounded-md border-[2.5px] border-dashed border-ink opacity-30" />
             <span className="absolute inset-y-0 left-0 w-1/3 animate-shrink rounded-md border-[2.5px] border-ink bg-sun" />
           </span>
-          <span className="flex-none font-display text-[15px]">−67%</span>
+          <span className="flex-none font-heading font-semibold text-[15px]">−67%</span>
         </div>
       </div>
     </div>

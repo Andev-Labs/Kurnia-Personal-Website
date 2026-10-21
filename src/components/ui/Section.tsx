@@ -26,11 +26,18 @@ interface SectionHeadingProps {
 
 export function SectionHeading({ number, badgeClassName, children }: SectionHeadingProps) {
   return (
-    <Reveal direction="left" className="mb-[26px] flex flex-wrap items-baseline gap-3.5">
-      <span className={cn('rounded-lg border-3 border-ink px-3 py-1.5 font-display text-[12px]', badgeClassName)}>
+    <Reveal direction="left" className="mb-[26px] flex flex-wrap items-center gap-3.5">
+      <span
+        className={cn(
+          'rounded-full px-3.5 py-1.5 font-heading text-[13px] font-semibold text-ink shadow-soft-sm',
+          badgeClassName,
+        )}
+      >
         {number}
       </span>
-      <h2 className="font-display text-[clamp(26px,3.4vw,40px)] tracking-[-0.03em]">{children}</h2>
+      <h2 className="font-heading text-[clamp(28px,3.6vw,42px)] leading-[1.1] font-bold tracking-[-0.01em] text-balance">
+        {children}
+      </h2>
     </Reveal>
   )
 }

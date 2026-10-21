@@ -2,21 +2,21 @@ import type { ReactNode } from 'react'
 
 import { cn } from '#/lib/cn'
 
-export type MarkerColor = 'sun' | 'teal' | 'lavender' | 'pink'
+export type MarkerColor = 'butter' | 'mint' | 'lavender' | 'blush'
 
 const markerClass: Record<MarkerColor, string> = {
-  sun: 'bg-sun',
-  teal: 'bg-teal',
+  butter: 'bg-butter',
+  mint: 'bg-mint',
   lavender: 'bg-lavender',
-  pink: 'bg-pink',
+  blush: 'bg-bubblegum',
 }
 
 export function Bullet({ marker, children }: { marker: MarkerColor; children: ReactNode }) {
   return (
-    <p className="relative pl-[34px] text-pretty">
+    <p className="relative pl-7 text-pretty">
       <span
         aria-hidden="true"
-        className={cn('absolute top-0.5 left-0 size-[22px] rounded-md border-[2.5px] border-ink', markerClass[marker])}
+        className={cn('absolute top-[0.4em] left-0 size-3.5 rounded-full ring-4 ring-white', markerClass[marker])}
       />
       {children}
     </p>
