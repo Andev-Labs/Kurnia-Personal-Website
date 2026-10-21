@@ -112,7 +112,7 @@ export function Skills() {
           </RevealItem>
         ))}
 
-        <RevealItem className="rounded-card bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] p-6 text-white shadow-soft">
+        <RevealItem className="rounded-card bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] p-6 text-white shadow-soft print-plain">
           <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_data_systems()}</h3>
           <TagList className="mb-[22px]">
             {DATA_SYSTEMS.map((item) => (

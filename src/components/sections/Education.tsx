@@ -64,7 +64,7 @@ export function Education() {
             </div>
           </RevealItem>
 
-          <RevealItem className="rounded-card-lg bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] p-[26px] text-white shadow-soft">
+          <RevealItem className="rounded-card-lg bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] p-[26px] text-white shadow-soft print-plain">
             <h3 className="mb-4 font-heading font-semibold text-[17px]">{m.education_international_heading()}</h3>
             <div className="flex flex-col gap-3.5 text-[15px] leading-[1.6]">
               <p className="text-pretty">

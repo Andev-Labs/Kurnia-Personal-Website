@@ -40,7 +40,7 @@ export function Navbar() {
   }, [isOpen])
 
   return (
-    <header className="page-x sticky top-0 z-40 pt-3 md:pt-4">
+    <header className="page-x sticky top-0 z-40 pt-3 md:pt-4 print:hidden">
       <nav className="relative flex items-center justify-between gap-4 rounded-full bg-white/80 py-2 pr-2 pl-2.5 shadow-soft ring-1 ring-lavender-200/70 backdrop-blur-md">
         <a href="#atas" className="flex items-center gap-2.5 rounded-full pr-2">
           <span className="grid size-[38px] place-items-center rounded-full bg-violet font-heading font-semibold text-[17px] leading-none text-white">

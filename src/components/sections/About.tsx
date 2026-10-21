@@ -46,7 +46,7 @@ export function About() {
         </RevealGroup>
       </RevealGroup>
 
-      <Reveal className="mt-6 overflow-hidden rounded-card-lg bg-white px-6 py-[22px] shadow-soft">
+      <Reveal className="mt-6 overflow-hidden rounded-card-lg bg-white px-6 py-[22px] shadow-soft print:hidden">
         <Chromatogram />
       </Reveal>
     </Section>
