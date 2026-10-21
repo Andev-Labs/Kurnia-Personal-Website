@@ -48,3 +48,32 @@ describe('Navbar mobile drawer', () => {
     expect(toggle.getAttribute('aria-expanded')).toBe('false')
   })
 })
+
+describe('Navbar section links', () => {
+  it('reaches every section from the mobile drawer', () => {
+    render(<Navbar />)
+    const drawer = screen.getByRole('dialog', { name: 'Menu navigasi', hidden: true })
+    const hrefs = Array.from(drawer.querySelectorAll('a[href^="#"]')).map((a) => a.getAttribute('href'))
+    for (const id of ['#tentang', '#keahlian', '#pengalaman', '#pendidikan', '#penghargaan', '#aktivitas', '#kontak']) {
+      expect(hrefs).toContain(id)
+    }
+  })
+
+  it('opens "More" from the keyboard and closes it with Escape', async () => {
+    render(<Navbar />)
+    const user = userEvent.setup()
+    const more = screen.getByRole('button', { name: 'Lainnya' })
+    const list = document.getElementById(more.getAttribute('aria-controls') ?? '')
+    expect(list?.hidden).toBe(true)
+
+    more.focus()
+    await user.keyboard('{Enter}')
+    expect(more.getAttribute('aria-expanded')).toBe('true')
+    expect(list?.hidden).toBe(false)
+    expect(list?.querySelector('a[href="#aktivitas"]')).not.toBeNull()
+
+    await user.keyboard('{Escape}')
+    expect(more.getAttribute('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(more)
+  })
+})

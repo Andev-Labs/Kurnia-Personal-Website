@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { getGallery } from '#/data/gallery'
 import { m } from '#/paraglide/messages.js'
 import { GalleryProvider } from './GalleryProvider'
-import { ProgramGallery } from './ProgramGallery'
+import { ProgramCover } from './ProgramCover'
 import { WorkGallery } from './WorkGallery'
 
 const GALLERY = getGallery()
@@ -16,7 +16,8 @@ const workItem = GALLERY.find((item) => item.group === 'kerja' && item.photo)!
 function renderGallery() {
   return render(
     <GalleryProvider>
-      <ProgramGallery />
+      <ProgramCover program="sechenov" />
+      <ProgramCover program="cpu" />
       <WorkGallery />
     </GalleryProvider>,
   )

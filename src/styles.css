@@ -51,8 +51,6 @@
   --animate-shrink: shrink 5s ease-in-out infinite;
   --animate-tick: tick 3s ease-in-out infinite;
   --animate-bubble: bubble 2.4s ease-in infinite;
-  --animate-bubble-slow: bubble 3.4s ease-in infinite;
-  --animate-grow: grow 2.8s ease-out infinite;
   --animate-pulse-ring: pulse-ring 2.2s ease-out infinite;
   --animate-spin-slow: spin 14s linear infinite;
   --animate-spin-slower: spin 18s linear infinite;
@@ -65,10 +63,6 @@
     0% { transform: translateY(0); opacity: 0; }
     20% { opacity: 1; }
     100% { transform: translateY(-16px); opacity: 0; }
-  }
-  @keyframes grow {
-    0% { transform: scaleY(0.12); }
-    55%, 100% { transform: scaleY(1); }
   }
   @keyframes flow {
     0% { transform: translateY(-18px); }
@@ -105,9 +99,9 @@
   }
 }
 
-/* Horizontal gutter shared by every full-bleed band: 26px min, content capped at 1280px. */
+/* Horizontal gutter shared by the navbar, hero, every section and the footer: 24px min, content capped at 1200px. */
 @utility page-x {
-  padding-inline: max(26px, calc((100% - 1280px) / 2));
+  padding-inline: max(24px, calc((100% - 1200px) / 2));
 }
 
 /* Soft hover lift used by buttons and cards. */

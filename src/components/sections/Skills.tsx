@@ -1,140 +1,168 @@
-import type { ComponentType } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 
-import { ChecklistIcon, ColumnIcon, FlaskIcon, GrowthIcon } from '#/components/icons/SkillIcons'
+import { ChecklistIcon, ColumnIcon, FlaskIcon } from '#/components/icons/SkillIcons'
 import { Mascot } from '#/components/mascot/Mascot'
-import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
-import { Section, SectionHeading } from '#/components/ui/Section'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
+import { Section, SectionHeader } from '#/components/ui/Section'
 import { Tag, TagList } from '#/components/ui/Tag'
 import type { TagTone } from '#/components/ui/Tag'
 import { EFSET_URL } from '#/data/site'
+import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 
-interface SkillGroup {
-  title: string
-  Icon: ComponentType
-  tone: TagTone
-  items: string[]
+interface Instrument {
+  name: string
+  /** Short label shown on the tile; `name` stays available as tooltip and to screen readers. */
+  short?: string
 }
 
-/** Skill list as given by Kurnia (NIA-13); tool and standard names stay untranslated. */
-function getSoftware() {
-  return ['Microsoft Office', 'Microsoft Outlook', 'Oracle']
-}
-
-function getSkillGroups(): SkillGroup[] {
+/** Skill lists as given by Kurnia (NIA-13); tool and standard names stay untranslated. */
+function getInstruments(): Instrument[] {
   return [
-    {
-      title: m.skills_group_lab(),
-      Icon: FlaskIcon,
-      tone: 'lavender',
-      items: [
-        'Analytical Skills',
-        'Analytical Development',
-        'Method Development',
-        'Research & Development (R&D)',
-        'Formulation Development',
-        'Calibration',
-        'Performance Qualification (PQ)',
-        'Pharmaceutical',
-      ],
-    },
-    {
-      title: m.skills_group_instruments(),
-      Icon: ColumnIcon,
-      tone: 'mint',
-      items: [
-        'High Performance Liquid Chromatography',
-        'Gas Chromatography',
-        'Gas Chromatography-Mass Spectrometry (GC-MS)',
-        'High-Performance Thin-Layer Chromatography',
-        'Atomic Absorption Spectrometry',
-        'ICP-OES',
-        'FTIR',
-        m.skills_instrument_uv_vis(),
-        'Karl Fischer',
-        'Moisture Analyzer',
-        'TOC Analyzer',
-        'Dissolution Tester',
-        'Disintegration Tester',
-      ],
-    },
-    {
-      title: m.skills_group_quality(),
-      Icon: ChecklistIcon,
-      tone: 'butter',
-      items: [
-        'Quality Control',
-        'Good Manufacturing Practices',
-        'CPOB',
-        'CPKB',
-        'Good Laboratory Practices',
-        'Good Documentation Practice',
-        'Data Integrity',
-        'Out of Specification (OOS)',
-        'Out of Trend (OOT)',
-        'Corrective Action and Preventive Action (CAPA)',
-      ],
-    },
-    {
-      title: m.skills_group_teamwork(),
-      Icon: GrowthIcon,
-      tone: 'blush',
-      items: ['Team Leadership', 'Teamwork'],
-    },
+    { name: 'High Performance Liquid Chromatography', short: 'HPLC' },
+    { name: 'Gas Chromatography', short: 'GC' },
+    { name: 'Gas Chromatography-Mass Spectrometry (GC-MS)', short: 'GC-MS' },
+    { name: 'High-Performance Thin-Layer Chromatography', short: 'HPTLC' },
+    { name: 'Atomic Absorption Spectrometry', short: 'AAS' },
+    { name: 'ICP-OES', short: 'ICP-OES' },
+    { name: 'FTIR', short: 'FTIR' },
+    { name: m.skills_instrument_uv_vis(), short: 'UV-Vis' },
+    { name: 'Karl Fischer' },
+    { name: 'Moisture Analyzer' },
+    { name: 'TOC Analyzer' },
+    { name: 'Dissolution Tester' },
+    { name: 'Disintegration Tester' },
   ]
 }
 
+const LAB_SKILLS = [
+  'Analytical Skills',
+  'Analytical Development',
+  'Method Development',
+  'Research & Development (R&D)',
+  'Formulation Development',
+  'Calibration',
+  'Performance Qualification (PQ)',
+  'Pharmaceutical',
+]
+
+const QUALITY_SKILLS = [
+  'Quality Control',
+  'Good Manufacturing Practices',
+  'CPOB',
+  'CPKB',
+  'Good Laboratory Practices',
+  'Good Documentation Practice',
+  'Data Integrity',
+  'Out of Specification (OOS)',
+  'Out of Trend (OOT)',
+  'Corrective Action and Preventive Action (CAPA)',
+]
+
+const TEAMWORK_SKILLS = ['Team Leadership', 'Teamwork']
+
+const SOFTWARE = ['Microsoft Office', 'Microsoft Outlook', 'Oracle']
+
+/*
+ * Bento grid. From lg: Instruments is the large card on the left, Lab and Quality stack beside it,
+ * and the three short groups share the last row. Tablet: two columns. Phone: one column, same order.
+ */
 export function Skills() {
+  const instruments = getInstruments()
+  const abbreviated = instruments.filter((item) => item.short)
+  const others = instruments.filter((item) => !item.short)
+
   return (
     <Section id="keahlian">
-      <div className="flex items-end justify-between gap-4">
-        <SectionHeading number="02" badgeClassName="bg-mint-100">
-          {m.skills_heading()}
-        </SectionHeading>
-        <Reveal direction="pop" className="-mb-2 hidden w-24 flex-none sm:block md:w-28">
-          <Mascot pose="lab" className="h-auto w-full" />
-        </Reveal>
-      </div>
+      <SectionHeader number="02" title={m.skills_heading()} mascot={<Mascot pose="lab" />} />
 
-      <RevealGroup stagger={0.09} className="grid grid-cols-[repeat(auto-fit,minmax(min(290px,100%),1fr))] gap-[22px]">
-        {getSkillGroups().map(({ title, Icon, tone, items }) => (
-          <RevealItem key={title} className="rounded-card bg-white p-6 shadow-soft">
-            <Icon />
-            <h3 className="mb-3 font-heading font-semibold text-[17px]">{title}</h3>
-            <TagList>
-              {items.map((item) => (
-                <Tag key={item} tone={tone}>
-                  {item}
-                </Tag>
-              ))}
-            </TagList>
-          </RevealItem>
-        ))}
-
-        <RevealItem className="rounded-card bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] p-6 text-white shadow-soft print-plain">
-          <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_group_software()}</h3>
-          <TagList className="mb-[22px]">
-            {getSoftware().map((item) => (
-              <Tag key={item} tone="violet">
-                {item}
-              </Tag>
+      <RevealGroup stagger={0.08} className="grid gap-5 md:grid-cols-2 lg:grid-cols-12 lg:gap-6">
+        <SkillCard
+          title={m.skills_group_instruments()}
+          Icon={ColumnIcon}
+          className="md:col-span-2 lg:col-span-6 lg:row-span-2"
+        >
+          {/* Tiles stretch to fill the card, so it matches the Lab + Quality stack beside it without dead space. */}
+          <ul className="grid flex-1 auto-rows-fr grid-cols-3 gap-2.5 sm:grid-cols-4">
+            {abbreviated.map((item) => (
+              <li
+                key={item.name}
+                title={item.name === item.short ? undefined : item.name}
+                className="grid min-h-[72px] place-items-center rounded-2xl bg-mint-100 px-2 py-3 text-center font-heading text-[clamp(16px,1.6vw,21px)] leading-none font-semibold text-[#1f6b51]"
+              >
+                <span aria-hidden={item.name === item.short ? undefined : true}>{item.short}</span>
+                {item.name === item.short ? null : <span className="sr-only">{item.name}</span>}
+              </li>
             ))}
-          </TagList>
-          <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_languages()}</h3>
-          <TagList>
-            <Tag tone="violet">{m.skills_language_indonesian()}</Tag>
-            <Tag tone="violet">{m.skills_language_english()}</Tag>
-          </TagList>
+          </ul>
+          <SkillTags items={others.map((item) => item.name)} tone="mint" className="pt-5" />
+        </SkillCard>
+
+        <SkillCard title={m.skills_group_lab()} Icon={FlaskIcon} className="lg:col-span-6">
+          <SkillTags items={LAB_SKILLS} tone="lavender" />
+        </SkillCard>
+
+        <SkillCard title={m.skills_group_quality()} Icon={ChecklistIcon} className="lg:col-span-6">
+          <SkillTags items={QUALITY_SKILLS} tone="butter" />
+        </SkillCard>
+
+        <SkillCard title={m.skills_group_teamwork()} className="lg:col-span-3">
+          <SkillTags items={TEAMWORK_SKILLS} tone="blush" />
+        </SkillCard>
+
+        <SkillCard title={m.skills_group_software()} className="lg:col-span-3">
+          <SkillTags items={SOFTWARE} tone="lavender" />
+        </SkillCard>
+
+        <SkillCard
+          title={m.skills_languages()}
+          className="bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] text-white md:col-span-2 lg:col-span-6 print-plain"
+        >
+          {/* Plain lines rather than chips: the English entry is a full sentence and would wrap inside a pill. */}
+          <ul className="flex flex-col gap-2 text-[14px] leading-[1.5] font-bold">
+            <li>{m.skills_language_indonesian()}</li>
+            <li>{m.skills_language_english()}</li>
+          </ul>
           <a
             href={EFSET_URL}
             target="_blank"
             rel="noopener"
-            className="mt-3.5 inline-flex items-center gap-1.5 text-[13.5px] font-bold text-white underline decoration-white/40 underline-offset-4 hover:text-white hover:decoration-white"
+            className="mt-3 inline-flex items-center gap-1.5 self-start text-[13.5px] font-bold text-white underline decoration-white/40 underline-offset-4 hover:text-white hover:decoration-white"
           >
             {m.skills_language_verify()} <span aria-hidden="true">↗</span>
           </a>
-        </RevealItem>
+        </SkillCard>
       </RevealGroup>
     </Section>
+  )
+}
+
+interface SkillCardProps {
+  title: string
+  Icon?: ComponentType
+  className?: string
+  children: ReactNode
+}
+
+/** Content sits at the top; the card stretches to its grid row so every card in a row is the same height. */
+function SkillCard({ title, Icon, className, children }: SkillCardProps) {
+  return (
+    <RevealItem className={cn('flex flex-col rounded-card bg-white p-6 shadow-soft', className)}>
+      {Icon ? <Icon /> : null}
+      <h3 className="mb-3 font-heading font-semibold text-[17px]">{title}</h3>
+      {children}
+    </RevealItem>
+  )
+}
+
+function SkillTags({ items, tone, className }: { items: string[]; tone: TagTone; className?: string }) {
+  return (
+    <TagList className={cn('lg:[&>*]:whitespace-nowrap', className)}>
+      {items.map((item) => (
+        <Tag key={item} tone={tone}>
+          {item}
+        </Tag>
+      ))}
+    </TagList>
   )
 }

@@ -12,6 +12,9 @@ import { m } from '#/paraglide/messages.js'
 /** Frame caps at 380px wide; the photo sits inside 12px of white padding. */
 const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 110px), 356px'
 
+/** Instruments named in the CV summary; abbreviations stay untranslated. */
+const HERO_INSTRUMENTS = ['HPLC', 'GC', 'ICP-OES', 'AAS', 'FTIR', 'UV-Vis']
+
 /** Organic blob outline shared by the portrait frame and the photo inside it. */
 const BLOB_RADIUS = 'rounded-[46%_54%_42%_58%/54%_44%_56%_46%]'
 
@@ -64,13 +67,25 @@ export function Hero() {
             </motion.h1>
             <motion.p
               variants={SLIDE_UP}
-              className="mb-8 max-w-[46ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.65] text-ink-soft text-pretty [&_strong]:text-ink"
+              className="mb-4 max-w-[46ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.65] text-ink-soft text-pretty [&_strong]:text-ink"
             >
               <RichText message={m.hero_summary} />
             </motion.p>
-            <motion.div variants={SLIDE_UP} className="flex flex-wrap items-center gap-3 print:hidden">
-              <CvButton />
-              <Button href="#kontak" variant="secondary">
+            <motion.ul
+              variants={SLIDE_UP}
+              aria-label={m.skills_group_instruments()}
+              className="mb-8 flex flex-wrap gap-2 text-[12.5px] font-bold"
+            >
+              {HERO_INSTRUMENTS.map((instrument) => (
+                <li key={instrument} className="rounded-full bg-white/80 px-3 py-1.5 text-violet shadow-soft-sm">
+                  {instrument}
+                </li>
+              ))}
+            </motion.ul>
+            {/* Phones: two equal-width buttons side by side. From sm they size to their labels. */}
+            <motion.div variants={SLIDE_UP} className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center print:hidden">
+              <CvButton className="max-sm:px-3 max-sm:text-[14px]" />
+              <Button href="#kontak" variant="secondary" className="text-center max-sm:px-3 max-sm:text-[14px]">
                 {m.hero_cta_contact()}
               </Button>
             </motion.div>
@@ -84,21 +99,34 @@ export function Hero() {
                   className={cn('absolute inset-0 translate-x-4 translate-y-3 rotate-6 bg-lavender/60 print:hidden', BLOB_RADIUS)}
                 />
                 <div className={cn('relative bg-white p-3 shadow-soft-lg print:p-0', BLOB_RADIUS)}>
-                  <picture>
-                    <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
-                    <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
-                    <img
-                      src={`${HERO_PORTRAIT.base}-800.jpg`}
-                      srcSet={portraitSrcSet('jpg')}
-                      sizes={PORTRAIT_SIZES}
-                      width={HERO_PORTRAIT.width}
-                      height={HERO_PORTRAIT.height}
-                      alt={m.hero_portrait_alt()}
-                      fetchPriority="high"
-                      decoding="async"
-                      className={cn('block aspect-[4/5] w-full bg-lavender-50 object-cover', BLOB_RADIUS)}
+                  <div className="relative">
+                    <picture>
+                      <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
+                      <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
+                      <img
+                        src={`${HERO_PORTRAIT.base}-800.jpg`}
+                        srcSet={portraitSrcSet('jpg')}
+                        sizes={PORTRAIT_SIZES}
+                        width={HERO_PORTRAIT.width}
+                        height={HERO_PORTRAIT.height}
+                        alt={m.hero_portrait_alt()}
+                        fetchPriority="high"
+                        decoding="async"
+                        className={cn('block aspect-[4/5] w-full bg-lavender-50 object-cover', BLOB_RADIUS)}
+                      />
+                    </picture>
+                    {/*
+                     * The sign behind Kurnia is Cyrillic and reads as stray letters. A soft lavender tint and a light blur
+                     * cover the edges of the photo; the radial mask keeps Kurnia herself sharp. The photo file is unchanged.
+                     */}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'pointer-events-none absolute inset-0 bg-lavender-50/65 backdrop-blur-[5px] [mask-image:radial-gradient(ellipse_25%_62%_at_52%_58%,transparent_50%,#000_95%)] print:hidden',
+                        BLOB_RADIUS,
+                      )}
                     />
-                  </picture>
+                  </div>
                 </div>
               </motion.div>
               <motion.div

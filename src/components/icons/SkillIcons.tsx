@@ -67,19 +67,3 @@ export function ChecklistIcon() {
     </svg>
   )
 }
-
-const BAR_CLASS = '[transform-box:fill-box] origin-bottom animate-grow'
-
-/** Bar chart with growing bars. */
-export function GrowthIcon() {
-  return (
-    <svg viewBox="0 0 56 56" className={ICON_CLASS} aria-hidden="true">
-      <g stroke="#5B3FE0" strokeWidth="2.5">
-        <rect x="9" y="30" width="10" height="17" fill="#B9A2F5" className={BAR_CLASS} />
-        <rect x="23" y="22" width="10" height="25" fill="#3DB48A" className={`${BAR_CLASS} [animation-delay:.35s]`} />
-        <rect x="37" y="12" width="10" height="35" fill="#FF9EC4" className={`${BAR_CLASS} [animation-delay:.7s]`} />
-      </g>
-      <line x1="6" y1="49" x2="50" y2="49" stroke="#5B3FE0" strokeWidth="2.5" strokeLinecap="round" />
-    </svg>
-  )
-}

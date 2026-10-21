@@ -34,7 +34,7 @@ function Home() {
           <Navbar />
           <Hero />
         </div>
-        <main id="main" tabIndex={-1} className="outline-none">
+        <main id="main" tabIndex={-1} className="pb-16 outline-none lg:pb-24">
           <About />
           <Skills />
           <Experience />

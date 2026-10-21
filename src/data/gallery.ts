@@ -33,8 +33,13 @@ const cpuPhoto = (name: string, width: number, height: number, alt: string) =>
 const qccPhoto = (name: string, width: number, height: number, alt: string) =>
   galleryPhoto(`qcc-${name}`, width, height, alt)
 
+/** International programs that get their own card in the Education section. */
+export type ProgramId = 'sechenov' | 'cpu'
+
 export interface GalleryItem {
   group: GalleryGroup
+  /** Set on `intl` albums so the Education section can show each cover on its own program card. */
+  program?: ProgramId
   title: string
   meta: string
   caption: string
@@ -71,6 +76,7 @@ export function getGallery(): GalleryItem[] {
     },
     {
       group: 'intl',
+      program: 'sechenov',
       title: m.gallery_sechenov_title(),
       meta: 'Summer School · Innovative Drugs · 2025',
       caption: m.gallery_sechenov_caption(),
@@ -125,6 +131,7 @@ export function getGallery(): GalleryItem[] {
     },
     {
       group: 'intl',
+      program: 'cpu',
       title: m.gallery_cpu_title(),
       meta: 'Summer International School · Discover Jiangsu · 2023',
       caption: m.gallery_cpu_caption(),
