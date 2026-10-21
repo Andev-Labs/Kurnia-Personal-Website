@@ -12,7 +12,7 @@ describe('LanguageSwitcher', () => {
     const hrefs = Object.fromEntries(
       screen.getAllByRole('link').map((link) => [link.getAttribute('hreflang'), link.getAttribute('href')]),
     )
-    expect(hrefs).toEqual({ id: '/', en: '/en', ru: '/ru', zh: '/zh' })
+    expect(hrefs).toEqual({ id: '/', en: '/en', ru: '/ru', 'zh-CN': '/zh' })
   })
 
   it('marks the active language', () => {

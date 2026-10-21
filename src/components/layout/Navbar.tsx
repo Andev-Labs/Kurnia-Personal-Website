@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { LanguageSwitcher } from '#/components/i18n/LanguageSwitcher'
 import { buttonClassName } from '#/components/ui/Button'
+import { CvButton } from '#/components/ui/CvButton'
 import { cn } from '#/lib/cn'
 import { useActiveSection } from '#/lib/useActiveSection'
 import { m } from '#/paraglide/messages.js'
@@ -54,7 +55,7 @@ export function Navbar() {
               href={link.href}
               aria-current={isActive(link.href) ? 'location' : undefined}
               className={cn(
-                'rounded-full px-3.5 py-2 transition-colors duration-150',
+                'rounded-full px-3.5 py-2 whitespace-nowrap transition-colors duration-150',
                 isActive(link.href) ? 'bg-lavender-50 text-violet' : 'text-ink-soft hover:text-violet',
               )}
             >
@@ -64,6 +65,10 @@ export function Navbar() {
         </div>
         <div className="hidden items-center gap-2.5 lg:flex">
           <LanguageSwitcher />
+          {/* At lg the RU / EN labels leave no room for a third control; the hero has the same button. */}
+          <span className="hidden xl:block">
+            <CvButton variant="secondary" className="px-5 py-3 text-[14.5px] whitespace-nowrap" />
+          </span>
           <a
             href="#kontak"
             aria-current={isActive('#kontak') ? 'location' : undefined}
@@ -136,7 +141,8 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#kontak" onClick={close} className={buttonClassName('primary', 'mx-2 mt-4 py-4 text-[16px]')}>
+          <CvButton variant="secondary" onClick={close} className="mx-2 mt-4 py-4 text-[16px]" />
+          <a href="#kontak" onClick={close} className={buttonClassName('primary', 'mx-2 mt-2 py-4 text-[16px]')}>
             {m.nav_contact()}
           </a>
         </div>

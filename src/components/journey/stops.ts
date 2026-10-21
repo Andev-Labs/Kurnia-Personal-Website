@@ -2,7 +2,11 @@ import type { MarkerColor } from '#/components/ui/Bullet'
 import type { RichMessage } from '#/components/ui/RichText'
 import { m } from '#/paraglide/messages.js'
 
-export type StopEntry = { marker: MarkerColor; message: RichMessage } | { chart: 'lead-time' }
+export type StopEntry =
+  | { marker: MarkerColor; message: RichMessage }
+  | { chart: 'lead-time' }
+  /** A labelled paragraph, used by the QCC case study (problem, approach, impact, validation). */
+  | { label: string; message: RichMessage | string }
 
 /** `current` marks the latest job; `finish` is the flag at the end of the path. */
 export type StopKind = 'passed' | 'current' | 'finish'
@@ -18,7 +22,13 @@ export interface JourneyStop {
   period?: string
   /** What Kapsi says while standing on the stop. */
   bubble: string
+  /** Small heading above the entries, e.g. "Main impact". */
+  entriesLabel?: string
   entries: StopEntry[]
+  /** Routine duties, folded into a "Daily responsibilities" disclosure under the entries. */
+  daily?: string[]
+  /** Case study header shown above the entries. */
+  caseStudy?: { label: string; title: string; meta: string }
   extra?: StopExtra
 }
 
@@ -34,11 +44,13 @@ export function getStops(): JourneyStop[] {
       company: COMPANY,
       period: m.experience_intern_period(),
       bubble: m.journey_bubble_intern(),
+      entriesLabel: m.experience_impact_label(),
       entries: [
-        { marker: 'lavender', message: m.experience_intern_analysis },
-        { marker: 'butter', message: m.experience_intern_reagents },
-        { marker: 'blush', message: m.experience_intern_stock_opname },
+        { marker: 'lavender', message: m.experience_intern_impact_method },
+        { marker: 'butter', message: m.experience_intern_impact_transfer },
+        { marker: 'blush', message: m.experience_intern_impact_reports },
       ],
+      daily: [m.experience_intern_daily_testing()],
     },
     {
       id: 'kch',
@@ -47,15 +59,24 @@ export function getStops(): JourneyStop[] {
       company: COMPANY,
       period: m.experience_kch_period(),
       bubble: m.journey_bubble_kch(),
+      entriesLabel: m.experience_impact_label(),
       entries: [
-        { marker: 'butter', message: m.experience_kch_analysis },
-        { marker: 'mint', message: m.experience_kch_oot_oos },
-        { marker: 'butter', message: m.experience_kch_method_transfer },
-        { marker: 'mint', message: m.experience_kch_troubleshooting },
-        { marker: 'lavender', message: m.experience_kch_dissolution },
-        { marker: 'blush', message: m.experience_kch_working_standard },
-        { marker: 'butter', message: m.experience_kch_stock_opname },
-        { marker: 'mint', message: m.experience_kch_suggestion_system },
+        { marker: 'butter', message: m.experience_kch_impact_qcc },
+        /*
+         * Confidential: the "three priority products" are Mixagrip Flu Kaplet, Mixagrip Flu & Batuk, and
+         * Mextril Tablet. Brand names stay off the public site in every language (the CV omits them too).
+         */
+        { marker: 'mint', message: m.experience_kch_impact_savings },
+        { marker: 'lavender', message: m.experience_kch_impact_method },
+      ],
+      daily: [
+        m.experience_kch_daily_testing(),
+        m.experience_kch_daily_troubleshooting(),
+        m.experience_kch_daily_dissolution(),
+        m.experience_kch_daily_working_standard(),
+        m.experience_kch_daily_oos(),
+        m.experience_kch_daily_reagents(),
+        m.experience_kch_daily_suggestion(),
       ],
       extra: 'work-gallery',
     },
@@ -66,10 +87,14 @@ export function getStops(): JourneyStop[] {
       company: COMPANY,
       period: m.journey_qcc_period(),
       bubble: m.journey_bubble_qcc(),
+      caseStudy: { label: m.case_label(), title: m.case_title(), meta: m.case_meta() },
       entries: [
-        { marker: 'lavender', message: m.experience_kch_qcc },
+        // TODO(Kurnia): the "problem" wording is inferred from the CV; confirm it matches the QCC report.
+        { label: m.case_problem_label(), message: m.case_problem() },
+        { label: m.case_approach_label(), message: m.case_approach },
         { chart: 'lead-time' },
-        { marker: 'blush', message: m.experience_kch_savings },
+        { label: m.case_impact_label(), message: m.case_impact },
+        { label: m.case_validation_label(), message: m.case_validation() },
       ],
     },
     {

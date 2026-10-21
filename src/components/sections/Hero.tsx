@@ -3,11 +3,12 @@ import { motion } from 'framer-motion'
 import { Mascot } from '#/components/mascot/Mascot'
 import { RevealGroup } from '#/components/motion/Reveal'
 import { Button } from '#/components/ui/Button'
+import { CvButton } from '#/components/ui/CvButton'
 import { RichText } from '#/components/ui/RichText'
+import { HERO_PORTRAIT } from '#/data/site'
 import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 
-const PORTRAIT_WIDTHS = [480, 800, 1200]
 /** Frame caps at 380px wide; the photo sits inside 12px of white padding. */
 const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 110px), 356px'
 
@@ -37,7 +38,7 @@ const POP_VARIANTS = {
 } as const
 
 function portraitSrcSet(ext: 'avif' | 'webp' | 'jpg') {
-  return PORTRAIT_WIDTHS.map((w) => `/images/kurnia-portrait-${w}.${ext} ${w}w`).join(', ')
+  return HERO_PORTRAIT.widths.map((w) => `${HERO_PORTRAIT.base}-${w}.${ext} ${w}w`).join(', ')
 }
 
 export function Hero() {
@@ -68,9 +69,9 @@ export function Hero() {
               <RichText message={m.hero_summary} />
             </motion.p>
             <motion.div variants={SLIDE_UP} className="flex flex-wrap items-center gap-3 print:hidden">
-              <Button href="#kontak">{m.hero_cta_contact()}</Button>
-              <Button href="#pengalaman" variant="secondary">
-                {m.hero_cta_experience()}
+              <CvButton />
+              <Button href="#kontak" variant="secondary">
+                {m.hero_cta_contact()}
               </Button>
             </motion.div>
           </RevealGroup>
@@ -87,11 +88,11 @@ export function Hero() {
                     <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
                     <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
                     <img
-                      src="/images/kurnia-portrait-800.jpg"
+                      src={`${HERO_PORTRAIT.base}-800.jpg`}
                       srcSet={portraitSrcSet('jpg')}
                       sizes={PORTRAIT_SIZES}
-                      width={800}
-                      height={1000}
+                      width={HERO_PORTRAIT.width}
+                      height={HERO_PORTRAIT.height}
                       alt={m.hero_portrait_alt()}
                       fetchPriority="high"
                       decoding="async"
