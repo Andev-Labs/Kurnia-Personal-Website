@@ -52,7 +52,6 @@
   --animate-tick: tick 3s ease-in-out infinite;
   --animate-bubble: bubble 2.4s ease-in infinite;
   --animate-bubble-slow: bubble 3.4s ease-in infinite;
-  --animate-grow: grow 2.8s ease-out infinite;
   --animate-pulse-ring: pulse-ring 2.2s ease-out infinite;
   --animate-spin-slow: spin 14s linear infinite;
   --animate-spin-slower: spin 18s linear infinite;
@@ -65,10 +64,6 @@
     0% { transform: translateY(0); opacity: 0; }
     20% { opacity: 1; }
     100% { transform: translateY(-16px); opacity: 0; }
-  }
-  @keyframes grow {
-    0% { transform: scaleY(0.12); }
-    55%, 100% { transform: scaleY(1); }
   }
   @keyframes flow {
     0% { transform: translateY(-18px); }
