@@ -91,7 +91,7 @@ export function Awards() {
   )
 }
 
-const CONFETTI_CLASS = 'absolute size-2.5 rounded-[3px] animate-twinkle'
+const CONFETTI_CLASS = 'absolute size-2.5 rounded-[3px] animate-twinkle print:hidden'
 
 /** A few extra confetti pieces scattered around Kapsi's trophy pose. */
 function Confetti() {

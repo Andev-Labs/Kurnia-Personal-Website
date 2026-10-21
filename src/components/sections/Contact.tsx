@@ -21,19 +21,19 @@ const CONTACT_LINKS = [
 export function Contact() {
   return (
     <section id="kontak" className="page-x py-14">
-      <div className="relative isolate overflow-hidden rounded-[36px] bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_55%,var(--color-lavender-900)_100%)] px-5 py-12 sm:px-10 md:py-16">
+      <div className="relative isolate overflow-hidden rounded-[36px] bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_55%,var(--color-lavender-900)_100%)] px-3 py-12 sm:px-10 md:py-16 print:rounded-none print:bg-none print:p-0">
         <span
           aria-hidden="true"
-          className="absolute -top-20 -right-16 -z-10 size-64 rounded-full bg-lavender/25 blur-2xl"
+          className="absolute -top-20 -right-16 -z-10 size-64 rounded-full bg-lavender/25 blur-2xl print:hidden"
         />
         <span
           aria-hidden="true"
-          className="absolute -bottom-24 -left-16 -z-10 size-72 rounded-full bg-bubblegum/20 blur-2xl"
+          className="absolute -bottom-24 -left-16 -z-10 size-72 rounded-full bg-bubblegum/20 blur-2xl print:hidden"
         />
 
         <Reveal
           direction="pop"
-          className="mx-auto grid max-w-[880px] grid-cols-1 items-center gap-8 rounded-card-lg bg-white p-6 text-center shadow-soft-lg sm:p-9 md:grid-cols-[auto_1fr] md:text-left"
+          className="mx-auto grid max-w-[880px] grid-cols-1 items-center gap-8 rounded-card-lg bg-white px-5 py-6 text-center shadow-soft-lg sm:p-9 md:grid-cols-[auto_1fr] md:text-left print:block print:p-0 print:text-left"
         >
           <Mascot pose="mail" className="mx-auto h-auto w-28 md:w-36" />
 
@@ -59,7 +59,9 @@ export function Contact() {
                     className={buttonClassName(index === 0 ? 'primary' : 'secondary', 'max-w-full [overflow-wrap:anywhere]')}
                   >
                     <span>{link.label}</span>
-                    <span aria-hidden="true">→</span>
+                    <span aria-hidden="true" className="max-[400px]:hidden">
+                      →
+                    </span>
                   </a>
                 </RevealItem>
               ))}

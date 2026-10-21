@@ -35,7 +35,7 @@ function PillRun({ hidden = false }: { hidden?: boolean }) {
 
 export function Marquee() {
   return (
-    <div className="overflow-hidden bg-lavender-100/70 py-4">
+    <div className="overflow-hidden bg-lavender-100/70 py-4 print:hidden">
       {/* Two identical runs; the track slides by exactly half its width for a seamless loop. */}
       <div className="flex w-max animate-marquee">
         <PillRun />
