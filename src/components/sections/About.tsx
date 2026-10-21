@@ -20,7 +20,7 @@ export function About() {
       </SectionHeading>
 
       <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
-        <RevealItem className="rounded-[18px] border-3 border-ink bg-white p-[26px] shadow-hard-6">
+        <RevealItem className="rounded-[18px] border-3 border-ink bg-white p-[26px] shadow-soft">
           <p className="text-[16px] leading-[1.65] text-pretty">
             <RichText message={m.about_body} />
           </p>
@@ -31,16 +31,16 @@ export function About() {
             <RevealItem
               key={stat.value}
               direction="pop"
-              className={cn('rounded-[18px] border-3 border-ink p-5 shadow-hard-6', stat.className)}
+              className={cn('rounded-[18px] border-3 border-ink p-5 shadow-soft', stat.className)}
             >
-              <p className="mb-1.5 font-display text-[clamp(28px,3.6vw,40px)] leading-none">{stat.value}</p>
+              <p className="mb-1.5 font-heading font-semibold text-[clamp(28px,3.6vw,40px)] leading-none">{stat.value}</p>
               <p className="text-[13.5px] leading-[1.4] font-semibold">{stat.label}</p>
             </RevealItem>
           ))}
         </RevealGroup>
       </RevealGroup>
 
-      <Reveal className="mt-6 overflow-hidden rounded-[18px] border-3 border-ink bg-white px-6 py-[22px] shadow-hard-6">
+      <Reveal className="mt-6 overflow-hidden rounded-[18px] border-3 border-ink bg-white px-6 py-[22px] shadow-soft">
         <Chromatogram />
       </Reveal>
     </Section>

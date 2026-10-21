@@ -13,18 +13,18 @@ export function WorkGallery() {
   return (
     <div className="mt-10">
       <div className="mb-[18px] flex flex-wrap items-baseline justify-between gap-3">
-        <h3 className="font-display text-[clamp(19px,2.2vw,26px)] tracking-[-0.02em]">{m.gallery_work_heading()}</h3>
+        <h3 className="font-heading font-semibold text-[clamp(19px,2.2vw,26px)] tracking-[-0.02em]">{m.gallery_work_heading()}</h3>
         <p className="text-[13px] font-semibold opacity-60">{m.gallery_work_hint()}</p>
       </div>
       <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
         {items.map((item, index) =>
           item.group === 'kerja' ? (
-            // The motion wrapper sits outside the card so it doesn't override the `press` hover transform.
+            // The motion wrapper sits outside the card so it doesn't override the `lift` hover transform.
             <RevealItem key={item.title} direction="pop">
               <button
                 type="button"
                 onClick={() => dispatch({ type: 'open', index })}
-                className="press block w-full cursor-pointer overflow-hidden rounded-[18px] border-3 border-ink bg-white p-0 text-left shadow-hard-6"
+                className="lift block w-full cursor-pointer overflow-hidden rounded-[18px] border-3 border-ink bg-white p-0 text-left shadow-soft"
               >
                 <WorkCardContent item={item} />
               </button>
@@ -53,7 +53,7 @@ function WorkCardContent({ item }: { item: GalleryItem }) {
         </span>
       </span>
       <span className="block px-[18px] py-4">
-        <span className="block font-display text-[14.5px] leading-[1.3] text-ink">{item.title}</span>
+        <span className="block font-heading font-semibold text-[14.5px] leading-[1.3] text-ink">{item.title}</span>
         <span className="mt-1.5 block text-[12.5px] font-semibold text-ink opacity-60">{item.meta}</span>
         <span className="mt-2.5 block text-[12.5px] leading-[1.55] text-pretty text-ink opacity-75">
           {item.caption}

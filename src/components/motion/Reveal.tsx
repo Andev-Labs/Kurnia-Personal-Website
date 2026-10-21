@@ -29,7 +29,7 @@ const groupVariants = (stagger: number, delay: number): Variants => ({
 })
 
 /*
- * Motion writes an inline `transform`, which would override CSS hover transforms (`press`, `hover:-translate-y`).
+ * Motion writes an inline `transform`, which would override CSS hover transforms (`lift`, `hover:-translate-y`).
  * Keep these wrappers on plain layout boxes and put interactive elements inside them.
  */
 

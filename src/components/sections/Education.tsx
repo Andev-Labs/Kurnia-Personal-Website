@@ -14,18 +14,18 @@ export function Education() {
       </SectionHeading>
 
       <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
-        <RevealItem className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
+        <RevealItem className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-soft">
           <span className="mb-3.5 inline-block rounded-full border-3 border-ink bg-sun px-[13px] py-[7px] text-[12.5px] font-bold">
             {m.education_bachelor_period()}
           </span>
-          <h3 className="mb-1.5 font-display text-[20px] leading-[1.2]">{m.education_bachelor_degree()}</h3>
+          <h3 className="mb-1.5 font-heading font-semibold text-[20px] leading-[1.2]">{m.education_bachelor_degree()}</h3>
           <p className="mb-4 text-[14.5px] font-semibold">Binawan University</p>
           <div className="flex flex-col gap-3 text-[15px] leading-[1.6]">
             <p className="text-pretty">
               <RichText message={m.education_bachelor_status} />
             </p>
             <p className="rounded-[14px] border-[2.5px] border-ink bg-cream p-4 text-pretty">
-              <strong className="mb-[5px] block font-display text-[12.5px] font-normal tracking-[0.04em]">
+              <strong className="mb-[5px] block font-heading font-semibold text-[12.5px] tracking-[0.04em]">
                 {m.education_thesis_label()}
               </strong>
               {m.education_thesis_title()}
@@ -42,11 +42,11 @@ export function Education() {
         </RevealItem>
 
         <RevealGroup stagger={0.14} className="flex flex-col gap-6">
-          <RevealItem className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-hard-7">
+          <RevealItem className="rounded-[20px] border-3 border-ink bg-white p-[26px] shadow-soft">
             <span className="mb-3.5 inline-block rounded-full border-3 border-ink bg-mint px-[13px] py-[7px] text-[12.5px] font-bold">
               {m.education_vocational_period()}
             </span>
-            <h3 className="mb-1.5 font-display text-[20px] leading-[1.2]">{m.education_vocational_major()}</h3>
+            <h3 className="mb-1.5 font-heading font-semibold text-[20px] leading-[1.2]">{m.education_vocational_major()}</h3>
             <p className="mb-4 text-[14.5px] font-semibold">SMK-SMAK Bogor</p>
             <div className="flex flex-col gap-2.5 text-[15px] leading-[1.6]">
               <p className="text-pretty">
@@ -58,8 +58,8 @@ export function Education() {
             </div>
           </RevealItem>
 
-          <RevealItem className="rounded-[20px] border-3 border-ink bg-ink p-[26px] text-cream shadow-[7px_7px_0_var(--color-lavender)]">
-            <h3 className="mb-4 font-display text-[17px]">{m.education_international_heading()}</h3>
+          <RevealItem className="rounded-[20px] border-3 border-ink bg-ink p-[26px] text-cream shadow-soft">
+            <h3 className="mb-4 font-heading font-semibold text-[17px]">{m.education_international_heading()}</h3>
             <div className="flex flex-col gap-3.5 text-[15px] leading-[1.6]">
               <p className="text-pretty">
                 <RichText message={m.education_international_sechenov} />

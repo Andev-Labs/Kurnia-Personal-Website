@@ -1,34 +1,57 @@
 @import "tailwindcss";
 
-@import "@fontsource/archivo-black/400.css";
-@import "@fontsource/space-grotesk/400.css";
-@import "@fontsource/space-grotesk/500.css";
-@import "@fontsource/space-grotesk/600.css";
-@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/fredoka/500.css";
+@import "@fontsource/fredoka/600.css";
+@import "@fontsource/fredoka/700.css";
+@import "@fontsource/nunito/400.css";
+@import "@fontsource/nunito/600.css";
+@import "@fontsource/nunito/700.css";
+@import "@fontsource/nunito/800.css";
 
 @theme {
-  --font-sans: "Space Grotesk", system-ui, sans-serif;
-  --font-display: "Archivo Black", sans-serif;
+  --font-sans: "Nunito", system-ui, sans-serif;
+  --font-heading: "Fredoka", "Nunito", system-ui, sans-serif;
 
-  --color-ink: #121212;
-  --color-graphite: #1e1e1e;
-  --color-cream: #fdf3e7;
-  --color-sand: #f6e9da;
-  --color-pink: #ff5c9e;
-  --color-pink-deep: #e0457b;
-  --color-sun: #ffd23f;
-  --color-lavender: #9aa3f5;
-  --color-teal: #0fa38c;
-  --color-mint: #a9f5b5;
+  /* Ahead palette. */
+  --color-violet: #5b3fe0;
+  --color-violet-deep: #4a2fcc;
+  --color-lavender: #b9a2f5;
+  --color-lavender-50: #f1eafe;
+  --color-lavender-100: #e6dafd;
+  --color-lavender-200: #d6c6fb;
+  --color-lavender-300: #c7b4f8;
+  --color-lavender-400: #b9a2f5;
+  --color-lavender-500: #9c83ee;
+  --color-lavender-600: #7c5ce6;
+  --color-lavender-700: #5b3fe0;
+  --color-lavender-800: #3f2a9e;
+  --color-lavender-900: #2a1b5c;
+  --color-blush: #f8e4ee;
+  --color-bubblegum: #ff9ec4;
+  --color-butter: #f7c52b;
+  --color-mint: #3db48a;
+  --color-ink: #2a1b5c;
+  --color-ink-soft: #5c4f8f;
+  --color-mist-teal: #a9cfcb;
 
-  --shadow-hard-2: 2px 2px 0 var(--color-ink);
-  --shadow-hard-3: 3px 3px 0 var(--color-ink);
-  --shadow-hard-4: 4px 4px 0 var(--color-ink);
-  --shadow-hard-5: 5px 5px 0 var(--color-ink);
-  --shadow-hard-6: 6px 6px 0 var(--color-ink);
-  --shadow-hard-7: 7px 7px 0 var(--color-ink);
-  --shadow-hard-8: 8px 8px 0 var(--color-ink);
-  --shadow-hard-10: 10px 10px 0 var(--color-ink);
+  /*
+   * Legacy aliases for the pre-redesign section styles. They point at the new palette so the
+   * untouched sections keep rendering until they are restyled, then get removed.
+   */
+  --color-cream: var(--color-lavender-50);
+  --color-sand: var(--color-blush);
+  --color-graphite: var(--color-ink);
+  --color-pink: var(--color-bubblegum);
+  --color-pink-deep: var(--color-violet);
+  --color-sun: var(--color-butter);
+  --color-teal: var(--color-mint);
+
+  --radius-card: 24px;
+  --radius-card-lg: 28px;
+
+  --shadow-soft-sm: 0 6px 18px -10px rgb(91 63 224 / 0.3);
+  --shadow-soft: 0 10px 30px -12px rgb(91 63 224 / 0.35);
+  --shadow-soft-lg: 0 18px 44px -16px rgb(91 63 224 / 0.42);
 
   --animate-marquee: marquee 26s linear infinite;
   --animate-float: float 5s ease-in-out infinite;
@@ -43,6 +66,9 @@
   --animate-pulse-ring: pulse-ring 2.2s ease-out infinite;
   --animate-spin-slow: spin 14s linear infinite;
   --animate-spin-slower: spin 18s linear infinite;
+  --animate-blink: blink 4.8s ease-in-out infinite;
+  --animate-wave: wave 2.4s ease-in-out infinite;
+  --animate-bob: bob 1.6s ease-in-out infinite;
 
   @keyframes marquee {
     from { transform: translateX(0); }
@@ -86,6 +112,19 @@
     0%, 40% { stroke-dashoffset: 40; }
     70%, 100% { stroke-dashoffset: 0; }
   }
+  @keyframes blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+  }
+  @keyframes wave {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    15%, 45% { transform: rotate(-14deg); }
+    30% { transform: rotate(8deg); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
 }
 
 /* Horizontal gutter shared by every full-bleed band: 26px min, content capped at 1280px. */
@@ -93,26 +132,19 @@
   padding-inline: max(26px, calc((100% - 1280px) / 2));
 }
 
-/* Neo-brutalist "press" hover used by buttons and cards. */
-@utility press-sm {
-  transition: transform 0.12s, box-shadow 0.12s;
+/* Soft hover lift used by buttons and cards. */
+@utility lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   &:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--press-shadow, var(--color-ink));
-  }
-}
-@utility press {
-  transition: transform 0.12s, box-shadow 0.12s;
-  &:hover {
-    transform: translate(3px, 3px);
-    box-shadow: 2px 2px 0 var(--color-ink);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft-lg);
   }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Keep anchor targets clear of the sticky navbar (its bottom border overlaps the section border). */
+    /* Keep anchor targets clear of the sticky navbar. */
     scroll-padding-top: 74px;
     @media (width >= 48rem) {
       scroll-padding-top: 82px;
@@ -121,7 +153,8 @@
 
   body {
     overflow-x: hidden;
-    background: var(--color-cream);
+    min-height: 100vh;
+    background: linear-gradient(165deg, var(--color-lavender-50) 0%, #f6ecfa 45%, var(--color-blush) 100%) fixed;
     line-height: normal;
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -133,27 +166,28 @@
     text-decoration: none;
   }
   a:hover {
-    color: var(--color-pink-deep);
+    color: var(--color-violet);
   }
 
   strong {
     font-weight: 700;
   }
 
+  :focus-visible {
+    outline: 3px solid var(--color-violet);
+    outline-offset: 3px;
+  }
+
   /*
-   * Archivo Black and Space Grotesk ship Latin glyphs only. Russian and Chinese pages fall back to
-   * heavy system faces; `font-synthesis-weight: none` keeps the Latin glyphs from being faux-bolded.
+   * Fredoka ships Latin glyphs only, so Russian headings fall back to Nunito (which has Cyrillic).
+   * Chinese pages fall back to system CJK faces.
    */
   html:lang(ru) {
-    --font-display: "Archivo Black", "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    --font-heading: "Nunito", system-ui, sans-serif;
   }
   html:lang(zh) {
-    --font-display: "Archivo Black", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-    --font-sans: "Space Grotesk", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
-  }
-  html:is(:lang(ru), :lang(zh)) .font-display {
-    font-weight: 900;
-    font-synthesis-weight: none;
+    --font-heading: "Fredoka", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    --font-sans: "Nunito", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -36,16 +36,16 @@ function AlbumModal() {
         aria-modal="true"
         aria-labelledby="gallery-album-title"
         onClick={stopPropagation}
-        className="max-h-[90vh] w-[min(1120px,100%)] overflow-auto rounded-[22px] border-3 border-ink bg-cream shadow-hard-10"
+        className="max-h-[90vh] w-[min(1120px,100%)] overflow-auto rounded-[22px] border-3 border-ink bg-cream shadow-soft-lg"
       >
         <div className="sticky top-0 z-2 flex items-center justify-between gap-3.5 border-b-3 border-ink bg-lavender px-4 py-4 md:px-[22px]">
-          <span className="font-display text-[13px] tracking-[0.04em]">{view.groupLabel}</span>
+          <span className="font-heading font-semibold text-[13px] tracking-[0.04em]">{view.groupLabel}</span>
           <button
             type="button"
             onClick={close}
             aria-label={m.gallery_close_album()}
             autoFocus
-            className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-display text-[15px] text-ink shadow-hard-3"
+            className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-heading font-semibold text-[15px] text-ink shadow-soft-sm"
           >
             ×
           </button>
@@ -54,7 +54,7 @@ function AlbumModal() {
         <div className="border-b-3 border-ink px-4 pt-[26px] pb-2 md:px-[22px]">
           <h4
             id="gallery-album-title"
-            className="mb-1.5 font-display text-[clamp(20px,2.6vw,30px)] leading-[1.2] tracking-[-0.02em]"
+            className="mb-1.5 font-heading font-semibold text-[clamp(20px,2.6vw,30px)] leading-[1.2] tracking-[-0.02em]"
           >
             {active.title}
           </h4>
@@ -69,7 +69,7 @@ function AlbumModal() {
                 key={shot.label}
                 type="button"
                 onClick={() => dispatch({ type: 'openShot', shotIndex })}
-                className="press-sm block w-full cursor-zoom-in overflow-hidden rounded-2xl border-3 border-ink bg-white p-0 text-left shadow-hard-5"
+                className="lift block w-full cursor-zoom-in overflow-hidden rounded-2xl border-3 border-ink bg-white p-0 text-left shadow-soft"
               >
                 {/* Portrait and landscape shots share one grid, so the thumbnail fits the frame instead of cropping it. */}
                 <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-ink bg-cream">
@@ -89,7 +89,7 @@ function AlbumModal() {
                   </span>
                 </span>
                 <span className="block px-4 py-3.5">
-                  <span className="mb-[5px] block font-display text-[13.5px] leading-[1.3]">{shot.label}</span>
+                  <span className="mb-[5px] block font-heading font-semibold text-[13.5px] leading-[1.3]">{shot.label}</span>
                   <span className="block text-[13px] leading-[1.55] text-pretty opacity-70">{shot.caption}</span>
                 </span>
               </button>
@@ -101,7 +101,7 @@ function AlbumModal() {
           <button
             type="button"
             onClick={() => dispatch({ type: 'step', delta: -1 })}
-            className="cursor-pointer rounded-xl border-3 border-ink bg-white px-3.5 py-2.5 font-display text-[12.5px] text-ink shadow-hard-4 md:px-5 md:py-3 md:text-[13.5px]"
+            className="cursor-pointer rounded-xl border-3 border-ink bg-white px-3.5 py-2.5 font-heading font-semibold text-[12.5px] text-ink shadow-soft-sm md:px-5 md:py-3 md:text-[13.5px]"
           >
             ← {m.gallery_previous_program()}
           </button>
@@ -111,7 +111,7 @@ function AlbumModal() {
           <button
             type="button"
             onClick={() => dispatch({ type: 'step', delta: 1 })}
-            className="cursor-pointer rounded-xl border-3 border-ink bg-pink px-3.5 py-2.5 font-display text-[12.5px] text-ink shadow-hard-4 md:px-5 md:py-3 md:text-[13.5px]"
+            className="cursor-pointer rounded-xl border-3 border-ink bg-pink px-3.5 py-2.5 font-heading font-semibold text-[12.5px] text-ink shadow-soft-sm md:px-5 md:py-3 md:text-[13.5px]"
           >
             {m.gallery_next_program()} →
           </button>
@@ -131,7 +131,7 @@ function StepShotButton({ delta, className }: { delta: 1 | -1; className?: strin
       onClick={() => dispatch({ type: 'stepShot', delta })}
       aria-label={delta < 0 ? m.gallery_previous_photo() : m.gallery_next_photo()}
       className={cn(
-        'grid size-[44px] flex-none cursor-pointer place-items-center rounded-full border-3 border-cream font-display text-[17px] text-ink md:size-[50px]',
+        'grid size-[44px] flex-none cursor-pointer place-items-center rounded-full border-3 border-cream font-heading font-semibold text-[17px] text-ink md:size-[50px]',
         delta < 0 ? 'bg-cream' : 'bg-pink',
         className,
       )}
@@ -158,7 +158,7 @@ function ShotViewer() {
       className="fixed inset-0 z-80 flex flex-col gap-3 bg-ink/90 p-3 md:gap-3.5 md:p-[18px]"
     >
       <div className="flex flex-none items-center justify-between gap-3.5">
-        <span className="min-w-0 flex-[0_1_auto] rounded-xl border-3 border-cream bg-sun px-4 py-[9px] font-display text-[12px] leading-[1.35] text-ink">
+        <span className="min-w-0 flex-[0_1_auto] rounded-xl border-3 border-cream bg-sun px-4 py-[9px] font-heading font-semibold text-[12px] leading-[1.35] text-ink">
           {shot.heading}
         </span>
         <button
@@ -166,7 +166,7 @@ function ShotViewer() {
           onClick={closeShot}
           aria-label={m.gallery_close_photo()}
           autoFocus
-          className="grid size-[42px] flex-none cursor-pointer place-items-center rounded-xl border-3 border-cream bg-cream font-display text-[17px] text-ink shadow-[3px_3px_0_var(--color-pink)]"
+          className="grid size-[42px] flex-none cursor-pointer place-items-center rounded-xl border-3 border-cream bg-cream font-heading font-semibold text-[17px] text-ink shadow-soft"
         >
           ×
         </button>
@@ -188,7 +188,7 @@ function ShotViewer() {
               <div className="absolute inset-0 grid place-items-center p-7 text-center">
                 <div>
                   <div className="mx-auto mb-3.5 size-[62px] rounded-[14px] border-3 border-cream bg-lavender" />
-                  <p className="font-display text-[14px] text-cream">{m.gallery_placeholder_title()}</p>
+                  <p className="font-heading font-semibold text-[14px] text-cream">{m.gallery_placeholder_title()}</p>
                   <p className="mt-1.5 text-[12.5px] font-semibold text-cream opacity-60">
                     {m.gallery_placeholder_hint()}
                   </p>
@@ -200,7 +200,7 @@ function ShotViewer() {
           <div className="flex max-h-[55%] flex-none flex-col rounded-b-[18px] border-3 border-cream bg-cream px-4 py-3.5 md:px-5 md:py-4">
             <div className="min-h-0 overflow-y-auto">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <p className="font-display text-[15px] leading-[1.3]">{shot.label}</p>
+                <p className="font-heading font-semibold text-[15px] leading-[1.3]">{shot.label}</p>
                 <span className="text-[12.5px] font-bold opacity-60">{shot.counter}</span>
               </div>
               {shot.meta && <p className="mt-[5px] text-[12.5px] font-bold opacity-55">{shot.meta}</p>}

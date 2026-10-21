@@ -36,10 +36,10 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b-3 border-ink bg-cream">
       <nav className="page-x flex items-center justify-between gap-5 py-4 md:py-5">
         <a href="#atas" className="flex items-center gap-2.5">
-          <span className="grid size-[38px] place-items-center rounded-[10px] border-3 border-ink bg-lavender font-display text-[17px] leading-none">
+          <span className="grid size-[38px] place-items-center rounded-[10px] border-3 border-ink bg-lavender font-heading font-semibold text-[17px] leading-none">
             K
           </span>
-          <span className="font-display text-[15px] tracking-[-0.02em]">kurnia.qc</span>
+          <span className="font-heading font-semibold text-[15px] tracking-[-0.02em]">kurnia.qc</span>
         </a>
         <div className="hidden items-center gap-[22px] text-[14.5px] font-semibold lg:flex">
           {links.map((link) => (
@@ -47,7 +47,7 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <a href="#kontak" className="rounded-full border-3 border-ink bg-sun px-[18px] py-[9px] shadow-hard-3">
+          <a href="#kontak" className="rounded-full border-3 border-ink bg-sun px-[18px] py-[9px] shadow-soft-sm">
             {m.nav_contact()}
           </a>
           <LanguageSwitcher />
@@ -58,7 +58,7 @@ export function Navbar() {
           aria-label={m.nav_menu_open()}
           aria-expanded={isOpen}
           aria-controls={DRAWER_ID}
-          className="grid size-[42px] cursor-pointer place-items-center rounded-xl border-3 border-ink bg-sun shadow-hard-3 lg:hidden"
+          className="grid size-[42px] cursor-pointer place-items-center rounded-xl border-3 border-ink bg-sun shadow-soft-sm lg:hidden"
         >
           <span aria-hidden="true" className="flex w-[18px] flex-col gap-[4px]">
             <span className="h-[2.5px] rounded-full bg-ink" />
@@ -89,12 +89,12 @@ export function Navbar() {
         )}
       >
         <div className="flex items-center justify-between gap-3 border-b-3 border-ink bg-lavender px-[22px] py-4">
-          <span className="font-display text-[13px] tracking-[0.04em]">{m.nav_menu_title()}</span>
+          <span className="font-heading font-semibold text-[13px] tracking-[0.04em]">{m.nav_menu_title()}</span>
           <button
             type="button"
             onClick={close}
             aria-label={m.nav_menu_close()}
-            className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-display text-[15px] text-ink shadow-hard-3"
+            className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-heading font-semibold text-[15px] text-ink shadow-soft-sm"
           >
             ×
           </button>
@@ -111,7 +111,7 @@ export function Navbar() {
           <a
             href="#kontak"
             onClick={close}
-            className="mt-5 rounded-full border-3 border-ink bg-sun px-[18px] py-3 text-center shadow-hard-3"
+            className="mt-5 rounded-full border-3 border-ink bg-sun px-[18px] py-3 text-center shadow-soft-sm"
           >
             {m.nav_contact()}
           </a>

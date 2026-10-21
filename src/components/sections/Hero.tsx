@@ -5,7 +5,7 @@ import { RichText } from '#/components/ui/RichText'
 import { m } from '#/paraglide/messages.js'
 
 const CTA_CLASS =
-  'press-sm rounded-[14px] border-3 border-ink px-[26px] py-[15px] font-display text-[15px] shadow-hard-5'
+  'lift rounded-[14px] border-3 border-ink px-[26px] py-[15px] font-heading font-semibold text-[15px] shadow-soft'
 
 const PORTRAIT_WIDTHS = [480, 800, 1200]
 /** Frame caps at 400px wide; the photo sits inside ~42px of padding and border. */
@@ -30,10 +30,10 @@ export function Hero() {
       className="page-x grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] items-center gap-10 pt-14 pb-12"
     >
       <RevealGroup stagger={0.12} className="min-w-0">
-        <motion.p variants={FADE_UP} className="mb-[18px] inline-block rounded-full border-3 border-ink bg-white px-3.5 py-[7px] text-[13.5px] font-bold shadow-hard-3">
+        <motion.p variants={FADE_UP} className="mb-[18px] inline-block rounded-full border-3 border-ink bg-white px-3.5 py-[7px] text-[13.5px] font-bold shadow-soft-sm">
           {m.hero_greeting()}
         </motion.p>
-        <motion.h1 variants={FADE_UP} className="mb-5 font-display text-[clamp(40px,6.4vw,80px)] leading-[0.94] tracking-[-0.035em] text-balance">
+        <motion.h1 variants={FADE_UP} className="mb-5 font-heading font-semibold text-[clamp(40px,6.4vw,80px)] leading-[0.94] tracking-[-0.035em] text-balance">
           {m.hero_title_line1()}
           <br />
           {m.hero_title_line2()}
@@ -53,7 +53,7 @@ export function Hero() {
 
       <div className="flex min-w-0 justify-center">
         <RevealGroup stagger={0.15} delay={0.15} className="relative w-full max-w-[400px]">
-          <RevealItem direction="pop" className="relative rounded-[22px] border-3 border-ink bg-pink p-[18px] shadow-hard-8">
+          <RevealItem direction="pop" className="relative rounded-[22px] border-3 border-ink bg-pink p-[18px] shadow-soft-lg">
             <picture>
               <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
               <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
@@ -72,19 +72,19 @@ export function Hero() {
           </RevealItem>
           <motion.div
             variants={STICKER_VARIANTS}
-            className="absolute -top-[26px] -left-[22px] -rotate-7 rounded-xl border-3 border-ink bg-teal px-3.5 py-[9px] font-display text-[12.5px] text-white shadow-hard-4"
+            className="absolute -top-[26px] -left-[22px] -rotate-7 rounded-xl border-3 border-ink bg-teal px-3.5 py-[9px] font-heading font-semibold text-[12.5px] text-white shadow-soft-sm"
           >
             HPLC ✓
           </motion.div>
           <motion.div
             variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
-            className="absolute top-[34%] -right-[30px] grid size-[74px] animate-float place-items-center rounded-full border-3 border-ink bg-sun text-center font-display text-[15px] leading-none shadow-hard-4"
+            className="absolute top-[34%] -right-[30px] grid size-[74px] animate-float place-items-center rounded-full border-3 border-ink bg-sun text-center font-heading font-semibold text-[15px] leading-none shadow-soft-sm"
           >
             GMP
           </motion.div>
           <motion.div
             variants={STICKER_VARIANTS}
-            className="absolute right-1.5 -bottom-5 rotate-3 rounded-full border-3 border-ink bg-mint px-[15px] py-[9px] text-[12.5px] font-bold shadow-hard-4"
+            className="absolute right-1.5 -bottom-5 rotate-3 rounded-full border-3 border-ink bg-mint px-[15px] py-[9px] text-[12.5px] font-bold shadow-soft-sm"
           >
             {m.hero_open_badge()}
           </motion.div>
