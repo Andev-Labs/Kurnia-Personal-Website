@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 
 import { Mascot } from '#/components/mascot/Mascot'
@@ -9,8 +9,8 @@ import {
   INTRO_FLIGHT_MS,
   clampToScreenEdge,
   flightKeyframes,
-  readIntroState,
   remainingHoldMs,
+  restoreIntroState,
   setIntroState,
 } from '#/lib/intro'
 
@@ -37,8 +37,9 @@ export function WelcomeIntro() {
   const rootRef = useRef<HTMLDivElement>(null)
   const flyerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (readIntroState() !== 'play') {
+  // Runs before paint, so the overlay and the hidden Hero Kapsi never flash if `data-intro` was wiped.
+  useLayoutEffect(() => {
+    if (restoreIntroState() !== 'play') {
       setPhase('gone')
       return
     }
