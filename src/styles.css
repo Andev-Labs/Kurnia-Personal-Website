@@ -119,215 +119,6 @@
   }
 }
 
-/*
- * "Kapsi Says Hi" intro (src/components/intro/IntroOverlay.tsx). The entry runs in CSS so it plays
- * before hydration; timings match INTRO_TIMING in src/lib/intro.ts.
- */
-@property --intro-hole {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-
-/* Set by the inline boot script: lock scroll and hide the Hero Kapsi until the flying one lands. */
-html[data-intro="playing"] {
-  overflow: hidden;
-  scrollbar-gutter: stable;
-}
-html[data-intro="playing"] [data-intro-target] {
-  visibility: hidden;
-}
-html[data-intro="skip"] .intro {
-  display: none;
-}
-
-/* Without JS the overlay still leaves on its own. */
-.intro {
-  animation: intro-fallback-out 0.4s ease 3.6s forwards;
-}
-.intro[data-state="exiting"],
-.intro[data-state="landing"] {
-  animation: none;
-  pointer-events: none;
-}
-
-.intro-curtain {
-  --intro-hole-x: 50%;
-  --intro-hole-y: 50%;
-  mask-image: radial-gradient(
-    circle at var(--intro-hole-x) var(--intro-hole-y),
-    transparent var(--intro-hole),
-    #000 calc(var(--intro-hole) + 1px)
-  );
-  transition: --intro-hole var(--intro-hole-ms, 700ms) cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.intro-pop-in {
-  animation: intro-pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* Kapsi springs up from below with a squash-and-stretch landing. */
-.intro-rise {
-  transform-origin: 50% 100%;
-  animation: intro-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
-}
-.intro-kapsi {
-  transform-origin: 0 0;
-}
-
-.intro-bubble {
-  transform-origin: 0% 100%;
-  animation: intro-pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
-}
-
-.intro-letter {
-  animation: intro-letter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: calc(0.75s + var(--i) * 0.05s);
-}
-
-.intro-subtitle {
-  animation: intro-fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both;
-}
-
-.intro-skip {
-  animation: intro-fade-up 0.3s ease 0.5s both;
-  transition: opacity 0.2s ease;
-}
-
-.intro[data-state="exiting"] .intro-text,
-.intro[data-state="exiting"] .intro-bubble,
-.intro[data-state="landing"] .intro-text,
-.intro[data-state="landing"] .intro-bubble {
-  transform: translateY(48px);
-  opacity: 0;
-  transition: transform 0.35s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.3s ease;
-}
-.intro[data-state="exiting"] .intro-bubble,
-.intro[data-state="landing"] .intro-bubble {
-  animation: none;
-  transform: scale(0.6);
-}
-.intro[data-state="exiting"] .intro-skip,
-.intro[data-state="landing"] .intro-skip {
-  /* Drop the entry animation, whose fill would otherwise hold the button at full opacity. */
-  animation: none;
-  opacity: 0;
-}
-.intro[data-state="landing"] .intro-kapsi {
-  visibility: hidden;
-}
-
-/* The Hero Kapsi pops when the flying one lands on it. */
-[data-intro-target].intro-landed {
-  transform-origin: 50% 100%;
-  animation: intro-land 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.intro-burst {
-  animation: intro-burst 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes intro-fallback-out {
-  to {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
-@keyframes intro-pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-@keyframes intro-rise {
-  0% {
-    opacity: 0;
-    transform: translateY(70vh) scale(0.85, 1.15);
-  }
-  55% {
-    opacity: 1;
-    transform: translateY(-14px) scale(0.94, 1.08);
-  }
-  72% {
-    transform: translateY(0) scale(1.12, 0.88);
-  }
-  86% {
-    transform: translateY(0) scale(0.97, 1.03);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-@keyframes intro-letter {
-  0% {
-    opacity: 0;
-    transform: translateY(0.6em) scale(0.6);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-0.12em) scale(1.08);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-@keyframes intro-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes intro-land {
-  0% {
-    transform: scale(0.9, 1.1);
-  }
-  35% {
-    transform: scale(1.14, 0.86);
-  }
-  65% {
-    transform: scale(0.96, 1.04);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes intro-burst {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(0.2);
-  }
-  40% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--dx), var(--dy)) scale(1);
-  }
-}
-
-/* Motion-sensitive visitors and printouts never see the intro. */
-@media (prefers-reduced-motion: reduce) {
-  .intro {
-    display: none;
-  }
-}
-@media print {
-  .intro {
-    display: none !important;
-  }
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -380,6 +171,303 @@ html[data-intro="skip"] .intro {
     *::after {
       animation: none !important;
     }
+  }
+}
+
+/*
+ * Welcome intro ("Kapsi Says Hi"), see src/components/intro/WelcomeIntro.tsx.
+ * The inline head script sets `<html data-intro>`; the overlay only shows while it is `play`.
+ * The entrance is pure CSS so it runs before hydration; JS drives the exit (curtain + Kapsi's flight).
+ */
+@property --hole {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.kapsi-intro {
+  display: none;
+}
+
+html[data-intro="play"] .kapsi-intro {
+  --intro-mid: 47svh;
+  --kapsi-w: clamp(118px, 30vw, 168px);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  cursor: pointer;
+}
+
+/* If the app never hydrates, get out of the way on its own. */
+.kapsi-intro:not([data-hydrated]) {
+  animation: kapsi-intro-fallback 0.4s ease 4.5s forwards;
+}
+
+.kapsi-intro[data-phase="exit"] {
+  pointer-events: none;
+}
+
+.kapsi-intro__curtain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--color-lavender-100) 0%, #f1e4f8 50%, var(--color-blush) 100%);
+}
+
+/* The curtain opens as a growing hole centred on Kapsi; the fade covers browsers without @property. */
+.kapsi-intro[data-phase="exit"] .kapsi-intro__curtain {
+  -webkit-mask-image: radial-gradient(
+    circle at var(--hole-x, 50%) var(--hole-y, 50%),
+    transparent var(--hole),
+    #000 calc(var(--hole) + 1.5px)
+  );
+  mask-image: radial-gradient(
+    circle at var(--hole-x, 50%) var(--hole-y, 50%),
+    transparent var(--hole),
+    #000 calc(var(--hole) + 1.5px)
+  );
+  animation:
+    kapsi-intro-open 750ms cubic-bezier(0.65, 0, 0.35, 1) forwards,
+    kapsi-intro-fade 200ms ease 550ms forwards;
+}
+
+.kapsi-intro__blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(48px);
+}
+
+.kapsi-intro__sparkle {
+  animation:
+    kapsi-intro-sparkle 0.5s var(--spring) calc(100ms + var(--i) * 70ms) both,
+    twinkle 3.2s ease-in-out 0.9s infinite;
+}
+
+.kapsi-intro__text {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(var(--intro-mid) + 14px);
+  padding-inline: 24px;
+  text-align: center;
+}
+
+.kapsi-intro__title {
+  font-weight: 600;
+  font-size: clamp(52px, 15vw, 124px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-violet);
+}
+
+.kapsi-intro__letter {
+  display: inline-block;
+  animation: kapsi-intro-letter 0.55s var(--spring) calc(550ms + var(--i) * 45ms) both;
+}
+
+.kapsi-intro__subtitle {
+  margin-top: 10px;
+  font-size: clamp(16px, 2.2vw, 20px);
+  font-weight: 700;
+  color: var(--color-ink-soft);
+  animation: kapsi-intro-rise 0.5s ease-out 1.05s both;
+}
+
+.kapsi-intro__kapsi {
+  position: absolute;
+  left: 50%;
+  top: var(--intro-mid);
+  width: var(--kapsi-w);
+  transform: translate(-50%, -100%);
+}
+
+.kapsi-intro__flyer {
+  transform-origin: center;
+}
+
+/* Springs up from below, overshoots, then squashes on landing. */
+.kapsi-intro__drop {
+  transform-origin: 50% 100%;
+  animation: kapsi-intro-drop 0.85s linear 0.2s both;
+}
+
+.kapsi-intro__ring {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 150%;
+  aspect-ratio: 1;
+  border: 3px solid var(--color-butter);
+  border-radius: 9999px;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation: kapsi-intro-ring 0.9s ease-out 0.75s forwards;
+}
+
+.kapsi-intro__bubble {
+  position: absolute;
+  left: 78%;
+  top: 2%;
+  white-space: nowrap;
+  border-radius: 18px 18px 18px 6px;
+  background: #fff;
+  padding: 8px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-soft);
+  transform-origin: 0 100%;
+  animation: kapsi-intro-pop 0.45s var(--spring) 0.95s both;
+}
+
+.kapsi-intro__skip {
+  position: absolute;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  animation: kapsi-intro-rise 0.4s ease-out 0.6s both;
+}
+
+.kapsi-intro[data-phase="exit"] :is(.kapsi-intro__text, .kapsi-intro__bubble, .kapsi-intro__skip) {
+  animation: kapsi-intro-out 0.3s ease-in forwards;
+}
+
+/* Kapsi in the Hero waits for the hand-off, then lands with a squash and a sparkle ring. */
+html[data-intro="play"] [data-intro-target] {
+  animation: kapsi-intro-unhide 0s 4.9s both;
+}
+
+html[data-intro="done"] [data-intro-target] {
+  transform-origin: 50% 100%;
+  animation: kapsi-intro-land 0.55s var(--spring, ease-out) both;
+}
+
+html[data-intro="done"] [data-intro-target]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  aspect-ratio: 1;
+  border: 3px solid var(--color-butter);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  animation: kapsi-intro-ring 0.65s ease-out both;
+}
+
+@keyframes kapsi-intro-fallback {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes kapsi-intro-open {
+  to {
+    --hole: 150vmax;
+  }
+}
+
+@keyframes kapsi-intro-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes kapsi-intro-sparkle {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(-90deg);
+  }
+}
+
+@keyframes kapsi-intro-letter {
+  from {
+    opacity: 0;
+    transform: translateY(0.55em) scale(0.5) rotate(-10deg);
+  }
+}
+
+@keyframes kapsi-intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes kapsi-intro-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes kapsi-intro-out {
+  to {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes kapsi-intro-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(60vh) scale(0.7);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-18px) scale(0.94, 1.08);
+    animation-timing-function: ease-in;
+  }
+  68% {
+    transform: translateY(0) scale(1.14, 0.84);
+    animation-timing-function: ease-out;
+  }
+  84% {
+    transform: translateY(-5px) scale(0.97, 1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes kapsi-intro-ring {
+  from {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+}
+
+@keyframes kapsi-intro-unhide {
+  from {
+    visibility: hidden;
+  }
+  to {
+    visibility: visible;
+  }
+}
+
+@keyframes kapsi-intro-land {
+  0% {
+    transform: scale(0.9);
+  }
+  45% {
+    transform: scale(1.12, 0.88);
+  }
+  70% {
+    transform: scale(0.97, 1.04);
+  }
+  100% {
+    transform: none;
   }
 }
 

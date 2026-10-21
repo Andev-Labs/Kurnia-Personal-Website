@@ -1,10 +1,11 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, ScriptOnce, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import { EMAIL, HERO_PORTRAIT, LINKEDIN_URL, PERSON_NAME, SITE_URL } from '#/data/site'
 import { LOCALE_OPTIONS } from '#/lib/locales'
 import { m } from '#/paraglide/messages.js'
+import { INTRO_HEAD_SCRIPT } from '#/lib/intro'
 import { getLocale, locales, localizeHref } from '#/paraglide/runtime.js'
 import appCss from '../styles.css?url'
 
@@ -78,8 +79,11 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={LOCALE_OPTIONS[getLocale()].tag}>
+    // The intro head script writes `data-intro` before hydration, so React must not flag the extra attribute.
+    <html lang={LOCALE_OPTIONS[getLocale()].tag} suppressHydrationWarning>
       <head>
+        {/* Decides whether the welcome intro plays, before the first paint. */}
+        <ScriptOnce>{INTRO_HEAD_SCRIPT}</ScriptOnce>
         <HeadContent />
       </head>
       <body>
