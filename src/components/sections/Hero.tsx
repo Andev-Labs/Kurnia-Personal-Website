@@ -115,10 +115,13 @@ export function Hero() {
                 {m.hero_open_badge()}
               </motion.div>
               <motion.div variants={POP_VARIANTS} className="absolute -bottom-2 -left-3 w-[96px] sm:-left-6 sm:w-[118px] print:hidden">
-                <p className="absolute bottom-[calc(100%-4px)] left-0 w-max max-w-[128px] rounded-2xl rounded-bl-[6px] bg-white px-3 py-2 font-heading font-semibold text-[12.5px] leading-[1.3] text-ink shadow-soft">
-                  {m.hero_mascot_bubble()}
-                </p>
-                <Mascot pose="wave" className="block w-full drop-shadow-[0_10px_14px_rgb(91_63_224/0.22)]" />
+                {/* The intro's Kapsi flies here and lands (see IntroOverlay). */}
+                <div data-intro-target className="relative">
+                  <p className="absolute bottom-[calc(100%-4px)] left-0 w-max max-w-[128px] rounded-2xl rounded-bl-[6px] bg-white px-3 py-2 font-heading font-semibold text-[12.5px] leading-[1.3] text-ink shadow-soft">
+                    {m.hero_mascot_bubble()}
+                  </p>
+                  <Mascot pose="wave" className="block w-full drop-shadow-[0_10px_14px_rgb(91_63_224/0.22)]" />
+                </div>
               </motion.div>
             </RevealGroup>
           </div>
