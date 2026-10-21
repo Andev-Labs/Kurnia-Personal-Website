@@ -5,8 +5,18 @@
  * - `play`: the intro overlay is showing and Kapsi in the Hero is hidden, waiting for the hand-off.
  * - `skip`: no intro (reduced motion, or a language switch reloaded the page).
  * - `done`: Kapsi has landed in the Hero.
+ *
+ * The same state is mirrored on `window.__kapsiIntro`, outside the DOM React manages. Hosts can inject
+ * markup into `<head>` (Netlify adds an HTML comment), which makes React throw away the server HTML
+ * and re-render the whole document, wiping `data-intro`. The mirror lets the intro restore it.
  */
 export type IntroState = 'play' | 'skip' | 'done'
+
+declare global {
+  interface Window {
+    __kapsiIntro?: IntroState
+  }
+}
 
 /** Session flag set just before a language switch reloads the page, so the intro does not replay. */
 export const INTRO_SKIP_KEY = 'kapsi:skip-intro'
@@ -25,15 +35,29 @@ export const INTRO_CURTAIN_MS = 750
  * Runs inline in `<head>` before the first paint. It must stay self-contained (no imports).
  * Reduced motion skips the intro entirely; a pending language-switch flag skips it once.
  */
-export const INTRO_HEAD_SCRIPT = `(function(){var d=document.documentElement,s="skip";try{if(sessionStorage.getItem("${INTRO_SKIP_KEY}")){sessionStorage.removeItem("${INTRO_SKIP_KEY}");d.dataset.intro=s;return}}catch(e){}d.dataset.intro=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches?s:"play"})()`
+export const INTRO_HEAD_SCRIPT = `(function(){var s="skip";function set(v){document.documentElement.dataset.intro=window.__kapsiIntro=v}try{if(sessionStorage.getItem("${INTRO_SKIP_KEY}")){sessionStorage.removeItem("${INTRO_SKIP_KEY}");set(s);return}}catch(e){}set(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches?s:"play")})()`
 
+function isIntroState(value: unknown): value is IntroState {
+  return value === 'play' || value === 'skip' || value === 'done'
+}
+
+/** `<html data-intro>`, or the `window` mirror if a client re-render wiped the attribute. */
 export function readIntroState(): IntroState | undefined {
   const state = document.documentElement.dataset.intro
-  return state === 'play' || state === 'skip' || state === 'done' ? state : undefined
+  if (isIntroState(state)) return state
+  return isIntroState(window.__kapsiIntro) ? window.__kapsiIntro : undefined
 }
 
 export function setIntroState(state: IntroState) {
   document.documentElement.dataset.intro = state
+  window.__kapsiIntro = state
+}
+
+/** Puts `data-intro` back on `<html>` if a client re-render dropped it, so the CSS sees the state again. */
+export function restoreIntroState(): IntroState | undefined {
+  const state = readIntroState()
+  if (state && document.documentElement.dataset.intro !== state) setIntroState(state)
+  return state
 }
 
 /** Call right before a client-side reload (e.g. switching language) to skip the next intro. */

@@ -10,6 +10,8 @@ import {
   readIntroState,
   remainingHoldMs,
   requestIntroSkip,
+  restoreIntroState,
+  setIntroState,
 } from './intro'
 
 function runHeadScript({ reducedMotion = false } = {}) {
@@ -24,6 +26,7 @@ afterEach(() => {
   vi.unstubAllGlobals()
   sessionStorage.clear()
   delete document.documentElement.dataset.intro
+  delete window.__kapsiIntro
 })
 
 describe('intro head script', () => {
@@ -53,6 +56,44 @@ describe('intro head script', () => {
 
     runHeadScript()
     expect(readIntroState()).toBe('play')
+  })
+})
+
+describe('intro state surviving a client re-render', () => {
+  it('mirrors the head script decision outside the DOM', () => {
+    runHeadScript()
+    expect(window.__kapsiIntro).toBe('play')
+
+    runHeadScript({ reducedMotion: true })
+    expect(window.__kapsiIntro).toBe('skip')
+  })
+
+  it('falls back to the mirror when `data-intro` was wiped', () => {
+    runHeadScript()
+    delete document.documentElement.dataset.intro
+
+    expect(readIntroState()).toBe('play')
+  })
+
+  it('puts the wiped attribute back on <html>', () => {
+    runHeadScript()
+    delete document.documentElement.dataset.intro
+
+    expect(restoreIntroState()).toBe('play')
+    expect(document.documentElement.dataset.intro).toBe('play')
+  })
+
+  it('keeps the mirror in step with later state changes', () => {
+    runHeadScript()
+    setIntroState('done')
+    delete document.documentElement.dataset.intro
+
+    expect(restoreIntroState()).toBe('done')
+  })
+
+  it('leaves nothing to restore when the head script never ran', () => {
+    expect(restoreIntroState()).toBeUndefined()
+    expect(document.documentElement.dataset.intro).toBeUndefined()
   })
 })
 

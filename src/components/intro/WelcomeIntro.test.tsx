@@ -9,6 +9,7 @@ import { WelcomeIntro } from './WelcomeIntro'
 afterEach(() => {
   cleanup()
   delete document.documentElement.dataset.intro
+  delete window.__kapsiIntro
 })
 
 describe('WelcomeIntro', () => {
@@ -27,6 +28,29 @@ describe('WelcomeIntro', () => {
 
     await waitFor(() => expect(container.querySelector('.kapsi-intro')).toBeNull())
     expect(readIntroState()).toBe('skip')
+  })
+
+  it('still plays when a full client re-render wiped `<html data-intro>`', async () => {
+    // What the head script left behind, after React discarded the server HTML (e.g. Netlify's injected comment).
+    setIntroState('play')
+    delete document.documentElement.dataset.intro
+    const { container } = render(<WelcomeIntro />)
+
+    expect(document.documentElement.dataset.intro).toBe('play')
+    expect(container.querySelector('.kapsi-intro')).not.toBeNull()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Skip intro' }))
+    await waitFor(() => expect(container.querySelector('.kapsi-intro')).toBeNull())
+    expect(document.documentElement.dataset.intro).toBe('done')
+  })
+
+  it('stays skipped when the wiped state was `skip`', async () => {
+    setIntroState('skip')
+    delete document.documentElement.dataset.intro
+    const { container } = render(<WelcomeIntro />)
+
+    await waitFor(() => expect(container.querySelector('.kapsi-intro')).toBeNull())
+    expect(document.documentElement.dataset.intro).toBe('skip')
   })
 
   it('hands over to the Hero when skipped', async () => {
