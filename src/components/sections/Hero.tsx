@@ -99,34 +99,21 @@ export function Hero() {
                   className={cn('absolute inset-0 translate-x-4 translate-y-3 rotate-6 bg-lavender/60 print:hidden', BLOB_RADIUS)}
                 />
                 <div className={cn('relative bg-white p-3 shadow-soft-lg print:p-0', BLOB_RADIUS)}>
-                  <div className="relative">
-                    <picture>
-                      <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
-                      <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
-                      <img
-                        src={`${HERO_PORTRAIT.base}-800.jpg`}
-                        srcSet={portraitSrcSet('jpg')}
-                        sizes={PORTRAIT_SIZES}
-                        width={HERO_PORTRAIT.width}
-                        height={HERO_PORTRAIT.height}
-                        alt={m.hero_portrait_alt()}
-                        fetchPriority="high"
-                        decoding="async"
-                        className={cn('block aspect-[4/5] w-full bg-lavender-50 object-cover', BLOB_RADIUS)}
-                      />
-                    </picture>
-                    {/*
-                     * The sign behind Kurnia is Cyrillic and reads as stray letters. A soft lavender tint and a light blur
-                     * cover the edges of the photo; the radial mask keeps Kurnia herself sharp. The photo file is unchanged.
-                     */}
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'pointer-events-none absolute inset-0 bg-lavender-50/65 backdrop-blur-[5px] [mask-image:radial-gradient(ellipse_25%_62%_at_52%_58%,transparent_50%,#000_95%)] print:hidden',
-                        BLOB_RADIUS,
-                      )}
+                  <picture>
+                    <source type="image/avif" srcSet={portraitSrcSet('avif')} sizes={PORTRAIT_SIZES} />
+                    <source type="image/webp" srcSet={portraitSrcSet('webp')} sizes={PORTRAIT_SIZES} />
+                    <img
+                      src={`${HERO_PORTRAIT.base}-800.jpg`}
+                      srcSet={portraitSrcSet('jpg')}
+                      sizes={PORTRAIT_SIZES}
+                      width={HERO_PORTRAIT.width}
+                      height={HERO_PORTRAIT.height}
+                      alt={m.hero_portrait_alt()}
+                      fetchPriority="high"
+                      decoding="async"
+                      className={cn('block aspect-[4/5] w-full bg-lavender-50 object-cover', BLOB_RADIUS)}
                     />
-                  </div>
+                  </picture>
                 </div>
               </motion.div>
               <motion.div
