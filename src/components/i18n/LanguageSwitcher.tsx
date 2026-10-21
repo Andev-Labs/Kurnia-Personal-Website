@@ -23,14 +23,14 @@ export function LanguageSwitcher() {
       className="inline-flex items-center gap-0.5 rounded-full bg-lavender-50 p-1 ring-1 ring-lavender-100"
     >
       {locales.map((locale) => {
-        const { label, name } = LOCALE_OPTIONS[locale]
+        const { label, name, tag } = LOCALE_OPTIONS[locale]
         const isActive = locale === current
         return (
           <a
             key={locale}
             href={localizeHref('/', { locale })}
-            hrefLang={locale}
-            lang={locale}
+            hrefLang={tag}
+            lang={tag}
             title={name}
             aria-label={name}
             aria-current={isActive ? 'true' : undefined}

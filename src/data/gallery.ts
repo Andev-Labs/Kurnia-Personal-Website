@@ -13,7 +13,7 @@ export interface GalleryPhoto {
 export interface GalleryShot {
   label: string
   caption: string
-  /** Shots without a photo render a placeholder slot. */
+  /** Optional in the type only so a single work photo can reuse this shape in the viewer; gallery.test.ts requires it. */
   photo?: GalleryPhoto
 }
 
@@ -38,13 +38,17 @@ export interface GalleryItem {
   title: string
   meta: string
   caption: string
-  /** Single work photo shown on the card and in the viewer; items without one render a placeholder slot. */
+  /** Single photo shown on the card and in the viewer. Every `kerja` item needs one; `intl` albums use `shots`. */
   photo?: GalleryPhoto
   /** Items with shots open as an album first; items without open straight into the photo viewer. */
   shots?: GalleryShot[]
 }
 
 /**
+ * The one place to add gallery photos. To add a work photo: export it at 540 and 1080 px wide as
+ * `public/images/gallery/<name>-<width>.{avif,webp,jpg}`, add the caption/alt keys to every `messages/*.json`,
+ * then append a `kerja` item below. Cards without a photo are not allowed (see gallery.test.ts).
+ *
  * Built per call so captions follow the active locale — on the server, each request can have a
  * different one, so this must not be hoisted to a module-level constant.
  */
@@ -52,15 +56,10 @@ export function getGallery(): GalleryItem[] {
   return [
     {
       group: 'kerja',
-      title: m.gallery_hplc_title(),
-      meta: m.gallery_hplc_meta(),
-      caption: m.gallery_hplc_caption(),
-    },
-    {
-      group: 'kerja',
       title: m.gallery_qcc_convention_title(),
       meta: 'Top 10 · Kalbe Consumer Health',
       caption: m.gallery_qcc_convention_caption(),
+      // TODO(Kurnia): confirm this internal QCC slide may be published (the next card too).
       photo: qccPhoto('convention-title', 1080, 602, m.gallery_qcc_convention_alt()),
     },
     {
@@ -71,27 +70,9 @@ export function getGallery(): GalleryItem[] {
       photo: qccPhoto('team', 1080, 601, m.gallery_qcc_team_alt()),
     },
     {
-      group: 'kerja',
-      title: m.gallery_dissolution_title(),
-      meta: 'Performance verification test',
-      caption: m.gallery_dissolution_caption(),
-    },
-    {
-      group: 'kerja',
-      title: m.gallery_reagents_title(),
-      meta: 'Working Standard vs Reference Standard',
-      caption: m.gallery_reagents_caption(),
-    },
-    {
-      group: 'kerja',
-      title: m.gallery_spectroscopy_title(),
-      meta: 'FTIR · UV-Vis · ICP-OES · AAS',
-      caption: m.gallery_spectroscopy_caption(),
-    },
-    {
       group: 'intl',
       title: m.gallery_sechenov_title(),
-      meta: 'Summer School Program · Innovative Drugs',
+      meta: 'Summer School · Innovative Drugs · 2025',
       caption: m.gallery_sechenov_caption(),
       shots: [
         {
@@ -125,6 +106,12 @@ export function getGallery(): GalleryItem[] {
           photo: sechenovPhoto('participants', 1080, 720, m.gallery_sechenov_participants_alt()),
         },
         {
+          // Formerly the hero photo; it belongs with the Sechenov program.
+          label: m.gallery_sechenov_portrait_label(),
+          caption: m.gallery_sechenov_portrait_caption(),
+          photo: sechenovPhoto('portrait', 1080, 1350, m.gallery_sechenov_portrait_alt()),
+        },
+        {
           label: m.gallery_sechenov_institute_label(),
           caption: m.gallery_sechenov_institute_caption(),
           photo: sechenovPhoto('institute-pharmacy', 1080, 1440, m.gallery_sechenov_institute_alt()),
@@ -139,7 +126,7 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'intl',
       title: m.gallery_cpu_title(),
-      meta: 'Summer International School Program · 2023',
+      meta: 'Summer International School · Discover Jiangsu · 2023',
       caption: m.gallery_cpu_caption(),
       shots: [
         {

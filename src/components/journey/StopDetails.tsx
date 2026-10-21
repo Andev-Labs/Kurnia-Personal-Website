@@ -1,6 +1,7 @@
 import { GalleryPhoto } from '#/components/gallery/GalleryPhoto'
 import { useGallery } from '#/components/gallery/GalleryProvider'
 import { WorkGallery } from '#/components/gallery/WorkGallery'
+import { Accordion } from '#/components/ui/Accordion'
 import { Bullet } from '#/components/ui/Bullet'
 import { Button } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
@@ -32,13 +33,16 @@ interface StopBodyProps {
 export function StopBody({ stop, withMedia = true }: StopBodyProps) {
   return (
     <>
+      {stop.caseStudy ? <CaseStudyHeader {...stop.caseStudy} /> : null}
       {stop.entries.length > 0 ? (
         <div className="flex flex-col gap-3.5 text-[15px] leading-[1.6]">
+          {stop.entriesLabel ? <p className={LABEL_CLASS}>{stop.entriesLabel}</p> : null}
           {stop.entries.map((entry, index) => (
             <StopEntryView key={index} entry={entry} />
           ))}
         </div>
       ) : null}
+      {stop.daily?.length ? <DailyDuties items={stop.daily} collapsible={withMedia} /> : null}
       {stop.extra === 'next' ? <NextAdventure withMedia={withMedia} /> : null}
       {withMedia && stop.extra === 'qcc-photos' ? <QccPhotos /> : null}
       {withMedia && stop.extra === 'work-gallery' ? <WorkGallery /> : null}
@@ -46,12 +50,55 @@ export function StopBody({ stop, withMedia = true }: StopBodyProps) {
   )
 }
 
+const LABEL_CLASS = 'font-heading text-[12.5px] font-semibold tracking-[0.04em] text-violet uppercase'
+
+function CaseStudyHeader({ label, title, meta }: { label: string; title: string; meta: string }) {
+  return (
+    <div className="rounded-[18px] bg-butter-100 px-5 py-4">
+      <p className="mb-1.5 font-heading text-[12.5px] font-semibold tracking-[0.04em] text-[#7a5a00]">{label}</p>
+      <p className="font-heading text-[17px] leading-[1.3] font-semibold text-pretty">{title}</p>
+      <p className="mt-1.5 text-[13px] font-bold text-ink-soft">{meta}</p>
+    </div>
+  )
+}
+
 function StopEntryView({ entry }: { entry: StopEntry }) {
   if ('chart' in entry) return <LeadTimeChart />
+  if ('label' in entry) {
+    return (
+      <div>
+        <p className={`mb-1 ${LABEL_CLASS}`}>{entry.label}</p>
+        <p className="text-pretty text-ink-soft [&_strong]:text-ink">
+          {typeof entry.message === 'string' ? entry.message : <RichText message={entry.message} />}
+        </p>
+      </div>
+    )
+  }
   return (
     <Bullet marker={entry.marker}>
       <RichText message={entry.message} />
     </Bullet>
+  )
+}
+
+/** Routine duties: a disclosure in the interactive card, an open list in the print / no-JS timeline. */
+function DailyDuties({ items, collapsible }: { items: string[]; collapsible: boolean }) {
+  const list = (
+    <ul className="flex flex-col gap-2 px-4 pb-4 text-[14.5px] leading-[1.6] text-ink-soft">
+      {items.map((item) => (
+        <li key={item} className="relative pl-5 text-pretty">
+          <span aria-hidden="true" className="absolute top-[0.6em] left-0 size-2 rounded-full bg-lavender" />
+          {item}
+        </li>
+      ))}
+    </ul>
+  )
+  if (collapsible) return <Accordion title={m.experience_daily_toggle()}>{list}</Accordion>
+  return (
+    <div className="rounded-[18px] bg-lavender-50 pt-3">
+      <h4 className="px-4 pb-2 font-heading text-[14.5px] font-semibold text-violet">{m.experience_daily_toggle()}</h4>
+      {list}
+    </div>
   )
 }
 

@@ -8,7 +8,6 @@ export function About() {
   const stats = [
     { value: '3+', label: m.about_stat_years(), className: 'bg-butter-100', dotClassName: 'bg-butter' },
     { value: '10', label: m.about_stat_team(), className: 'bg-bubblegum-100', dotClassName: 'bg-bubblegum' },
-    { value: 'Top 10', label: m.about_stat_award(), className: 'bg-lavender-100', dotClassName: 'bg-violet' },
   ]
 
   return (
@@ -21,6 +20,9 @@ export function About() {
         <RevealItem className="relative rounded-card-lg bg-white p-[26px] shadow-soft md:p-8">
           <p className="text-[16px] leading-[1.7] text-ink-soft text-pretty [&_strong]:text-ink">
             <RichText message={m.about_body} />
+          </p>
+          <p className="mt-4 text-[16px] leading-[1.7] text-ink-soft text-pretty [&_strong]:text-ink">
+            <RichText message={m.about_goal} />
           </p>
         </RevealItem>
 

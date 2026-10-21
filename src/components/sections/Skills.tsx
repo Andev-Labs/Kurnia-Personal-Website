@@ -6,6 +6,7 @@ import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { Section, SectionHeading } from '#/components/ui/Section'
 import { Tag, TagList } from '#/components/ui/Tag'
 import type { TagTone } from '#/components/ui/Tag'
+import { EFSET_URL } from '#/data/site'
 import { m } from '#/paraglide/messages.js'
 
 interface SkillGroup {
@@ -15,7 +16,9 @@ interface SkillGroup {
   items: string[]
 }
 
-const DATA_SYSTEMS = ['Empower (HPLC Data System)', 'Oracle']
+function getSoftware() {
+  return ['Waters Empower', m.skills_software_oracle(), 'Microsoft 365', 'Google Workspace', 'LibreOffice']
+}
 
 function getSkillGroups(): SkillGroup[] {
   return [
@@ -50,6 +53,7 @@ function getSkillGroups(): SkillGroup[] {
         'Karl Fischer',
         'Polarimeter',
         'pH Meter',
+        'Centrifuge',
       ],
     },
     {
@@ -60,7 +64,10 @@ function getSkillGroups(): SkillGroup[] {
         'GMP',
         'GLP',
         'ISO 17025',
+        'Good Documentation Practices (GDP)',
         m.skills_quality_pharmacopoeia(),
+        m.skills_quality_oos(),
+        'CAPA',
         m.skills_quality_audit(),
         m.skills_quality_chemical_safety(),
       ],
@@ -84,8 +91,6 @@ function getSkillGroups(): SkillGroup[] {
 }
 
 export function Skills() {
-  const languages = [m.skills_language_indonesian(), m.skills_language_english()]
-
   return (
     <Section id="keahlian">
       <div className="flex items-end justify-between gap-4">
@@ -113,9 +118,9 @@ export function Skills() {
         ))}
 
         <RevealItem className="rounded-card bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_100%)] p-6 text-white shadow-soft print-plain">
-          <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_data_systems()}</h3>
+          <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_group_software()}</h3>
           <TagList className="mb-[22px]">
-            {DATA_SYSTEMS.map((item) => (
+            {getSoftware().map((item) => (
               <Tag key={item} tone="violet">
                 {item}
               </Tag>
@@ -123,12 +128,17 @@ export function Skills() {
           </TagList>
           <h3 className="mb-3 font-heading font-semibold text-[17px]">{m.skills_languages()}</h3>
           <TagList>
-            {languages.map((item) => (
-              <Tag key={item} tone="violet">
-                {item}
-              </Tag>
-            ))}
+            <Tag tone="violet">{m.skills_language_indonesian()}</Tag>
+            <Tag tone="violet">{m.skills_language_english()}</Tag>
           </TagList>
+          <a
+            href={EFSET_URL}
+            target="_blank"
+            rel="noopener"
+            className="mt-3.5 inline-flex items-center gap-1.5 text-[13.5px] font-bold text-white underline decoration-white/40 underline-offset-4 hover:text-white hover:decoration-white"
+          >
+            {m.skills_language_verify()} <span aria-hidden="true">↗</span>
+          </a>
         </RevealItem>
       </RevealGroup>
     </Section>

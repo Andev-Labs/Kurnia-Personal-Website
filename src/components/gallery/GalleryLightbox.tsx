@@ -80,11 +80,7 @@ function AlbumModal() {
                       sizes={ALBUM_THUMB_SIZES}
                       className="absolute inset-0 size-full object-contain"
                     />
-                  ) : (
-                    <span className="absolute inset-3 grid place-items-center rounded-2xl border-2 border-dashed border-lavender-300">
-                      <span className="block size-[30px] rounded-xl bg-lavender" />
-                    </span>
-                  )}
+                  ) : null}
                   <span className="absolute top-2.5 right-2.5 rounded-full bg-butter px-[9px] py-1 text-[10.5px] font-bold text-ink shadow-soft-sm">
                     {m.gallery_photo_badge()}
                   </span>
@@ -185,17 +181,7 @@ function ShotViewer() {
                 sizes={VIEWER_SIZES}
                 className="absolute inset-0 size-full object-contain"
               />
-            ) : (
-              <div className="absolute inset-0 grid place-items-center p-7 text-center">
-                <div>
-                  <div className="mx-auto mb-3.5 size-[62px] rounded-2xl bg-lavender" />
-                  <p className="font-heading font-semibold text-[14px] text-white">{m.gallery_placeholder_title()}</p>
-                  <p className="mt-1.5 text-[12.5px] font-semibold text-lavender-200">
-                    {m.gallery_placeholder_hint()}
-                  </p>
-                </div>
-              </div>
-            )}
+            ) : null}
           </div>
           {/* Capped so a long caption scrolls on short screens instead of squeezing the photo out. */}
           <div className="flex max-h-[55%] flex-none flex-col rounded-b-card bg-white px-4 py-3.5 md:px-5 md:py-4">

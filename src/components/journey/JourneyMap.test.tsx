@@ -42,9 +42,25 @@ describe('JourneyMap', () => {
     const dialog = screen.getByRole('dialog', { name: m.experience_kch_role() })
     expect(dialog.textContent).toContain('Kalbe Consumer Health (KCH), Kalbe Group')
     expect(dialog.textContent).toContain(m.experience_kch_period())
-    expect(dialog.textContent).toContain(m.experience_kch_suggestion_system().replace(/\{[#/]b\}/g, ''))
+    expect(dialog.textContent).toContain(m.experience_kch_impact_method().replace(/\{[#/]b\}/g, ''))
     expect(within(dialog).getByRole('heading', { name: m.gallery_work_heading() })).toBeTruthy()
     expect(document.activeElement).toBe(within(dialog).getByRole('button', { name: m.journey_close() }))
+  })
+
+  it('folds the daily responsibilities into a disclosure', async () => {
+    renderMap()
+    await userEvent.click(mapStops()[1])
+
+    const dialog = screen.getByRole('dialog', { name: m.experience_kch_role() })
+    const toggle = within(dialog).getByRole('button', { name: m.experience_daily_toggle() })
+    const panel = document.getElementById(toggle.getAttribute('aria-controls') ?? '')
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+    expect(panel?.hasAttribute('inert')).toBe(true)
+    expect(panel?.textContent).toContain(m.experience_kch_daily_suggestion())
+
+    await userEvent.click(toggle)
+    expect(toggle.getAttribute('aria-expanded')).toBe('true')
+    expect(panel?.hasAttribute('inert')).toBe(false)
   })
 
   it('shows the lead time chart on the QCC stop', async () => {
@@ -53,6 +69,7 @@ describe('JourneyMap', () => {
     const dialog = screen.getByRole('dialog', { name: m.journey_qcc_title() })
     expect(dialog.textContent).toContain(m.experience_chart_title())
     expect(dialog.textContent).toContain('−67%')
+    expect(dialog.textContent).toContain(m.case_title())
   })
 
   it('closes on Escape and returns focus to the stop', async () => {
@@ -93,8 +110,8 @@ describe('JourneyMap', () => {
   it('keeps every stop in a plain timeline for print', () => {
     renderMap()
     const [, timeline] = screen.getAllByRole('list', { hidden: true })
-    expect(within(timeline).getAllByRole('heading', { hidden: true })).toHaveLength(STOPS.length)
+    expect(within(timeline).getAllByRole('heading', { level: 3, hidden: true })).toHaveLength(STOPS.length)
     for (const stop of STOPS) expect(timeline.textContent).toContain(stop.title)
-    expect(timeline.textContent).toContain(m.experience_intern_stock_opname().replace(/\{[#/]b\}/g, ''))
+    expect(timeline.textContent).toContain(m.experience_intern_daily_testing())
   })
 })

@@ -18,7 +18,7 @@ export function WorkGallery() {
       </div>
       <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
         {items.map((item, index) =>
-          item.group === 'kerja' ? (
+          item.group === 'kerja' && item.photo ? (
             // The motion wrapper sits outside the card so it doesn't override the `lift` hover transform.
             <RevealItem key={item.title} direction="pop">
               <button
@@ -43,11 +43,7 @@ function WorkCardContent({ item }: { item: GalleryItem }) {
       <span className="relative block aspect-[4/3] overflow-hidden bg-lavender-50">
         {item.photo ? (
           <GalleryPhoto photo={item.photo} sizes={COVER_SIZES} className="absolute inset-0 size-full object-contain" />
-        ) : (
-          <span className="absolute inset-3 grid place-items-center rounded-2xl border-2 border-dashed border-lavender-300">
-            <span className="block size-[34px] rounded-xl bg-lavender" />
-          </span>
-        )}
+        ) : null}
         <span className="absolute top-2.5 right-2.5 rounded-full bg-butter px-[9px] py-1 text-[10.5px] font-bold text-ink shadow-soft-sm">
           {m.gallery_photo_badge()}
         </span>
