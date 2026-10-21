@@ -1,6 +1,7 @@
+import { Mascot } from '#/components/mascot/Mascot'
 import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
+import { buttonClassName } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
-import { Section } from '#/components/ui/Section'
 import { m } from '#/paraglide/messages.js'
 
 const CONTACT_LINKS = [
@@ -16,42 +17,57 @@ const CONTACT_LINKS = [
   },
 ]
 
+/** A white card on a deep violet panel, after Ahead's welcome screen. */
 export function Contact() {
   return (
-    <Section id="kontak" className="border-t-3 border-ink bg-ink text-cream">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-9">
-        <Reveal direction="left">
-          <h2 className="mb-4 font-heading font-semibold text-[clamp(30px,4.4vw,54px)] leading-none tracking-[-0.03em]">
-            {m.contact_heading_line1()}
-            <br />
-            {m.contact_heading_line2()}
-            <br />
-            {m.contact_heading_line3()}
-          </h2>
-          <p className="max-w-[34ch] text-[16px] leading-[1.6] text-pretty">
-            <RichText message={m.contact_body} />
-          </p>
-        </Reveal>
+    <section id="kontak" className="page-x py-14">
+      <div className="relative isolate overflow-hidden rounded-[36px] bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_55%,var(--color-lavender-900)_100%)] px-5 py-12 sm:px-10 md:py-16">
+        <span
+          aria-hidden="true"
+          className="absolute -top-20 -right-16 -z-10 size-64 rounded-full bg-lavender/25 blur-2xl"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute -bottom-24 -left-16 -z-10 size-72 rounded-full bg-bubblegum/20 blur-2xl"
+        />
 
-        <RevealGroup stagger={0.12} delay={0.15} className="flex flex-col gap-3.5">
-          {CONTACT_LINKS.map((link) => (
-            // The link keeps its CSS `lift` hover transform, so the motion wrapper stays outside it.
-            <RevealItem key={link.href} direction="right">
-              <a
-                href={link.href}
-                {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}
-                className="lift flex items-center justify-between gap-3.5 rounded-[14px] border-3 border-cream bg-cream px-[22px] py-[18px] text-[15px] font-bold text-ink hover:text-ink shadow-soft"
-              >
-                <span>{link.label}</span>
-                <span className="font-heading font-semibold">→</span>
-              </a>
-            </RevealItem>
-          ))}
-          <RevealItem direction="right">
-            <p className="mt-2 text-[14.5px] font-semibold opacity-80">Bekasi, Indonesia 17411</p>
-          </RevealItem>
-        </RevealGroup>
+        <Reveal
+          direction="pop"
+          className="mx-auto grid max-w-[880px] grid-cols-1 items-center gap-8 rounded-card-lg bg-white p-6 text-center shadow-soft-lg sm:p-9 md:grid-cols-[auto_1fr] md:text-left"
+        >
+          <Mascot pose="mail" className="mx-auto h-auto w-28 md:w-36" />
+
+          <div className="min-w-0">
+            <h2 className="mb-4 font-heading font-semibold text-[clamp(28px,4vw,46px)] leading-[1.05] tracking-[-0.02em] text-balance">
+              {m.contact_heading_line1()}
+              <br />
+              {m.contact_heading_line2()}
+              <br />
+              <span className="text-violet">{m.contact_heading_line3()}</span>
+            </h2>
+            <p className="mb-6 max-w-[42ch] text-[16px] leading-[1.6] text-ink-soft text-pretty max-md:mx-auto [&_strong]:text-ink">
+              <RichText message={m.contact_body} />
+            </p>
+
+            <RevealGroup stagger={0.12} delay={0.15} className="flex flex-wrap justify-center gap-3 md:justify-start">
+              {CONTACT_LINKS.map((link, index) => (
+                // The link keeps its CSS `lift` hover transform, so the motion wrapper stays outside it.
+                <RevealItem key={link.href} direction="pop" className="max-w-full">
+                  <a
+                    href={link.href}
+                    {...(link.external ? { target: '_blank', rel: 'noopener' } : {})}
+                    className={buttonClassName(index === 0 ? 'primary' : 'secondary', 'max-w-full [overflow-wrap:anywhere]')}
+                  >
+                    <span>{link.label}</span>
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+            <p className="mt-5 text-[14px] font-bold text-ink-soft">Bekasi, Indonesia 17411</p>
+          </div>
+        </Reveal>
       </div>
-    </Section>
+    </section>
   )
 }

@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react'
 
+import { buttonClassName } from '#/components/ui/Button'
 import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
 import { GalleryPhoto } from './GalleryPhoto'
@@ -30,36 +31,36 @@ function AlbumModal() {
   const close = () => dispatch({ type: 'close' })
 
   return (
-    <div onClick={close} className="fixed inset-0 z-60 grid place-items-center bg-ink/72 p-3 md:p-5">
+    <div onClick={close} className="fixed inset-0 z-60 grid place-items-center bg-ink/60 p-3 backdrop-blur-sm md:p-5">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="gallery-album-title"
         onClick={stopPropagation}
-        className="max-h-[90vh] w-[min(1120px,100%)] overflow-auto rounded-[22px] border-3 border-ink bg-cream shadow-soft-lg"
+        className="max-h-[90vh] w-[min(1120px,100%)] overflow-auto rounded-card-lg bg-lavender-50 shadow-soft-lg"
       >
-        <div className="sticky top-0 z-2 flex items-center justify-between gap-3.5 border-b-3 border-ink bg-lavender px-4 py-4 md:px-[22px]">
-          <span className="font-heading font-semibold text-[13px] tracking-[0.04em]">{view.groupLabel}</span>
+        <div className="sticky top-0 z-2 flex items-center justify-between gap-3.5 bg-white/90 px-4 py-4 shadow-soft-sm backdrop-blur-md md:px-[22px]">
+          <span className="font-heading font-semibold text-[13px] tracking-[0.04em] text-violet">{view.groupLabel}</span>
           <button
             type="button"
             onClick={close}
             aria-label={m.gallery_close_album()}
             autoFocus
-            className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-heading font-semibold text-[15px] text-ink shadow-soft-sm"
+            className="grid size-[38px] cursor-pointer place-items-center rounded-full bg-lavender-50 font-heading font-semibold text-[18px] leading-none text-violet transition-colors hover:bg-lavender-100"
           >
             ×
           </button>
         </div>
 
-        <div className="border-b-3 border-ink px-4 pt-[26px] pb-2 md:px-[22px]">
+        <div className="px-4 pt-[26px] pb-2 md:px-[22px]">
           <h4
             id="gallery-album-title"
             className="mb-1.5 font-heading font-semibold text-[clamp(20px,2.6vw,30px)] leading-[1.2] tracking-[-0.02em]"
           >
             {active.title}
           </h4>
-          <p className="mb-3 text-[13px] font-bold opacity-60">{active.meta}</p>
-          <p className="mb-[22px] max-w-[70ch] text-[15.5px] leading-[1.65] text-pretty">{active.caption}</p>
+          <p className="mb-3 text-[13px] font-bold text-violet">{active.meta}</p>
+          <p className="mb-[22px] max-w-[70ch] text-[15.5px] leading-[1.65] text-ink-soft text-pretty">{active.caption}</p>
         </div>
 
         <div className="px-4 py-6 md:px-[22px]">
@@ -69,10 +70,10 @@ function AlbumModal() {
                 key={shot.label}
                 type="button"
                 onClick={() => dispatch({ type: 'openShot', shotIndex })}
-                className="lift block w-full cursor-zoom-in overflow-hidden rounded-2xl border-3 border-ink bg-white p-0 text-left shadow-soft"
+                className="lift block w-full cursor-zoom-in overflow-hidden rounded-card bg-white p-0 text-left shadow-soft"
               >
                 {/* Portrait and landscape shots share one grid, so the thumbnail fits the frame instead of cropping it. */}
-                <span className="relative block aspect-[4/3] overflow-hidden border-b-3 border-ink bg-cream">
+                <span className="relative block aspect-[4/3] overflow-hidden bg-lavender-50">
                   {shot.photo ? (
                     <GalleryPhoto
                       photo={shot.photo}
@@ -80,38 +81,38 @@ function AlbumModal() {
                       className="absolute inset-0 size-full object-contain"
                     />
                   ) : (
-                    <span className="absolute inset-3 grid place-items-center rounded-xl border-[2.5px] border-dashed border-ink">
-                      <span className="block size-[30px] rounded-lg border-[2.5px] border-ink bg-lavender" />
+                    <span className="absolute inset-3 grid place-items-center rounded-2xl border-2 border-dashed border-lavender-300">
+                      <span className="block size-[30px] rounded-xl bg-lavender" />
                     </span>
                   )}
-                  <span className="absolute top-2.5 right-2.5 rounded-full border-[2.5px] border-ink bg-sun px-[9px] py-1 text-[10.5px] font-bold">
+                  <span className="absolute top-2.5 right-2.5 rounded-full bg-butter px-[9px] py-1 text-[10.5px] font-bold text-ink shadow-soft-sm">
                     {m.gallery_photo_badge()}
                   </span>
                 </span>
                 <span className="block px-4 py-3.5">
                   <span className="mb-[5px] block font-heading font-semibold text-[13.5px] leading-[1.3]">{shot.label}</span>
-                  <span className="block text-[13px] leading-[1.55] text-pretty opacity-70">{shot.caption}</span>
+                  <span className="block text-[13px] leading-[1.55] text-ink-soft text-pretty">{shot.caption}</span>
                 </span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t-3 border-ink px-4 py-4 md:px-[22px]">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 pt-2 pb-5 md:px-[22px]">
           <button
             type="button"
             onClick={() => dispatch({ type: 'step', delta: -1 })}
-            className="cursor-pointer rounded-xl border-3 border-ink bg-white px-3.5 py-2.5 font-heading font-semibold text-[12.5px] text-ink shadow-soft-sm md:px-5 md:py-3 md:text-[13.5px]"
+            className={buttonClassName('secondary', 'px-3.5 py-2.5 text-[12.5px] md:px-5 md:py-3 md:text-[13.5px]')}
           >
             ← {m.gallery_previous_program()}
           </button>
-          <span className="order-last w-full text-center text-[13px] font-bold sm:order-none sm:w-auto">
+          <span className="order-last w-full text-center text-[13px] font-bold text-ink-soft sm:order-none sm:w-auto">
             {view.counter}
           </span>
           <button
             type="button"
             onClick={() => dispatch({ type: 'step', delta: 1 })}
-            className="cursor-pointer rounded-xl border-3 border-ink bg-pink px-3.5 py-2.5 font-heading font-semibold text-[12.5px] text-ink shadow-soft-sm md:px-5 md:py-3 md:text-[13.5px]"
+            className={buttonClassName('primary', 'px-3.5 py-2.5 text-[12.5px] md:px-5 md:py-3 md:text-[13.5px]')}
           >
             {m.gallery_next_program()} →
           </button>
@@ -131,8 +132,8 @@ function StepShotButton({ delta, className }: { delta: 1 | -1; className?: strin
       onClick={() => dispatch({ type: 'stepShot', delta })}
       aria-label={delta < 0 ? m.gallery_previous_photo() : m.gallery_next_photo()}
       className={cn(
-        'grid size-[44px] flex-none cursor-pointer place-items-center rounded-full border-3 border-cream font-heading font-semibold text-[17px] text-ink md:size-[50px]',
-        delta < 0 ? 'bg-cream' : 'bg-pink',
+        'grid size-[44px] flex-none cursor-pointer place-items-center rounded-full font-heading font-semibold text-[17px] shadow-soft transition-colors focus-visible:outline-lavender md:size-[50px]',
+        delta < 0 ? 'bg-white text-violet hover:bg-lavender-50' : 'bg-violet text-white hover:bg-violet-deep',
         className,
       )}
     >
@@ -155,10 +156,10 @@ function ShotViewer() {
       aria-modal="true"
       aria-label={`${shot.heading}: ${shot.label}`}
       onClick={closeShot}
-      className="fixed inset-0 z-80 flex flex-col gap-3 bg-ink/90 p-3 md:gap-3.5 md:p-[18px]"
+      className="fixed inset-0 z-80 flex flex-col gap-3 bg-ink/85 p-3 backdrop-blur-sm md:gap-3.5 md:p-[18px]"
     >
       <div className="flex flex-none items-center justify-between gap-3.5">
-        <span className="min-w-0 flex-[0_1_auto] rounded-xl border-3 border-cream bg-sun px-4 py-[9px] font-heading font-semibold text-[12px] leading-[1.35] text-ink">
+        <span className="min-w-0 flex-[0_1_auto] rounded-full bg-butter px-4 py-[9px] font-heading font-semibold text-[12px] leading-[1.35] text-ink shadow-soft-sm">
           {shot.heading}
         </span>
         <button
@@ -166,7 +167,7 @@ function ShotViewer() {
           onClick={closeShot}
           aria-label={m.gallery_close_photo()}
           autoFocus
-          className="grid size-[42px] flex-none cursor-pointer place-items-center rounded-xl border-3 border-cream bg-cream font-heading font-semibold text-[17px] text-ink shadow-soft"
+          className="grid size-[42px] flex-none cursor-pointer place-items-center rounded-full bg-white font-heading font-semibold text-[19px] leading-none text-violet shadow-soft transition-colors hover:bg-lavender-50 focus-visible:outline-lavender"
         >
           ×
         </button>
@@ -176,7 +177,7 @@ function ShotViewer() {
         <StepShotButton delta={-1} className="hidden md:grid" />
 
         <div className="flex h-full max-w-[1100px] min-w-0 flex-1 flex-col justify-center">
-          <div className="relative min-h-0 flex-1 overflow-hidden rounded-t-[18px] border-3 border-b-0 border-cream bg-graphite">
+          <div className="relative min-h-0 flex-1 overflow-hidden rounded-t-card bg-lavender-900">
             {shot.photo ? (
               <GalleryPhoto
                 key={shot.photo.src}
@@ -187,9 +188,9 @@ function ShotViewer() {
             ) : (
               <div className="absolute inset-0 grid place-items-center p-7 text-center">
                 <div>
-                  <div className="mx-auto mb-3.5 size-[62px] rounded-[14px] border-3 border-cream bg-lavender" />
-                  <p className="font-heading font-semibold text-[14px] text-cream">{m.gallery_placeholder_title()}</p>
-                  <p className="mt-1.5 text-[12.5px] font-semibold text-cream opacity-60">
+                  <div className="mx-auto mb-3.5 size-[62px] rounded-2xl bg-lavender" />
+                  <p className="font-heading font-semibold text-[14px] text-white">{m.gallery_placeholder_title()}</p>
+                  <p className="mt-1.5 text-[12.5px] font-semibold text-lavender-200">
                     {m.gallery_placeholder_hint()}
                   </p>
                 </div>
@@ -197,14 +198,14 @@ function ShotViewer() {
             )}
           </div>
           {/* Capped so a long caption scrolls on short screens instead of squeezing the photo out. */}
-          <div className="flex max-h-[55%] flex-none flex-col rounded-b-[18px] border-3 border-cream bg-cream px-4 py-3.5 md:px-5 md:py-4">
+          <div className="flex max-h-[55%] flex-none flex-col rounded-b-card bg-white px-4 py-3.5 md:px-5 md:py-4">
             <div className="min-h-0 overflow-y-auto">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <p className="font-heading font-semibold text-[15px] leading-[1.3]">{shot.label}</p>
-                <span className="text-[12.5px] font-bold opacity-60">{shot.counter}</span>
+                <span className="text-[12.5px] font-bold text-ink-soft">{shot.counter}</span>
               </div>
-              {shot.meta && <p className="mt-[5px] text-[12.5px] font-bold opacity-55">{shot.meta}</p>}
-              <p className="mt-[7px] text-[14px] leading-[1.6] text-pretty md:text-[14.5px]">{shot.caption}</p>
+              {shot.meta && <p className="mt-[5px] text-[12.5px] font-bold text-violet">{shot.meta}</p>}
+              <p className="mt-[7px] text-[14px] leading-[1.6] text-ink-soft text-pretty md:text-[14.5px]">{shot.caption}</p>
             </div>
             {/* Mobile has no room for arrows beside the photo, and floating them over it would cover the photo. */}
             <div className="mt-3.5 flex flex-none items-center justify-between gap-3 md:hidden">

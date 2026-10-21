@@ -34,17 +34,10 @@
   --color-ink-soft: #5c4f8f;
   --color-mist-teal: #a9cfcb;
 
-  /*
-   * Legacy aliases for the pre-redesign section styles. They point at the new palette so the
-   * untouched sections keep rendering until they are restyled, then get removed.
-   */
-  --color-cream: var(--color-lavender-50);
-  --color-sand: var(--color-blush);
-  --color-graphite: var(--color-ink);
-  --color-pink: var(--color-bubblegum);
-  --color-pink-deep: var(--color-violet);
-  --color-sun: var(--color-butter);
-  --color-teal: var(--color-mint);
+  /* Pale tints for pastel surfaces (stat cards, award cards, chips). */
+  --color-butter-100: #fdf1c7;
+  --color-mint-100: #d9f2e7;
+  --color-bubblegum-100: #ffe3ee;
 
   --radius-card: 24px;
   --radius-card-lg: 28px;
@@ -53,8 +46,7 @@
   --shadow-soft: 0 10px 30px -12px rgb(91 63 224 / 0.35);
   --shadow-soft-lg: 0 18px 44px -16px rgb(91 63 224 / 0.42);
 
-  --animate-marquee: marquee 26s linear infinite;
-  --animate-float: float 5s ease-in-out infinite;
+  --animate-marquee: marquee 60s linear infinite;
   --animate-draw: draw 6s ease-in-out infinite;
   --animate-scan: scan 6s linear infinite;
   --animate-flow: flow 2.6s linear infinite;
@@ -74,10 +66,6 @@
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(-6deg); }
-    50% { transform: translateY(-10px) rotate(-2deg); }
   }
   @keyframes bubble {
     0% { transform: translateY(0); opacity: 0; }
