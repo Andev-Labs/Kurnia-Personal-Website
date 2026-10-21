@@ -19,8 +19,11 @@ function Home() {
     // `user` honours prefers-reduced-motion: transforms are skipped and only opacity fades remain.
     <MotionConfig reducedMotion="user">
       <GalleryProvider>
-        <Navbar />
-        <Hero />
+        {/* On desktop the navbar and hero together fill the first screen, so nothing looks unfinished below the fold. */}
+        <div className="flex flex-col lg:min-h-[min(100svh,1080px)]">
+          <Navbar />
+          <Hero />
+        </div>
         <About />
         <Skills />
         <Experience />
