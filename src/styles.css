@@ -47,9 +47,6 @@
   --shadow-soft: 0 10px 30px -12px rgb(91 63 224 / 0.35);
   --shadow-soft-lg: 0 18px 44px -16px rgb(91 63 224 / 0.42);
 
-  --animate-marquee: marquee 60s linear infinite;
-  --animate-draw: draw 6s ease-in-out infinite;
-  --animate-scan: scan 6s linear infinite;
   --animate-flow: flow 2.6s linear infinite;
   --animate-shrink: shrink 5s ease-in-out infinite;
   --animate-tick: tick 3s ease-in-out infinite;
@@ -64,23 +61,10 @@
   --animate-bob: bob 1.6s ease-in-out infinite;
   --animate-twinkle: twinkle 3.2s ease-in-out infinite;
 
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
   @keyframes bubble {
     0% { transform: translateY(0); opacity: 0; }
     20% { opacity: 1; }
     100% { transform: translateY(-16px); opacity: 0; }
-  }
-  @keyframes draw {
-    0% { stroke-dashoffset: var(--len); }
-    45%, 75% { stroke-dashoffset: 0; }
-    100% { stroke-dashoffset: 0; opacity: 0; }
-  }
-  @keyframes scan {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(720px); }
   }
   @keyframes grow {
     0% { transform: scaleY(0.12); }
@@ -138,11 +122,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Keep anchor targets clear of the sticky navbar. */
-    scroll-padding-top: 84px;
-    @media (width >= 48rem) {
-      scroll-padding-top: 92px;
-    }
+    /* A little breathing room above anchor targets. */
+    scroll-padding-top: 24px;
   }
 
   body {
