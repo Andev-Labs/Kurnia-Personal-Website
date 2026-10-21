@@ -29,7 +29,7 @@ describe('JourneyMap', () => {
   it('lists the stops in chronological order with the latest job as the current step', () => {
     renderMap()
     const buttons = mapStops()
-    expect(buttons).toHaveLength(5)
+    expect(buttons).toHaveLength(STOPS.length)
     STOPS.forEach((stop, index) => expect(buttons[index].textContent).toContain(stop.title))
     expect(buttons.filter((button) => button.getAttribute('aria-current') === 'step')).toEqual([buttons[1]])
     expect(buttons[1].textContent).toContain(m.experience_kch_role())
@@ -85,7 +85,7 @@ describe('JourneyMap', () => {
 
   it('keeps Tab focus inside the card', async () => {
     renderMap()
-    await userEvent.click(mapStops()[4])
+    await userEvent.click(mapStops()[5])
     const dialog = screen.getByRole('dialog', { name: m.journey_next_title() })
     const close = within(dialog).getByRole('button', { name: m.journey_close() })
     const contact = within(dialog).getByRole('link', { name: m.hero_cta_contact() })
@@ -101,7 +101,7 @@ describe('JourneyMap', () => {
 
   it('opens QCC photos in the shared gallery viewer', async () => {
     renderMap()
-    await userEvent.click(mapStops()[3])
+    await userEvent.click(mapStops()[4])
     const dialog = screen.getByRole('dialog', { name: m.awards_qcc_title() })
     await userEvent.click(within(dialog).getByRole('button', { name: new RegExp(m.gallery_qcc_team_title()) }))
     expect(screen.getAllByRole('dialog').length).toBeGreaterThan(1)

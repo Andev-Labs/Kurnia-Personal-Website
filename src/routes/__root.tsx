@@ -22,7 +22,7 @@ export const Route = createRootRoute({
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: PERSON_NAME,
-      jobTitle: 'Analytical Chemistry Analyst',
+      jobTitle: 'Analytical Scientist',
       email: `mailto:${EMAIL}`,
       url: SITE_URL,
       image: `${SITE_URL}${HERO_PORTRAIT.base}-800.jpg`,

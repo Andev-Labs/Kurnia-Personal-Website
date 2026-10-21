@@ -16,8 +16,9 @@ interface SkillGroup {
   items: string[]
 }
 
+/** Skill list as given by Kurnia (NIA-13); tool and standard names stay untranslated. */
 function getSoftware() {
-  return ['Waters Empower', m.skills_software_oracle(), 'Microsoft 365', 'Google Workspace', 'LibreOffice']
+  return ['Microsoft Office', 'Microsoft Outlook', 'Oracle']
 }
 
 function getSkillGroups(): SkillGroup[] {
@@ -27,13 +28,14 @@ function getSkillGroups(): SkillGroup[] {
       Icon: FlaskIcon,
       tone: 'lavender',
       items: [
-        m.skills_lab_raw_materials(),
-        m.skills_lab_products(),
-        m.skills_lab_method_validation(),
-        m.skills_lab_calibration(),
-        m.skills_lab_troubleshooting(),
-        m.skills_lab_working_standard(),
-        m.skills_lab_reference_standard(),
+        'Analytical Skills',
+        'Analytical Development',
+        'Method Development',
+        'Research & Development (R&D)',
+        'Formulation Development',
+        'Calibration',
+        'Performance Qualification (PQ)',
+        'Pharmaceutical',
       ],
     },
     {
@@ -41,19 +43,19 @@ function getSkillGroups(): SkillGroup[] {
       Icon: ColumnIcon,
       tone: 'mint',
       items: [
-        'HPLC (Waters Alliance)',
+        'High Performance Liquid Chromatography',
         'Gas Chromatography',
-        'AAS',
-        'FTIR',
+        'Gas Chromatography-Mass Spectrometry (GC-MS)',
+        'High-Performance Thin-Layer Chromatography',
+        'Atomic Absorption Spectrometry',
         'ICP-OES',
+        'FTIR',
         m.skills_instrument_uv_vis(),
-        'TLC UV Scanner',
+        'Karl Fischer',
+        'Moisture Analyzer',
+        'TOC Analyzer',
         'Dissolution Tester',
         'Disintegration Tester',
-        'Karl Fischer',
-        'Polarimeter',
-        'pH Meter',
-        'Centrifuge',
       ],
     },
     {
@@ -61,31 +63,23 @@ function getSkillGroups(): SkillGroup[] {
       Icon: ChecklistIcon,
       tone: 'butter',
       items: [
-        'GMP',
-        'GLP',
-        'ISO 17025',
-        'Good Documentation Practices (GDP)',
-        m.skills_quality_pharmacopoeia(),
-        m.skills_quality_oos(),
-        'CAPA',
-        m.skills_quality_audit(),
-        m.skills_quality_chemical_safety(),
+        'Quality Control',
+        'Good Manufacturing Practices',
+        'CPOB',
+        'CPKB',
+        'Good Laboratory Practices',
+        'Good Documentation Practice',
+        'Data Integrity',
+        'Out of Specification (OOS)',
+        'Out of Trend (OOT)',
+        'Corrective Action and Preventive Action (CAPA)',
       ],
     },
     {
-      title: m.skills_group_improvement(),
+      title: m.skills_group_teamwork(),
       Icon: GrowthIcon,
       tone: 'blush',
-      items: [
-        'Quality Control Circle (QCC)',
-        '8 Steps Problem Solving',
-        '7 QC Tools',
-        'Root Cause Analysis',
-        'Risk Priority Number (RPN)',
-        m.skills_improvement_swot(),
-        'Suggestion System (SS)',
-        m.skills_improvement_leadership(),
-      ],
+      items: ['Team Leadership', 'Teamwork'],
     },
   ]
 }
