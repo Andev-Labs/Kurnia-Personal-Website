@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react'
 
 import { LanguageSwitcher } from '#/components/i18n/LanguageSwitcher'
 import { ScrollProgress } from '#/components/motion/Reveal'
+import { buttonClassName } from '#/components/ui/Button'
 import { cn } from '#/lib/cn'
+import { useActiveSection } from '#/lib/useActiveSection'
 import { m } from '#/paraglide/messages.js'
 
 const DRAWER_ID = 'mobile-nav-drawer'
+
+/** Sections the scroll spy watches. The hero is included so no link stays lit once you scroll back to the top. */
+const SPY_IDS = ['atas', 'tentang', 'keahlian', 'pengalaman', 'pendidikan', 'kontak'] as const
 
 export function Navbar() {
   const links = [
@@ -16,6 +21,8 @@ export function Navbar() {
   ]
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
+  const active = useActiveSection(SPY_IDS)
+  const isActive = (href: string) => href === `#${active}`
 
   // While the drawer is open: lock page scroll and let Escape close it.
   useEffect(() => {
@@ -33,24 +40,38 @@ export function Navbar() {
   }, [isOpen])
 
   return (
-    <header className="sticky top-0 z-40 border-b-3 border-ink bg-cream">
-      <nav className="page-x flex items-center justify-between gap-5 py-4 md:py-5">
-        <a href="#atas" className="flex items-center gap-2.5">
-          <span className="grid size-[38px] place-items-center rounded-[10px] border-3 border-ink bg-lavender font-heading font-semibold text-[17px] leading-none">
+    <header className="page-x sticky top-0 z-40 pt-3 md:pt-4">
+      <nav className="relative flex items-center justify-between gap-4 rounded-full bg-white/80 py-2 pr-2 pl-2.5 shadow-soft ring-1 ring-lavender-200/70 backdrop-blur-md">
+        <a href="#atas" className="flex items-center gap-2.5 rounded-full pr-2">
+          <span className="grid size-[38px] place-items-center rounded-full bg-violet font-heading font-semibold text-[17px] leading-none text-white">
             K
           </span>
           <span className="font-heading font-semibold text-[15px] tracking-[-0.02em]">kurnia.qc</span>
         </a>
-        <div className="hidden items-center gap-[22px] text-[14.5px] font-semibold lg:flex">
+        <div className="hidden items-center gap-1 text-[14.5px] font-bold lg:flex">
           {links.map((link) => (
-            <a key={link.href} href={link.href}>
+            <a
+              key={link.href}
+              href={link.href}
+              aria-current={isActive(link.href) ? 'location' : undefined}
+              className={cn(
+                'rounded-full px-3.5 py-2 transition-colors duration-150',
+                isActive(link.href) ? 'bg-lavender-50 text-violet' : 'text-ink-soft hover:text-violet',
+              )}
+            >
               {link.label}
             </a>
           ))}
-          <a href="#kontak" className="rounded-full border-3 border-ink bg-sun px-[18px] py-[9px] shadow-soft-sm">
+        </div>
+        <div className="hidden items-center gap-2.5 lg:flex">
+          <LanguageSwitcher />
+          <a
+            href="#kontak"
+            aria-current={isActive('#kontak') ? 'location' : undefined}
+            className={buttonClassName('primary', 'px-5 py-3 text-[14.5px]')}
+          >
             {m.nav_contact()}
           </a>
-          <LanguageSwitcher />
         </div>
         <button
           type="button"
@@ -58,22 +79,22 @@ export function Navbar() {
           aria-label={m.nav_menu_open()}
           aria-expanded={isOpen}
           aria-controls={DRAWER_ID}
-          className="grid size-[42px] cursor-pointer place-items-center rounded-xl border-3 border-ink bg-sun shadow-soft-sm lg:hidden"
+          className="grid size-[42px] cursor-pointer place-items-center rounded-full bg-lavender-50 text-violet transition-colors hover:bg-lavender-100 lg:hidden"
         >
           <span aria-hidden="true" className="flex w-[18px] flex-col gap-[4px]">
-            <span className="h-[2.5px] rounded-full bg-ink" />
-            <span className="h-[2.5px] rounded-full bg-ink" />
-            <span className="h-[2.5px] rounded-full bg-ink" />
+            <span className="h-[2.5px] rounded-full bg-current" />
+            <span className="h-[2.5px] rounded-full bg-current" />
+            <span className="h-[2.5px] rounded-full bg-current" />
           </span>
         </button>
+        <ScrollProgress />
       </nav>
-      <ScrollProgress />
 
       <div
         onClick={close}
         aria-hidden="true"
         className={cn(
-          'fixed inset-0 z-50 bg-ink/60 transition-opacity duration-200 lg:hidden',
+          'fixed inset-0 z-50 bg-ink/40 backdrop-blur-[2px] transition-opacity duration-200 lg:hidden',
           isOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
@@ -84,35 +105,40 @@ export function Navbar() {
         aria-label={m.nav_menu_label()}
         inert={!isOpen}
         className={cn(
-          'fixed inset-y-0 right-0 z-50 flex w-[min(300px,85vw)] flex-col border-l-3 border-ink bg-cream transition-transform duration-200 lg:hidden',
-          isOpen ? 'translate-x-0' : 'translate-x-full',
+          'fixed inset-y-3 right-3 z-50 flex w-[min(320px,calc(100vw-24px))] flex-col overflow-y-auto rounded-card-lg bg-white shadow-soft-lg transition-transform duration-250 ease-out lg:hidden',
+          isOpen ? 'translate-x-0' : 'translate-x-[calc(100%+24px)]',
         )}
       >
-        <div className="flex items-center justify-between gap-3 border-b-3 border-ink bg-lavender px-[22px] py-4">
-          <span className="font-heading font-semibold text-[13px] tracking-[0.04em]">{m.nav_menu_title()}</span>
+        <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
+          <span className="font-heading font-semibold text-[13px] tracking-[0.08em] text-violet">{m.nav_menu_title()}</span>
           <button
             type="button"
             onClick={close}
             aria-label={m.nav_menu_close()}
-            className="grid size-[38px] cursor-pointer place-items-center rounded-[10px] border-3 border-ink bg-cream font-heading font-semibold text-[15px] text-ink shadow-soft-sm"
+            className="grid size-[38px] cursor-pointer place-items-center rounded-full bg-lavender-50 font-heading font-semibold text-[18px] leading-none text-violet transition-colors hover:bg-lavender-100"
           >
             ×
           </button>
         </div>
-        <div className="border-b-3 border-ink px-[22px] py-4">
+        <div className="px-5 pb-2">
           <LanguageSwitcher />
         </div>
-        <div className="flex flex-col gap-1 px-[22px] py-5 text-[17px] font-semibold">
+        <div className="flex flex-col gap-1 px-3 py-4 text-[17px] font-bold">
           {links.map((link) => (
-            <a key={link.href} href={link.href} onClick={close} className="border-b-2 border-ink/15 py-3.5">
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={close}
+              aria-current={isActive(link.href) ? 'location' : undefined}
+              className={cn(
+                'rounded-2xl px-4 py-3.5 transition-colors duration-150',
+                isActive(link.href) ? 'bg-lavender-50 text-violet' : 'hover:bg-lavender-50',
+              )}
+            >
               {link.label}
             </a>
           ))}
-          <a
-            href="#kontak"
-            onClick={close}
-            className="mt-5 rounded-full border-3 border-ink bg-sun px-[18px] py-3 text-center shadow-soft-sm"
-          >
+          <a href="#kontak" onClick={close} className={buttonClassName('primary', 'mx-2 mt-4 py-4 text-[16px]')}>
             {m.nav_contact()}
           </a>
         </div>

@@ -1,7 +1,7 @@
 import { motion, useScroll, useSpring } from 'framer-motion'
 import type { HTMLMotionProps, Variants } from 'framer-motion'
 
-/** Snappy ease-out that suits the hard-shadow, neo-brutalist look. */
+/** Gentle ease-out: quick to start, soft to settle. */
 const EASE = [0.22, 1, 0.36, 1] as const
 
 /** Start a little before the element is fully on screen, and only animate the first time. */
@@ -78,7 +78,7 @@ export function RevealItem({ direction = 'up', ...props }: RevealItemProps) {
   return <motion.div variants={revealVariants(direction)} {...props} />
 }
 
-/** Thin bar pinned under the sticky navbar that fills as the page is scrolled. */
+/** Thin bar along the bottom of the floating navbar that fills as the page is scrolled. */
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 26, restDelta: 0.001 })
@@ -87,7 +87,7 @@ export function ScrollProgress() {
     <motion.div
       aria-hidden="true"
       style={{ scaleX }}
-      className="pointer-events-none absolute inset-x-0 -bottom-[3px] h-[5px] origin-left bg-pink"
+      className="pointer-events-none absolute inset-x-8 bottom-0 h-[3px] origin-left rounded-full bg-violet/50"
     />
   )
 }
