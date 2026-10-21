@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useSpring } from 'framer-motion'
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { KeyboardEvent, RefObject } from 'react'
 
@@ -139,7 +139,13 @@ function MapCanvas({ stops, interactive, selectedId, onSelect, registerNode }: M
       </ol>
 
       {interactive ? (
-        <KapsiWalker stops={stops} currentIndex={currentIndex} mapRef={mapRef} pathRef={pathRef} />
+        <KapsiWalker
+          stops={stops}
+          currentIndex={currentIndex}
+          selectedIndex={stops.findIndex((stop) => stop.id === selectedId)}
+          mapRef={mapRef}
+          pathRef={pathRef}
+        />
       ) : null}
     </div>
   )
@@ -221,6 +227,7 @@ function StopNode({ stop, number, interactive, selected, onSelect, registerNode 
           aria-expanded={selected}
           aria-current={stop.kind === 'current' ? 'step' : undefined}
           onClick={() => onSelect(stop.id)}
+          data-stop-index={number - 1}
           className={className}
           style={style}
         >
@@ -254,6 +261,8 @@ function FlagIcon() {
 interface KapsiWalkerProps {
   stops: JourneyStop[]
   currentIndex: number
+  /** The stop whose card is open, or -1. */
+  selectedIndex: number
   mapRef: RefObject<HTMLDivElement | null>
   pathRef: RefObject<SVGPathElement | null>
 }
@@ -266,10 +275,12 @@ const BUBBLE_RADIUS = 0.01
 const SIDE_STEP = { mobile: 62, desktop: 84 }
 
 /**
- * Kapsi walks the path as the page scrolls: it stands where the path crosses the middle of the
- * viewport and says something while it is near a stop. With reduced motion it waits at the current stop.
+ * Kapsi walks the path after the mouse: it heads for where the path reaches the pointer's height,
+ * lingers on any stop nearby, and goes straight to a stop that is hovered, focused or opened. It starts
+ * at the current stop and says something while it stands near one. With reduced motion it hops
+ * instead of walking.
  */
-function KapsiWalker({ stops, currentIndex, mapRef, pathRef }: KapsiWalkerProps) {
+function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: KapsiWalkerProps) {
   const reduceMotion = useReducedMotion() ?? false
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -315,21 +326,27 @@ function KapsiWalker({ stops, currentIndex, mapRef, pathRef }: KapsiWalkerProps)
     [pathRef, x, y],
   )
 
-  const { scrollYProgress } = useScroll({ target: mapRef, offset: ['start center', 'end center'] })
-  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, restDelta: 0.0005 })
+  const target = useMotionValue(0)
+  const walked = useSpring(target, { stiffness: 90, damping: 22, restDelta: 0.5 })
 
-  const lengthForProgress = useCallback((value: number) => {
-    const geo = geometry.current
-    if (!geo) return 0
-    const length = dwellAtStops(geo.stopLengths, lengthAtHeight(geo.samples, value * MAP_GRID), geo.total * DWELL_RADIUS)
-    return Math.max(geo.stopLengths[0], Math.min(geo.stopLengths[geo.stopLengths.length - 1], length))
-  }, [])
+  const walkTo = useCallback(
+    (value: number) => {
+      const geo = geometry.current
+      if (!geo) return
+      const clamped = Math.max(geo.stopLengths[0], Math.min(geo.stopLengths[geo.stopLengths.length - 1], value))
+      if (reduceMotion) walked.jump(clamped)
+      else target.set(clamped)
+    },
+    [reduceMotion, target, walked],
+  )
 
-  const restingLength = useCallback(() => {
-    const geo = geometry.current
-    if (!geo) return 0
-    return reduceMotion ? geo.stopLengths[currentIndex] : lengthForProgress(progress.get())
-  }, [currentIndex, lengthForProgress, progress, reduceMotion])
+  const walkToStop = useCallback(
+    (index: number) => {
+      const stopLength = geometry.current?.stopLengths[index]
+      if (stopLength !== undefined) walkTo(stopLength)
+    },
+    [walkTo],
+  )
 
   useLayoutEffect(() => {
     const path = pathRef.current
@@ -343,10 +360,14 @@ function KapsiWalker({ stops, currentIndex, mapRef, pathRef }: KapsiWalkerProps)
       stopLengths: lengthsAtPoints(samples, STOP_POINTS),
       total: path.getTotalLength(),
     }
+    const start = geometry.current.stopLengths[currentIndex] ?? 0
+    lastLength.current = start
+    target.jump(start)
+    walked.jump(start)
 
     const measure = () => {
       size.current = { width: map.clientWidth, height: map.clientHeight }
-      place(restingLength())
+      place(walked.get())
     }
     measure()
     setReady(true)
@@ -355,15 +376,49 @@ function KapsiWalker({ stops, currentIndex, mapRef, pathRef }: KapsiWalkerProps)
     const observer = new ResizeObserver(measure)
     observer.observe(map)
     return () => observer.disconnect()
-  }, [mapRef, pathRef, place, restingLength])
+  }, [currentIndex, mapRef, pathRef, place, target, walked])
 
-  useMotionValueEvent(progress, 'change', (value) => {
-    if (!reduceMotion) place(lengthForProgress(value))
-  })
+  // Follow the mouse over the map; a hovered or focused stop wins over the pointer's height.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+
+    const stopIndexOf = (element: EventTarget | null) => {
+      const node = element instanceof Element ? element.closest<HTMLElement>('[data-stop-index]') : null
+      return node ? Number(node.dataset.stopIndex) : null
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      // Touch has no hover; a tap opens a stop and Kapsi walks there instead.
+      if (event.pointerType === 'touch') return
+      const geo = geometry.current
+      if (!geo) return
+      const stop = stopIndexOf(event.target)
+      if (stop !== null) return walkToStop(stop)
+      const rect = map.getBoundingClientRect()
+      if (rect.height === 0) return
+      const height = ((event.clientY - rect.top) / rect.height) * MAP_GRID
+      walkTo(dwellAtStops(geo.stopLengths, lengthAtHeight(geo.samples, height), geo.total * DWELL_RADIUS))
+    }
+
+    const onFocusIn = (event: FocusEvent) => {
+      const stop = stopIndexOf(event.target)
+      if (stop !== null) walkToStop(stop)
+    }
+
+    map.addEventListener('pointermove', onPointerMove)
+    map.addEventListener('focusin', onFocusIn)
+    return () => {
+      map.removeEventListener('pointermove', onPointerMove)
+      map.removeEventListener('focusin', onFocusIn)
+    }
+  }, [mapRef, walkTo, walkToStop])
 
   useEffect(() => {
-    if (reduceMotion) place(restingLength())
-  }, [place, reduceMotion, restingLength])
+    if (selectedIndex !== -1) walkToStop(selectedIndex)
+  }, [selectedIndex, walkToStop])
+
+  useMotionValueEvent(walked, 'change', place)
 
   return (
     <motion.div
