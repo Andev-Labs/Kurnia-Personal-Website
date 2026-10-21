@@ -1,5 +1,6 @@
 import type { MouseEvent } from 'react'
 
+import { requestIntroSkip } from '#/lib/intro'
 import { LOCALE_OPTIONS } from '#/lib/locales'
 import { cn } from '#/lib/cn'
 import { m } from '#/paraglide/messages.js'
@@ -13,7 +14,10 @@ export function LanguageSwitcher() {
     // Let modified clicks (new tab, etc.) follow the plain link.
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     event.preventDefault()
-    if (locale !== current) setLocale(locale)
+    if (locale === current) return
+    // setLocale reloads the page; the welcome intro should only greet a fresh visit or a refresh.
+    requestIntroSkip()
+    setLocale(locale)
   }
 
   return (

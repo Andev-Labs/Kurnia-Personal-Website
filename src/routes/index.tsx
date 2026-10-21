@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { MotionConfig } from 'framer-motion'
 
 import { GalleryProvider } from '#/components/gallery/GalleryProvider'
+import { WelcomeIntro } from '#/components/intro/WelcomeIntro'
 import { Footer } from '#/components/layout/Footer'
 import { Navbar } from '#/components/layout/Navbar'
 import { About } from '#/components/sections/About'
@@ -19,6 +20,7 @@ function Home() {
     // `user` honours prefers-reduced-motion: transforms are skipped and only opacity fades remain.
     <MotionConfig reducedMotion="user">
       <GalleryProvider>
+        <WelcomeIntro />
         {/* On desktop the navbar and hero together fill the first screen, so nothing looks unfinished below the fold. */}
         <div className="flex flex-col lg:min-h-[min(100svh,1080px)]">
           <Navbar />
