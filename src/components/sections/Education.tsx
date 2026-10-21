@@ -2,22 +2,15 @@ import type { ReactNode } from 'react'
 
 import { ProgramGallery } from '#/components/gallery/ProgramGallery'
 import { Mascot } from '#/components/mascot/Mascot'
-import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { RichText } from '#/components/ui/RichText'
-import { Section, SectionHeading } from '#/components/ui/Section'
+import { Section, SectionHeader } from '#/components/ui/Section'
 import { m } from '#/paraglide/messages.js'
 
 export function Education() {
   return (
     <Section id="pendidikan">
-      <div className="flex items-end justify-between gap-4">
-        <SectionHeading number="04" badgeClassName="bg-lavender-100">
-          {m.education_heading()}
-        </SectionHeading>
-        <Reveal direction="pop" className="-mb-2 hidden w-24 flex-none sm:block md:w-28">
-          <Mascot pose="grad" className="h-auto w-full" />
-        </Reveal>
-      </div>
+      <SectionHeader number="04" title={m.education_heading()} mascot={<Mascot pose="grad" />} />
 
       <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(min(320px,100%),1fr))] gap-6">
         <RevealItem className="rounded-card-lg bg-white p-[26px] shadow-soft">

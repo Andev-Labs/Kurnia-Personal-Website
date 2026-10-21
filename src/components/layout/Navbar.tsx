@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { LanguageSwitcher } from '#/components/i18n/LanguageSwitcher'
 import { buttonClassName } from '#/components/ui/Button'
@@ -8,17 +8,27 @@ import { useActiveSection } from '#/lib/useActiveSection'
 import { m } from '#/paraglide/messages.js'
 
 const DRAWER_ID = 'mobile-nav-drawer'
+const MORE_ID = 'nav-more-menu'
 
 /** Sections the scroll spy watches. The hero is included so no link stays lit once you scroll back to the top. */
-const SPY_IDS = ['atas', 'tentang', 'keahlian', 'pengalaman', 'pendidikan', 'kontak'] as const
+const SPY_IDS = ['atas', 'tentang', 'keahlian', 'pengalaman', 'pendidikan', 'penghargaan', 'aktivitas', 'kontak'] as const
+
+interface NavLink {
+  href: string
+  label: string
+}
 
 export function Navbar() {
-  const links = [
+  const primaryLinks: NavLink[] = [
     { href: '#tentang', label: m.nav_about() },
     { href: '#keahlian', label: m.nav_skills() },
     { href: '#pengalaman', label: m.nav_experience() },
     { href: '#pendidikan', label: m.nav_education() },
   ]
+  const certifications: NavLink = { href: '#penghargaan', label: m.nav_certifications() }
+  const activities: NavLink = { href: '#aktivitas', label: m.nav_activities() }
+  const links = [...primaryLinks, certifications, activities]
+
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
   const active = useActiveSection(SPY_IDS)
@@ -49,19 +59,11 @@ export function Navbar() {
           <span className="font-heading font-semibold text-[15px] tracking-[-0.02em]">kurnia.qc</span>
         </a>
         <div className="hidden items-center gap-1 text-[14.5px] font-bold lg:flex">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              aria-current={isActive(link.href) ? 'location' : undefined}
-              className={cn(
-                'rounded-full px-3.5 py-2 whitespace-nowrap transition-colors duration-150',
-                isActive(link.href) ? 'bg-lavender-50 text-violet' : 'text-ink-soft hover:text-violet',
-              )}
-            >
-              {link.label}
-            </a>
+          {primaryLinks.map((link) => (
+            <DesktopLink key={link.href} link={link} active={isActive(link.href)} />
           ))}
+          {/* The row is capped at 1200px and Russian labels already fill it, so the last two sections share "More". */}
+          <MoreMenu links={[certifications, activities]} isActive={isActive} />
         </div>
         <div className="hidden items-center gap-2.5 lg:flex">
           <LanguageSwitcher />
@@ -148,5 +150,103 @@ export function Navbar() {
         </div>
       </div>
     </header>
+  )
+}
+
+function DesktopLink({ link, active }: { link: NavLink; active: boolean }) {
+  return (
+    <a
+      href={link.href}
+      aria-current={active ? 'location' : undefined}
+      className={cn(
+        'rounded-full px-3.5 py-2 whitespace-nowrap transition-colors duration-150',
+        active ? 'bg-lavender-50 text-violet' : 'text-ink-soft hover:text-violet',
+      )}
+    >
+      {link.label}
+    </a>
+  )
+}
+
+interface MoreMenuProps {
+  links: NavLink[]
+  isActive: (href: string) => boolean
+}
+
+/** Disclosure button with a short list of section links. Closes on Escape, outside click, focus leaving, or a pick. */
+function MoreMenu({ links, isActive }: MoreMenuProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const hasActive = links.some((link) => isActive(link.href))
+
+  useEffect(() => {
+    if (!isOpen) return
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false)
+    }
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setIsOpen(false)
+      buttonRef.current?.focus()
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [isOpen])
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative"
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget as Node | null)) setIsOpen(false)
+      }}
+    >
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
+        aria-controls={MORE_ID}
+        className={cn(
+          'inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 whitespace-nowrap transition-colors duration-150',
+          hasActive || isOpen ? 'bg-lavender-50 text-violet' : 'text-ink-soft hover:text-violet',
+        )}
+      >
+        {m.nav_more()}
+        <svg
+          viewBox="0 0 12 12"
+          aria-hidden="true"
+          className={cn('size-3 transition-transform duration-150', isOpen && 'rotate-180')}
+        >
+          <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      <ul
+        id={MORE_ID}
+        hidden={!isOpen}
+        className="absolute top-[calc(100%+8px)] right-0 z-50 min-w-[200px] rounded-2xl bg-white p-2 shadow-soft-lg"
+      >
+        {links.map((link) => (
+          <li key={link.href}>
+            <a
+              href={link.href}
+              onClick={() => setIsOpen(false)}
+              aria-current={isActive(link.href) ? 'location' : undefined}
+              className={cn(
+                'block rounded-xl px-3.5 py-2.5 whitespace-nowrap transition-colors duration-150',
+                isActive(link.href) ? 'bg-lavender-50 text-violet' : 'text-ink-soft hover:bg-lavender-50 hover:text-violet',
+              )}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

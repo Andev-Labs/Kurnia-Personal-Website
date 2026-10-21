@@ -27,7 +27,7 @@ function getContactLinks(): ContactLink[] {
 /** A white card on a deep violet panel, after Ahead's welcome screen. */
 export function Contact() {
   return (
-    <section id="kontak" className="page-x py-14">
+    <section id="kontak" className="page-x scroll-mt-4 pt-16 lg:pt-24">
       <div className="relative isolate overflow-hidden rounded-[36px] bg-[linear-gradient(150deg,var(--color-violet)_0%,var(--color-lavender-800)_55%,var(--color-lavender-900)_100%)] px-3 py-12 sm:px-10 md:py-16 print:rounded-none print:bg-none print:p-0">
         <span
           aria-hidden="true"

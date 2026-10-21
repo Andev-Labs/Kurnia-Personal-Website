@@ -1,9 +1,9 @@
 import { Mascot } from '#/components/mascot/Mascot'
-import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
 import { buttonClassName } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
 import type { RichMessage } from '#/components/ui/RichText'
-import { Section, SectionHeading } from '#/components/ui/Section'
+import { Section, SectionHeader } from '#/components/ui/Section'
 import { EFSET_URL, PAPER_DOI, PAPER_URL } from '#/data/site'
 import { m } from '#/paraglide/messages.js'
 
@@ -33,15 +33,16 @@ function getCertifications(): Certification[] {
 export function Awards() {
   return (
     <Section id="penghargaan">
-      <div className="flex items-end justify-between gap-4">
-        <SectionHeading number="05" badgeClassName="bg-butter-100">
-          {m.awards_heading()}
-        </SectionHeading>
-        <Reveal direction="pop" className="relative -mb-2 hidden w-24 flex-none sm:block md:w-28">
-          <Confetti />
-          <Mascot pose="trophy" className="relative h-auto w-full" />
-        </Reveal>
-      </div>
+      <SectionHeader
+        number="05"
+        title={m.awards_heading()}
+        mascot={
+          <>
+            <Confetti />
+            <Mascot pose="trophy" className="relative" />
+          </>
+        }
+      />
 
       <RevealGroup stagger={0.12} className="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-[22px]">
         <RevealItem className="rounded-card bg-butter-100 p-6 shadow-soft">

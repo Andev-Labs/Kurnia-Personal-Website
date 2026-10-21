@@ -3,7 +3,7 @@ import { Bullet } from '#/components/ui/Bullet'
 import type { MarkerColor } from '#/components/ui/Bullet'
 import { RichText } from '#/components/ui/RichText'
 import type { RichMessage } from '#/components/ui/RichText'
-import { Section, SectionHeading } from '#/components/ui/Section'
+import { Section, SectionHeader } from '#/components/ui/Section'
 import { m } from '#/paraglide/messages.js'
 
 /** Deliberately quiet: one card of bullets below the main credentials. */
@@ -18,9 +18,7 @@ export function Activities() {
 
   return (
     <Section id="aktivitas">
-      <SectionHeading number="06" badgeClassName="bg-mint-100">
-        {m.activities_heading()}
-      </SectionHeading>
+      <SectionHeader number="06" title={m.activities_heading()} />
 
       <RevealGroup className="rounded-card-lg bg-white p-6 shadow-soft md:p-8">
         <div className="grid gap-x-10 gap-y-4 text-[15px] leading-[1.6] text-ink-soft md:grid-cols-2 [&_strong]:text-ink">

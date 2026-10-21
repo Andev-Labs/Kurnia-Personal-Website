@@ -105,9 +105,9 @@
   }
 }
 
-/* Horizontal gutter shared by every full-bleed band: 26px min, content capped at 1280px. */
+/* Horizontal gutter shared by the navbar, hero, every section and the footer: 24px min, content capped at 1200px. */
 @utility page-x {
-  padding-inline: max(26px, calc((100% - 1280px) / 2));
+  padding-inline: max(24px, calc((100% - 1200px) / 2));
 }
 
 /* Soft hover lift used by buttons and cards. */

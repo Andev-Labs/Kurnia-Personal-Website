@@ -2,8 +2,8 @@ import type { ComponentType } from 'react'
 
 import { ChecklistIcon, ColumnIcon, FlaskIcon, GrowthIcon } from '#/components/icons/SkillIcons'
 import { Mascot } from '#/components/mascot/Mascot'
-import { Reveal, RevealGroup, RevealItem } from '#/components/motion/Reveal'
-import { Section, SectionHeading } from '#/components/ui/Section'
+import { RevealGroup, RevealItem } from '#/components/motion/Reveal'
+import { Section, SectionHeader } from '#/components/ui/Section'
 import { Tag, TagList } from '#/components/ui/Tag'
 import type { TagTone } from '#/components/ui/Tag'
 import { EFSET_URL } from '#/data/site'
@@ -87,14 +87,7 @@ function getSkillGroups(): SkillGroup[] {
 export function Skills() {
   return (
     <Section id="keahlian">
-      <div className="flex items-end justify-between gap-4">
-        <SectionHeading number="02" badgeClassName="bg-mint-100">
-          {m.skills_heading()}
-        </SectionHeading>
-        <Reveal direction="pop" className="-mb-2 hidden w-24 flex-none sm:block md:w-28">
-          <Mascot pose="lab" className="h-auto w-full" />
-        </Reveal>
-      </div>
+      <SectionHeader number="02" title={m.skills_heading()} mascot={<Mascot pose="lab" />} />
 
       <RevealGroup stagger={0.09} className="grid grid-cols-[repeat(auto-fit,minmax(min(290px,100%),1fr))] gap-[22px]">
         {getSkillGroups().map(({ title, Icon, tone, items }) => (
