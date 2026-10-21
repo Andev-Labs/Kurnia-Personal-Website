@@ -7,9 +7,18 @@ import { LOCALE_OPTIONS } from '#/lib/locales'
 import { m } from '#/paraglide/messages.js'
 import { INTRO_HEAD_SCRIPT } from '#/lib/intro'
 import { getLocale, locales, localizeHref } from '#/paraglide/runtime.js'
+import fredoka600 from '@fontsource/fredoka/files/fredoka-latin-600-normal.woff2?url'
+import nunito400 from '@fontsource/nunito/files/nunito-latin-400-normal.woff2?url'
+import nunito700 from '@fontsource/nunito/files/nunito-latin-700-normal.woff2?url'
 import appCss from '../styles.css?url'
 
 const OG_IMAGE = `${SITE_URL}/og-image.png`
+
+/*
+ * Faces the hero text renders with. Preloading them lets the first paint use the real fonts, so the hero
+ * does not reflow (and push the portrait down) when they swap in.
+ */
+const CRITICAL_FONTS = [fredoka600, nunito400, nunito700]
 
 export const Route = createRootRoute({
   head: () => {
@@ -69,6 +78,7 @@ export const Route = createRootRoute({
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
         { rel: 'icon', href: '/favicon-32.png', type: 'image/png', sizes: '32x32' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        ...CRITICAL_FONTS.map((href) => ({ rel: 'preload', href, as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' as const })),
         { rel: 'stylesheet', href: appCss },
       ],
       scripts: [{ type: 'application/ld+json', children: JSON.stringify(person) }],

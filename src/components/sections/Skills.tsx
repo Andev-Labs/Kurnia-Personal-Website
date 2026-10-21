@@ -88,7 +88,7 @@ export function Skills() {
               <li
                 key={item.name}
                 title={item.name === item.short ? undefined : item.name}
-                className="grid min-h-[72px] place-items-center rounded-2xl bg-mint-100 px-2 py-3 text-center font-heading text-[clamp(16px,1.6vw,21px)] leading-none font-semibold text-mint-700"
+                className="grid min-h-[72px] place-items-center rounded-2xl bg-mint-100 px-2 py-3 text-center font-heading text-[clamp(16px,1.6vw,21px)] leading-none font-semibold text-[#1f6b51]"
               >
                 <span aria-hidden={item.name === item.short ? undefined : true}>{item.short}</span>
                 {item.name === item.short ? null : <span className="sr-only">{item.name}</span>}
