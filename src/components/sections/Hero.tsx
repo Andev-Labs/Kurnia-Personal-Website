@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
 import { Mascot } from '#/components/mascot/Mascot'
-import { RevealGroup, RevealItem, revealVariants } from '#/components/motion/Reveal'
+import { RevealGroup } from '#/components/motion/Reveal'
 import { Button } from '#/components/ui/Button'
 import { RichText } from '#/components/ui/RichText'
 import { cn } from '#/lib/cn'
@@ -14,7 +14,21 @@ const PORTRAIT_SIZES = '(max-width: 440px) calc(100vw - 110px), 356px'
 /** Organic blob outline shared by the portrait frame and the photo inside it. */
 const BLOB_RADIUS = 'rounded-[46%_54%_42%_58%/54%_44%_56%_46%]'
 
-const FADE_UP = revealVariants('up')
+const EASE = [0.22, 1, 0.36, 1] as const
+
+/*
+ * Hero text and portrait are above the fold and hold the LCP, so they move without fading:
+ * starting at opacity 0 would keep them invisible until hydration and delay LCP by seconds.
+ */
+const SLIDE_UP = {
+  hidden: { y: 24 },
+  visible: { y: 0, transition: { duration: 0.6, ease: EASE } },
+} as const
+
+const SETTLE = {
+  hidden: { scale: 0.96 },
+  visible: { scale: 1, transition: { duration: 0.6, ease: EASE } },
+} as const
 
 /** Stickers and Kapsi land on the portrait after it has faded in. */
 const POP_VARIANTS = {
@@ -34,13 +48,13 @@ export function Hero() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 print:grid-cols-[1fr_150px] print:gap-8">
           <RevealGroup stagger={0.12} className="@container min-w-0">
             <motion.p
-              variants={FADE_UP}
+              variants={SLIDE_UP}
               className="mb-5 inline-block rounded-full bg-white/80 px-4 py-2 text-[13.5px] font-bold text-violet shadow-soft-sm"
             >
               {m.hero_greeting()}
             </motion.p>
             <motion.h1
-              variants={FADE_UP}
+              variants={SLIDE_UP}
               className="mb-5 font-heading font-semibold text-[clamp(28px,11.5cqi,76px)] leading-[0.98] tracking-[-0.03em] text-balance [overflow-wrap:anywhere]"
             >
               {m.hero_title_line1()}
@@ -48,22 +62,22 @@ export function Hero() {
               <span className="text-violet">{m.hero_title_line2()}</span>
             </motion.h1>
             <motion.p
-              variants={FADE_UP}
+              variants={SLIDE_UP}
               className="mb-8 max-w-[46ch] text-[clamp(15px,1.3vw,17.5px)] leading-[1.65] text-ink-soft text-pretty [&_strong]:text-ink"
             >
               <RichText message={m.hero_summary} />
             </motion.p>
-            <RevealItem className="flex flex-wrap items-center gap-3 print:hidden">
+            <motion.div variants={SLIDE_UP} className="flex flex-wrap items-center gap-3 print:hidden">
               <Button href="#kontak">{m.hero_cta_contact()}</Button>
               <Button href="#pengalaman" variant="secondary">
                 {m.hero_cta_experience()}
               </Button>
-            </RevealItem>
+            </motion.div>
           </RevealGroup>
 
           <div className="flex min-w-0 justify-center">
             <RevealGroup stagger={0.15} delay={0.15} className="relative w-full max-w-[380px] pb-6 pl-6 sm:pl-10 print:p-0">
-              <RevealItem direction="pop" className="relative">
+              <motion.div variants={SETTLE} className="relative">
                 <span
                   aria-hidden="true"
                   className={cn('absolute inset-0 translate-x-4 translate-y-3 rotate-6 bg-lavender/60 print:hidden', BLOB_RADIUS)}
@@ -85,7 +99,7 @@ export function Hero() {
                     />
                   </picture>
                 </div>
-              </RevealItem>
+              </motion.div>
               <motion.div
                 variants={POP_VARIANTS}
                 className="absolute top-2 right-0 rotate-6 print:hidden rounded-full bg-white px-3.5 py-2 font-heading font-semibold text-[12.5px] text-mint-700 shadow-soft-sm"
