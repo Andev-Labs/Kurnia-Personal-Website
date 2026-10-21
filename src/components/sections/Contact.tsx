@@ -99,14 +99,19 @@ export function Contact() {
             <RevealItem
               key={action.key}
               // With an odd count the last tile spans the two-column tablet row instead of sitting alone.
-              className={cn('min-w-0', actions.length % 2 === 1 && index === actions.length - 1 && 'sm:max-lg:col-span-2')}
+              className={cn(
+                'min-w-0',
+                actions.length % 2 === 1 && index === actions.length - 1 && 'sm:max-lg:col-span-2',
+                // Print keeps only links that need their URL spelled out; the email is already printed above.
+                !action.external && 'print:hidden',
+              )}
             >
               <a
                 href={action.href}
                 aria-label={action.ariaLabel}
                 {...(action.external ? { target: '_blank', rel: 'noopener' } : {})}
                 {...(action.download ? { download: true, type: 'application/pdf' } : {})}
-                className="lift flex items-center gap-3.5 rounded-2xl border border-white/20 bg-white/10 p-4 text-white transition-colors hover:border-white/40 hover:bg-white/15 hover:text-white"
+                className="lift flex items-center gap-3.5 rounded-2xl border border-white/20 bg-white/10 p-4 text-white transition-colors hover:border-white/40 hover:bg-white/15 hover:text-white print:block"
               >
                 <span
                   aria-hidden="true"
@@ -114,9 +119,9 @@ export function Contact() {
                 >
                   {action.icon}
                 </span>
-                <span className="min-w-0">
-                  <span className="block font-heading font-semibold text-[16px] leading-tight">{action.label}</span>
-                  <span className="block truncate text-[13.5px] text-lavender-100">{action.detail}</span>
+                <span className="min-w-0 print:inline">
+                  <span className="block font-heading font-semibold text-[16px] leading-tight print:inline">{action.label}</span>
+                  <span className="block truncate text-[13.5px] text-lavender-100 print:hidden">{action.detail}</span>
                 </span>
               </a>
             </RevealItem>
