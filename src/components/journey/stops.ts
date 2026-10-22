@@ -51,6 +51,7 @@ export function getStops(): JourneyStop[] {
         { marker: 'blush', message: m.experience_intern_impact_reports },
       ],
       daily: [m.experience_intern_daily_testing()],
+      extra: 'work-gallery',
     },
     {
       id: 'kch',

@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
+import { getStops } from '#/components/journey/stops'
 import { getGallery } from './gallery'
 
 const GALLERY = getGallery()
@@ -15,6 +16,15 @@ describe('GALLERY photos', () => {
     const item = GALLERY.find((entry) => entry.title.startsWith(title))
     expect(item?.shots?.length).toBeGreaterThan(0)
     expect(item?.shots?.every((shot) => shot.photo)).toBe(true)
+  })
+
+  it('places every work photo on a career-map stop that shows a work gallery', () => {
+    const galleryStops = getStops()
+      .filter((stop) => stop.extra === 'work-gallery')
+      .map((stop) => stop.id)
+    for (const entry of GALLERY.filter((item) => item.group === 'kerja')) {
+      expect(galleryStops).toContain(entry.stop)
+    }
   })
 
   it('never renders a work card without a photo', () => {

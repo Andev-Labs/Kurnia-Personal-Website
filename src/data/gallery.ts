@@ -40,6 +40,8 @@ export interface GalleryItem {
   group: GalleryGroup
   /** Set on `intl` albums so the Education section can show each cover on its own program card. */
   program?: ProgramId
+  /** Career-map stop (see `journey/stops.ts`) whose work gallery shows this `kerja` item. */
+  stop?: string
   title: string
   meta: string
   caption: string
@@ -62,6 +64,7 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'kerja',
       title: m.gallery_qcc_convention_title(),
+      stop: 'kch',
       meta: 'Top 10 · Kalbe Consumer Health',
       caption: m.gallery_qcc_convention_caption(),
       // TODO(Kurnia): confirm this internal QCC slide may be published (the next card too).
@@ -70,9 +73,26 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'kerja',
       title: m.gallery_qcc_team_title(),
+      stop: 'kch',
       meta: m.gallery_qcc_team_meta(),
       caption: m.gallery_qcc_team_caption(),
       photo: qccPhoto('team', 1080, 601, m.gallery_qcc_team_alt()),
+    },
+    {
+      group: 'kerja',
+      title: m.gallery_qc_team_title(),
+      stop: 'kch',
+      meta: m.experience_kch_role(),
+      caption: m.gallery_qc_team_caption(),
+      photo: galleryPhoto('qc-analyst-team', 1080, 810, m.gallery_qc_team_alt()),
+    },
+    {
+      group: 'kerja',
+      title: m.gallery_rnd_intern_title(),
+      stop: 'kch-intern',
+      meta: m.experience_intern_role(),
+      caption: m.gallery_rnd_intern_caption(),
+      photo: galleryPhoto('rnd-intern-team', 1080, 608, m.gallery_rnd_intern_alt()),
     },
     {
       group: 'intl',
