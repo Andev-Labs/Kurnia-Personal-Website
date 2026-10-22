@@ -5,7 +5,9 @@ import { routeTree } from './routeTree.gen'
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
-    scrollRestoration: true,
+    // In-page anchors are left to the browser so CSS `scroll-behavior: smooth` glides to them; the router would
+    // call `scrollIntoView` on every hash change and restart the glide halfway.
+    scrollRestoration: ({ location }) => !location.hash,
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
     // Routes stay canonical (`/`); Paraglide maps `/en`, `/ru`, `/zh` onto them and back.

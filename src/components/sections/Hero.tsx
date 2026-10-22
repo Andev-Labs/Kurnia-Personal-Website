@@ -46,7 +46,7 @@ function portraitSrcSet(ext: 'avif' | 'webp' | 'jpg') {
 
 export function Hero() {
   return (
-    <header id="atas" className="page-x flex flex-1 flex-col pt-5 pb-12 md:pt-7 lg:pb-8 print:pb-6">
+    <header className="page-x flex flex-1 flex-col pt-5 pb-12 md:pt-7 lg:pb-8 print:pb-6">
       <div className="relative isolate flex flex-1 flex-col justify-center overflow-hidden rounded-[36px] bg-[linear-gradient(140deg,var(--color-lavender-100)_0%,#f1e4f8_52%,var(--color-blush)_100%)] px-6 py-12 sm:px-10 md:py-16 lg:px-14 print:rounded-none print:bg-none print:p-0">
         <HeroDecorations />
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10 print:grid-cols-[1fr_150px] print:gap-8">
