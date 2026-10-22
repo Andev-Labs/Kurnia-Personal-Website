@@ -5,6 +5,7 @@ import { GalleryProvider } from '#/components/gallery/GalleryProvider'
 import { WelcomeIntro } from '#/components/intro/WelcomeIntro'
 import { Footer } from '#/components/layout/Footer'
 import { Navbar } from '#/components/layout/Navbar'
+import { ScrollToTop } from '#/components/layout/ScrollToTop'
 import { About } from '#/components/sections/About'
 import { Activities } from '#/components/sections/Activities'
 import { Awards } from '#/components/sections/Awards'
@@ -30,7 +31,8 @@ function Home() {
         </a>
         <WelcomeIntro />
         {/* On desktop the navbar and hero together fill the first screen, so nothing looks unfinished below the fold. */}
-        <div className="flex flex-col lg:min-h-[min(100svh,1080px)]">
+        {/* `#atas` sits on this wrapper, not the hero, so jumping "to the top" brings the navbar back too. */}
+        <div id="atas" className="flex flex-col lg:min-h-[min(100svh,1080px)]">
           <Navbar />
           <Hero />
         </div>
@@ -44,6 +46,7 @@ function Home() {
           <Contact />
         </main>
         <Footer />
+        <ScrollToTop />
       </GalleryProvider>
     </MotionConfig>
   )
