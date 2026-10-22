@@ -1,5 +1,5 @@
-import { useId } from 'react'
-import type { ReactNode } from 'react'
+import { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
+import type { ReactNode, RefObject } from 'react'
 
 import { cn } from '#/lib/cn'
 
@@ -34,6 +34,16 @@ const IDLE_CLASS: Record<MascotPose, string | null> = {
   mail: 'animate-kapsi-breathe [animation-delay:-2.4s]',
 }
 
+/** Between the eyes, in canvas units. The pupils lean from here towards the pointer. */
+const EYE_CENTER = { x: 100, y: 90 }
+/** How far a pupil may drift inside its eye white (r 11.5 around a 7.5 pupil). */
+const MAX_LOOK = 3
+/** How long Kapsi stays delighted after a tap. */
+const CHEER_MS = 1400
+
+/** Set while Kapsi is delighted after a tap, so every pose shows the happy face. */
+const CheerContext = createContext(false)
+
 interface MascotProps {
   pose: MascotPose
   className?: string
@@ -47,18 +57,99 @@ export function Mascot({ pose, className, title }: MascotProps) {
   const clipId = `${uid}-clip`
   const titleId = `${uid}-title`
   const a11y = title ? { role: 'img', 'aria-labelledby': titleId } : { 'aria-hidden': true, focusable: false }
+  const svgRef = useRef<SVGSVGElement>(null)
+  useLookAtPointer(svgRef)
+
+  // Each tap bumps `cheers`, which re-keys the hearts so their pop replays.
+  const [cheers, setCheers] = useState(0)
+  const [cheering, setCheering] = useState(false)
+  useEffect(() => {
+    if (cheers === 0) return
+    setCheering(true)
+    const timer = window.setTimeout(() => setCheering(false), CHEER_MS)
+    return () => window.clearTimeout(timer)
+  }, [cheers])
 
   return (
-    <svg viewBox="0 0 200 240" className={cn('kapsi', className)} data-pose={pose} {...a11y}>
+    <svg
+      ref={svgRef}
+      viewBox="0 0 200 240"
+      className={cn('kapsi', className)}
+      data-pose={pose}
+      data-cheering={cheering || undefined}
+      onClick={() => setCheers((count) => count + 1)}
+      {...a11y}
+    >
       {title ? <title id={titleId}>{title}</title> : null}
-      {IDLE_CLASS[pose] ? (
-        <g className={cn('kapsi-idle origin-[100px_222px]', IDLE_CLASS[pose])}>{renderPose(pose, clipId)}</g>
-      ) : (
-        renderPose(pose, clipId)
-      )}
+      <CheerContext.Provider value={cheering}>
+        {IDLE_CLASS[pose] ? (
+          <g className={cn('kapsi-idle origin-[100px_222px]', IDLE_CLASS[pose])}>{renderPose(pose, clipId)}</g>
+        ) : (
+          renderPose(pose, clipId)
+        )}
+      </CheerContext.Provider>
+      {cheering ? <CheerHearts key={cheers} /> : null}
     </svg>
   )
 }
+
+/**
+ * Points Kapsi's pupils at the pointer by setting `--look-x` / `--look-y` on the svg.
+ * Works in the svg's own coordinates, so a mirrored or scaled Kapsi still looks the right way.
+ */
+function useLookAtPointer(svgRef: RefObject<SVGSVGElement | null>) {
+  useEffect(() => {
+    const svg = svgRef.current
+    if (!svg || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+
+    let frame = 0
+    let pointer = { x: 0, y: 0 }
+    const look = () => {
+      frame = 0
+      const ctm = svg.getScreenCTM()
+      if (!ctm) return
+      const target = new DOMPoint(pointer.x, pointer.y).matrixTransform(ctm.inverse())
+      const dx = target.x - EYE_CENTER.x
+      const dy = target.y - EYE_CENTER.y
+      const distance = Math.hypot(dx, dy) || 1
+      // Full reach once the pointer is a body-length away; closer pointers get a smaller glance.
+      const reach = Math.min(1, distance / 120) * MAX_LOOK
+      svg.style.setProperty('--look-x', `${((dx / distance) * reach).toFixed(2)}px`)
+      svg.style.setProperty('--look-y', `${((dy / distance) * reach).toFixed(2)}px`)
+    }
+    const onPointerMove = (event: PointerEvent) => {
+      pointer = { x: event.clientX, y: event.clientY }
+      frame ||= requestAnimationFrame(look)
+    }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove)
+      cancelAnimationFrame(frame)
+    }
+  }, [svgRef])
+}
+
+/** Little hearts that pop out above Kapsi's head after a tap. */
+function CheerHearts() {
+  return (
+    <g data-testid="kapsi-hearts">
+      {CHEER_HEARTS.map(([x, y, scale, delay]) => (
+        <g key={x} className="origin-center animate-kapsi-heart-pop [transform-box:fill-box]" style={{ animationDelay: `${delay}s` }}>
+          <path transform={`translate(${x} ${y}) scale(${scale})`} d={HEART_PATH} fill={PINK} />
+        </g>
+      ))}
+    </g>
+  )
+}
+
+const HEART_PATH = 'M0 4 c-3 -6 -11 -3 -8 3 l8 7 8 -7 c3 -6 -5 -9 -8 -3z'
+
+const CHEER_HEARTS: ReadonlyArray<readonly [number, number, number, number]> = [
+  [56, 40, 1.1, 0],
+  [100, 14, 1.4, 0.1],
+  [146, 36, 1, 0.2],
+]
 
 function renderPose(pose: MascotPose, clipId: string): ReactNode {
   switch (pose) {
@@ -90,6 +181,12 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
           {/* Kapsi swirls the flask around the hand holding it. */}
           <g className="origin-[158px_150px] animate-kapsi-swirl">
             <Flask />
+            {/* Every few seconds the potion fizzes over in a puff of sparkles. */}
+            <g className="origin-[167px_100px] animate-kapsi-poof">
+              <Sparkle x={160} y={96} scale={0.6} color={MINT} />
+              <Sparkle x={180} y={88} scale={0.8} />
+              <Sparkle x={172} y={74} scale={0.5} color={PINK} />
+            </g>
           </g>
           <Arm x1={144} y1={130} x2={158} y2={150} />
         </>
@@ -113,7 +210,15 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
       return (
         <>
           <Arm x1={56} y1={132} x2={38} y2={158} />
-          <Body clipId={clipId} accessory={<GradCap />} />
+          <Body
+            clipId={clipId}
+            accessory={
+              // Kapsi tosses the cap and catches it every few seconds.
+              <g className="origin-[100px_40px] animate-kapsi-cap-toss">
+                <GradCap />
+              </g>
+            }
+          />
           {/* The diploma waves from the hand. */}
           <g className="origin-[160px_150px] animate-kapsi-sway">
             <g transform="rotate(-20 165 150)">
@@ -132,7 +237,16 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
               <rect x={x} y={y} width={6} height={10} rx={2} fill={fill} transform={`rotate(${r} ${x} ${y})`} />
             </g>
           ))}
-          <Body clipId={clipId} eyes="happy" mouth="open" accessory={<Crown />} />
+          <Body
+            clipId={clipId}
+            eyes="happy"
+            mouth="open"
+            accessory={
+              <g className="origin-[100px_40px] animate-kapsi-crown-pop">
+                <Crown />
+              </g>
+            }
+          />
           <path d="M62 120 L140 178 L130 186 L56 132z" fill={VIO} opacity={0.9} />
           {/* Both arms pump in a cheer. */}
           <g className="origin-[56px_126px] animate-kapsi-pump-l">
@@ -149,12 +263,12 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
           <Body clipId={clipId} />
           <Arm x1={56} y1={130} x2={80} y2={150} />
           <Arm x1={144} y1={130} x2={120} y2={150} />
-          {/* The letter rocks gently while its heart beats. */}
+          {/* The letter rocks gently while its heart beats, then floats off now and then. */}
           <g className="origin-[100px_155px] animate-kapsi-tilt">
             <g transform="translate(78 140)">
               <rect width={44} height={30} rx={5} fill="#fff" stroke={INK} strokeWidth={2.5} />
               <path d="M2 3 l20 15 20 -15" stroke={INK} strokeWidth={2.5} fill="none" strokeLinejoin="round" />
-              <g className="origin-center animate-kapsi-heartbeat [transform-box:fill-box]">
+              <g className="origin-center animate-kapsi-heart-send [transform-box:fill-box]">
                 <path d="M22 -10 c-3 -6 -11 -3 -8 3 l8 7 8 -7 c3 -6 -5 -9 -8 -3z" fill={PINK} />
               </g>
             </g>
@@ -182,7 +296,10 @@ interface BodyProps {
 }
 
 /** Shared capsule body, legs and face. Arms and props are layered per pose. */
-function Body({ clipId, eyes = 'open', mouth = 'smile', legs = 'stand', accessory }: BodyProps) {
+function Body({ clipId, eyes: restingEyes = 'open', mouth: restingMouth = 'smile', legs = 'stand', accessory }: BodyProps) {
+  const cheering = useContext(CheerContext)
+  const eyes = cheering ? 'happy' : restingEyes
+  const mouth = cheering ? 'open' : restingMouth
   return (
     <>
       <ellipse cx={100} cy={224} rx={42} ry={6} fill={INK} opacity={0.08} />
@@ -236,14 +353,17 @@ function OpenEyes() {
   return (
     <g className={BLINK_CLASS}>
       {[84, 116].map((cx) => (
-        <g key={cx}>
+        <g key={cx} className={cx === 116 ? 'kapsi-eye-r origin-center [transform-box:fill-box]' : undefined}>
           <circle cx={cx} cy={90} r={11.5} fill="#fff" />
-          <circle cx={cx + 1} cy={91} r={7.5} fill={INK} />
-          <path
-            d={`M${cx - 2} 85.5 l1.2 2.6 2.6 1.2 -2.6 1.2 -1.2 2.6 -1.2 -2.6 -2.6 -1.2 2.6 -1.2z`}
-            fill="#fff"
-          />
-          <circle cx={cx + 4} cy={94} r={1.4} fill="#fff" />
+          {/* `kapsi-pupil` follows the pointer, see useLookAtPointer. */}
+          <g className="kapsi-pupil">
+            <circle cx={cx + 1} cy={91} r={7.5} fill={INK} />
+            <path
+              d={`M${cx - 2} 85.5 l1.2 2.6 2.6 1.2 -2.6 1.2 -1.2 2.6 -1.2 -2.6 -2.6 -1.2 2.6 -1.2z`}
+              fill="#fff"
+            />
+            <circle cx={cx + 4} cy={94} r={1.4} fill="#fff" />
+          </g>
         </g>
       ))}
     </g>
