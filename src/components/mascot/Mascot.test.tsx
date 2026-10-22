@@ -1,5 +1,5 @@
-import { cleanup, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { MASCOT_POSES, Mascot } from './Mascot'
 
@@ -13,6 +13,41 @@ describe('Mascot', () => {
     expect(svg?.dataset.pose).toBe(pose)
     // The capsule body is shared by every pose.
     expect(svg?.querySelector('rect[rx="46"]')).not.toBeNull()
+  })
+
+  it.each(MASCOT_POSES.filter((pose) => pose !== 'walk'))('gives the %s pose an idle motion', (pose) => {
+    const { container } = render(<Mascot pose={pose} className="w-24" />)
+    const svg = container.querySelector('svg')
+    expect(svg?.getAttribute('class')).toBe('kapsi w-24')
+    expect(svg?.querySelector('.kapsi-idle')?.getAttribute('class')).toMatch(/animate-kapsi-/)
+  })
+
+  it('leaves the walk pose to its own bob', () => {
+    const { container } = render(<Mascot pose="walk" />)
+    expect(container.querySelector('.kapsi-idle')).toBeNull()
+    expect(container.querySelector('.animate-bob')).not.toBeNull()
+  })
+
+  it('cheers with happy eyes and hearts when tapped, then settles back', () => {
+    vi.useFakeTimers()
+    try {
+      const { container } = render(<Mascot pose="lab" />)
+      const svg = container.querySelector('svg')!
+      expect(container.querySelector('.kapsi-pupil')).not.toBeNull()
+
+      fireEvent.click(svg)
+      expect(svg.dataset.cheering).toBe('true')
+      expect(screen.getByTestId('kapsi-hearts')).toBeTruthy()
+      // Happy eyes replace the open ones, so no pupils while cheering.
+      expect(container.querySelector('.kapsi-pupil')).toBeNull()
+
+      act(() => vi.advanceTimersByTime(1500))
+      expect(svg.dataset.cheering).toBeUndefined()
+      expect(screen.queryByTestId('kapsi-hearts')).toBeNull()
+      expect(container.querySelector('.kapsi-pupil')).not.toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it('is decorative by default', () => {

@@ -58,6 +58,20 @@
   --animate-wave: wave 2.4s ease-in-out infinite;
   --animate-bob: bob 1.6s ease-in-out infinite;
   --animate-twinkle: twinkle 3.2s ease-in-out infinite;
+  /* Kapsi's idle motion, see src/components/mascot/Mascot.tsx. */
+  --animate-kapsi-breathe: kapsi-breathe 3.2s ease-in-out infinite;
+  --animate-kapsi-hop: kapsi-hop 1.6s ease-in-out infinite;
+  --animate-kapsi-swirl: kapsi-swirl 6s ease-in-out infinite;
+  --animate-kapsi-poof: kapsi-poof 6s ease-out infinite;
+  --animate-kapsi-cap-toss: kapsi-cap-toss 6s ease-in-out infinite;
+  --animate-kapsi-crown-pop: kapsi-crown-pop 4.8s ease-in-out infinite;
+  --animate-kapsi-heart-pop: kapsi-heart-pop 1s ease-out both;
+  --animate-kapsi-sway: kapsi-sway 2.8s ease-in-out infinite;
+  --animate-kapsi-tassel: kapsi-tassel 2s ease-in-out infinite;
+  --animate-kapsi-pump-l: kapsi-pump-l 0.8s ease-in-out infinite;
+  --animate-kapsi-pump-r: kapsi-pump-r 0.8s ease-in-out infinite;
+  --animate-kapsi-tilt: kapsi-tilt 3s ease-in-out infinite;
+  --animate-kapsi-heart-send: kapsi-heart-send 4.2s ease-in-out infinite;
 
   @keyframes bubble {
     0% { transform: translateY(0); opacity: 0; }
@@ -97,6 +111,118 @@
     0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
     50% { transform: scale(0.7) rotate(20deg); opacity: 0.55; }
   }
+  @keyframes kapsi-breathe {
+    0%, 100% { transform: scale(1, 1); }
+    50% { transform: scale(0.97, 1.045); }
+  }
+  @keyframes kapsi-hop {
+    0%, 70%, 100% { transform: translateY(0) scale(1, 1); }
+    12% { transform: translateY(0) scale(1.05, 0.93); }
+    32% { transform: translateY(-12px) scale(0.97, 1.04); }
+    52% { transform: translateY(0) scale(1.04, 0.95); }
+  }
+  /* A lazy swirl, then a vigorous shake that ends in kapsi-poof. */
+  @keyframes kapsi-swirl {
+    0%, 60%, 88%, 100% { transform: rotate(0deg); }
+    15% { transform: rotate(-10deg); }
+    35% { transform: rotate(8deg); }
+    68% { transform: rotate(-18deg); }
+    71%, 77% { transform: rotate(16deg); }
+    74%, 80% { transform: rotate(-16deg); }
+    83% { transform: rotate(10deg); }
+  }
+  @keyframes kapsi-poof {
+    0%, 80% { transform: scale(0); opacity: 0; }
+    85% { transform: scale(1.25); opacity: 1; }
+    94% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.3); opacity: 0; }
+  }
+  @keyframes kapsi-cap-toss {
+    0%, 72% { transform: translateY(0) rotate(0deg); }
+    76% { transform: translateY(2px) rotate(0deg); }
+    84% { transform: translateY(-52px) rotate(-200deg); }
+    88% { transform: translateY(-56px) rotate(-300deg); }
+    95% { transform: translateY(0) rotate(-360deg); }
+    97.5% { transform: translateY(3px) rotate(-360deg); }
+    100% { transform: translateY(0) rotate(-360deg); }
+  }
+  @keyframes kapsi-crown-pop {
+    0%, 70%, 100% { transform: translateY(0) rotate(0deg); }
+    78% { transform: translateY(-24px) rotate(-16deg); }
+    86% { transform: translateY(-28px) rotate(12deg); }
+    94% { transform: translateY(0) rotate(0deg); }
+    97% { transform: translateY(2px) rotate(0deg); }
+  }
+  @keyframes kapsi-heart-pop {
+    0% { transform: translateY(10px) scale(0); opacity: 0; }
+    30% { transform: translateY(0) scale(1.25); opacity: 1; }
+    100% { transform: translateY(-34px) scale(1); opacity: 0; }
+  }
+  @keyframes kapsi-sway {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-10deg); }
+  }
+  @keyframes kapsi-tassel {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(12deg); }
+  }
+  @keyframes kapsi-pump-l {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(14deg); }
+  }
+  @keyframes kapsi-pump-r {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-14deg); }
+  }
+  @keyframes kapsi-tilt {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+  /* Two heartbeats, a pause, then the heart floats off and a new one grows back. */
+  @keyframes kapsi-heart-send {
+    0%, 16%, 32%, 60%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+    8% { transform: translateY(-2px) scale(1.25); }
+    24% { transform: translateY(-2px) scale(1.18); }
+    70% { transform: translate(8px, -6px) scale(1.25); opacity: 1; }
+    84% { transform: translate(34px, -30px) scale(1.35); opacity: 0; }
+    85% { transform: translate(0, 0) scale(0); opacity: 0; }
+  }
+}
+
+/* Hovering or tapping Kapsi swaps its idle motion for a happy jump; a tap also pops hearts. */
+.kapsi {
+  /* Tossed caps, popping crowns and hearts may leave the 200×240 canvas. */
+  overflow: visible;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kapsi:hover .kapsi-idle,
+.kapsi[data-cheering] .kapsi-idle {
+  animation: kapsi-jump 0.7s var(--spring) both;
+}
+
+/* The pupils glance towards the pointer (Mascot.tsx sets --look-x / --look-y). */
+.kapsi-pupil {
+  transform: translate(var(--look-x, 0px), var(--look-y, 0px));
+  transition: transform 0.25s ease-out;
+}
+
+/* The waving Kapsi winks every few seconds. */
+.kapsi[data-pose="wave"] .kapsi-eye-r {
+  animation: kapsi-wink 5s ease-in-out 1.5s infinite;
+}
+
+@keyframes kapsi-wink {
+  0%, 82%, 94%, 100% { transform: scaleY(1); }
+  85%, 91% { transform: scaleY(0.1); }
+}
+
+@keyframes kapsi-jump {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  15% { transform: translateY(0) scale(1.08, 0.9); }
+  45% { transform: translateY(-22px) scale(0.95, 1.06); }
+  75% { transform: translateY(0) scale(1.06, 0.93); }
 }
 
 /* Horizontal gutter shared by the navbar, hero, every section and the footer: 24px min, content capped at 1200px. */
