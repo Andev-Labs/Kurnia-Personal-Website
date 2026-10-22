@@ -1,3 +1,6 @@
+import type { ComponentType } from 'react'
+
+import { ChinaFlag, RussiaFlag } from '#/components/icons/Flags'
 import type { ProgramId } from '#/data/gallery'
 
 import { GalleryPhoto } from './GalleryPhoto'
@@ -6,6 +9,12 @@ import { useGallery } from './GalleryProvider'
 /** The cover spans a program card: full width on phones, half the 1200px row on desktop. */
 const COVER_SIZES = '(max-width: 767px) calc(100vw - 96px), 540px'
 
+/** Host country of each program, shown as a round flag on its cover. */
+const PROGRAM_FLAGS: Record<ProgramId, ComponentType> = {
+  sechenov: RussiaFlag,
+  cpu: ChinaFlag,
+}
+
 /** Opens the program's album. Renders nothing when the program has no real photo, so no empty tile ever shows. */
 export function ProgramCover({ program }: { program: ProgramId }) {
   const { items, dispatch } = useGallery()
@@ -13,6 +22,7 @@ export function ProgramCover({ program }: { program: ProgramId }) {
   const item = items[index]
   const cover = item?.shots?.[0]?.photo
   if (!item || !cover) return null
+  const Flag = PROGRAM_FLAGS[program]
 
   return (
     <button
@@ -22,6 +32,9 @@ export function ProgramCover({ program }: { program: ProgramId }) {
     >
       <span className="relative block aspect-[16/9] overflow-hidden">
         <GalleryPhoto photo={cover} sizes={COVER_SIZES} className="absolute inset-0 size-full object-cover" />
+      </span>
+      <span className="absolute top-3 left-3 block size-9 overflow-hidden rounded-full shadow-soft-sm ring-2 ring-white">
+        <Flag />
       </span>
       <span className="absolute bottom-3 left-3 inline-flex max-w-[calc(100%-24px)] items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12.5px] font-bold text-ink shadow-soft-sm">
         <CameraIcon />

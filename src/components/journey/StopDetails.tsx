@@ -45,7 +45,7 @@ export function StopBody({ stop, withMedia = true }: StopBodyProps) {
       {stop.daily?.length ? <DailyDuties items={stop.daily} collapsible={withMedia} /> : null}
       {stop.extra === 'next' ? <NextAdventure withMedia={withMedia} /> : null}
       {withMedia && stop.extra === 'qcc-photos' ? <QccPhotos /> : null}
-      {withMedia && stop.extra === 'work-gallery' ? <WorkGallery /> : null}
+      {withMedia && stop.extra === 'work-gallery' ? <WorkGallery stop={stop.id} /> : null}
     </>
   )
 }

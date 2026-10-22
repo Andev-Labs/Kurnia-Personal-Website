@@ -40,6 +40,8 @@ export interface GalleryItem {
   group: GalleryGroup
   /** Set on `intl` albums so the Education section can show each cover on its own program card. */
   program?: ProgramId
+  /** Career-map stop (see `journey/stops.ts`) whose work gallery shows this `kerja` item. */
+  stop?: string
   title: string
   meta: string
   caption: string
@@ -62,6 +64,7 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'kerja',
       title: m.gallery_qcc_convention_title(),
+      stop: 'kch-qcc',
       meta: 'Top 10 · Kalbe Consumer Health',
       caption: m.gallery_qcc_convention_caption(),
       // TODO(Kurnia): confirm this internal QCC slide may be published (the next card too).
@@ -70,9 +73,26 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'kerja',
       title: m.gallery_qcc_team_title(),
+      stop: 'kch-qcc',
       meta: m.gallery_qcc_team_meta(),
       caption: m.gallery_qcc_team_caption(),
       photo: qccPhoto('team', 1080, 601, m.gallery_qcc_team_alt()),
+    },
+    {
+      group: 'kerja',
+      title: m.gallery_qc_team_title(),
+      stop: 'kch',
+      meta: m.experience_kch_role(),
+      caption: m.gallery_qc_team_caption(),
+      photo: galleryPhoto('qc-analyst-team', 1080, 810, m.gallery_qc_team_alt()),
+    },
+    {
+      group: 'kerja',
+      title: m.gallery_rnd_intern_title(),
+      stop: 'kch-intern',
+      meta: m.experience_intern_role(),
+      caption: m.gallery_rnd_intern_caption(),
+      photo: galleryPhoto('rnd-intern-team', 1080, 608, m.gallery_rnd_intern_alt()),
     },
     {
       group: 'intl',
@@ -85,6 +105,21 @@ export function getGallery(): GalleryItem[] {
           label: m.gallery_sechenov_campus_label(),
           caption: m.gallery_sechenov_campus_caption(),
           photo: sechenovPhoto('campus-group', 1080, 812, m.gallery_sechenov_campus_alt()),
+        },
+        {
+          label: m.gallery_sechenov_professor_label(),
+          caption: m.gallery_sechenov_professor_caption(),
+          photo: sechenovPhoto('professor', 1080, 810, m.gallery_sechenov_professor_alt()),
+        },
+        {
+          label: m.gallery_sechenov_classroom_label(),
+          caption: m.gallery_sechenov_classroom_caption(),
+          photo: sechenovPhoto('classroom', 1080, 810, m.gallery_sechenov_classroom_alt()),
+        },
+        {
+          label: m.gallery_sechenov_presentation_label(),
+          caption: m.gallery_sechenov_presentation_caption(),
+          photo: sechenovPhoto('project-presentation', 1080, 1409, m.gallery_sechenov_presentation_alt()),
         },
         {
           label: m.gallery_sechenov_lecture_label(),
@@ -112,7 +147,7 @@ export function getGallery(): GalleryItem[] {
           photo: sechenovPhoto('participants', 1080, 720, m.gallery_sechenov_participants_alt()),
         },
         {
-          // Formerly the hero photo; it belongs with the Sechenov program.
+          // Formerly the hero photo; taken in front of a Sechenov University dormitory.
           label: m.gallery_sechenov_portrait_label(),
           caption: m.gallery_sechenov_portrait_caption(),
           photo: sechenovPhoto('portrait', 1080, 1350, m.gallery_sechenov_portrait_alt()),
@@ -142,6 +177,11 @@ export function getGallery(): GalleryItem[] {
           photo: cpuPhoto('class-participants', 1080, 720, m.gallery_cpu_class_alt()),
         },
         {
+          label: m.gallery_cpu_tour_label(),
+          caption: m.gallery_cpu_tour_caption(),
+          photo: cpuPhoto('campus-tour', 1080, 2114, m.gallery_cpu_tour_alt()),
+        },
+        {
           label: m.gallery_cpu_opening_label(),
           caption: m.gallery_cpu_opening_caption(),
           photo: cpuPhoto('opening-ceremony', 1080, 345, m.gallery_cpu_opening_alt()),
@@ -150,6 +190,16 @@ export function getGallery(): GalleryItem[] {
           label: m.gallery_cpu_tcm_label(),
           caption: m.gallery_cpu_tcm_caption(),
           photo: cpuPhoto('tcm-lecture', 1080, 608, m.gallery_cpu_tcm_alt()),
+        },
+        {
+          label: m.gallery_cpu_herbal_label(),
+          caption: m.gallery_cpu_herbal_caption(),
+          photo: cpuPhoto('herbal-pharmacy', 1080, 673, m.gallery_cpu_herbal_alt()),
+        },
+        {
+          label: m.gallery_cpu_acupuncture_label(),
+          caption: m.gallery_cpu_acupuncture_caption(),
+          photo: cpuPhoto('acupuncture', 1080, 1093, m.gallery_cpu_acupuncture_alt()),
         },
         {
           label: m.gallery_cpu_classmates_label(),

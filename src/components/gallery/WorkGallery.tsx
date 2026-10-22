@@ -7,7 +7,8 @@ import { useGallery } from './GalleryProvider'
 /** Cards sit in a 210px+ grid that tops out around 360px, so the 540px export covers 1x and most 1.5x screens. */
 const COVER_SIZES = '(max-width: 640px) calc(100vw - 40px), 360px'
 
-export function WorkGallery() {
+/** Work photos of one career-map stop, or every work photo when `stop` is omitted. */
+export function WorkGallery({ stop }: { stop?: string }) {
   const { items, dispatch } = useGallery()
 
   return (
@@ -18,7 +19,7 @@ export function WorkGallery() {
       </div>
       <RevealGroup stagger={0.08} className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-5">
         {items.map((item, index) =>
-          item.group === 'kerja' && item.photo ? (
+          item.group === 'kerja' && item.photo && (!stop || item.stop === stop) ? (
             // The motion wrapper sits outside the card so it doesn't override the `lift` hover transform.
             <RevealItem key={item.title} direction="pop">
               <button
