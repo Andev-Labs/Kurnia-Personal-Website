@@ -54,7 +54,7 @@ export function Navbar() {
       <nav className="flex items-center justify-between gap-4 py-2">
         <a href="#atas" className="flex items-center gap-2.5 rounded-full pr-2">
           <img src="/kurnia-icon.svg" alt="" width={38} height={38} className="size-[38px]" />
-          <span className="font-heading font-semibold text-[15px] tracking-[-0.02em]">kurnia.qc</span>
+          <span className="font-heading font-semibold text-[15px] tracking-[-0.02em]">kurnia</span>
         </a>
         <div className="hidden items-center gap-1 text-[14.5px] font-bold lg:flex">
           {primaryLinks.map((link) => (
