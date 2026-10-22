@@ -64,7 +64,7 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'kerja',
       title: m.gallery_qcc_convention_title(),
-      stop: 'kch',
+      stop: 'kch-qcc',
       meta: 'Top 10 · Kalbe Consumer Health',
       caption: m.gallery_qcc_convention_caption(),
       // TODO(Kurnia): confirm this internal QCC slide may be published (the next card too).
@@ -73,7 +73,7 @@ export function getGallery(): GalleryItem[] {
     {
       group: 'kerja',
       title: m.gallery_qcc_team_title(),
-      stop: 'kch',
+      stop: 'kch-qcc',
       meta: m.gallery_qcc_team_meta(),
       caption: m.gallery_qcc_team_caption(),
       photo: qccPhoto('team', 1080, 601, m.gallery_qcc_team_alt()),

@@ -97,6 +97,7 @@ export function getStops(): JourneyStop[] {
         { label: m.case_impact_label(), message: m.case_impact },
         { label: m.case_validation_label(), message: m.case_validation() },
       ],
+      extra: 'work-gallery',
     },
     // Source copy is Kurnia's English CV. TODO(Kurnia): review terjemahan (id/zh/ru).
     {
