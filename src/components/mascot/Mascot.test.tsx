@@ -15,6 +15,19 @@ describe('Mascot', () => {
     expect(svg?.querySelector('rect[rx="46"]')).not.toBeNull()
   })
 
+  it.each(MASCOT_POSES.filter((pose) => pose !== 'walk'))('gives the %s pose an idle motion', (pose) => {
+    const { container } = render(<Mascot pose={pose} className="w-24" />)
+    const svg = container.querySelector('svg')
+    expect(svg?.getAttribute('class')).toBe('kapsi w-24')
+    expect(svg?.querySelector('.kapsi-idle')?.getAttribute('class')).toMatch(/animate-kapsi-/)
+  })
+
+  it('leaves the walk pose to its own bob', () => {
+    const { container } = render(<Mascot pose="walk" />)
+    expect(container.querySelector('.kapsi-idle')).toBeNull()
+    expect(container.querySelector('.animate-bob')).not.toBeNull()
+  })
+
   it('is decorative by default', () => {
     const { container } = render(<Mascot pose="wave" />)
     expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true')

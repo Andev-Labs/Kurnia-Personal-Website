@@ -1,6 +1,8 @@
 import { useId } from 'react'
 import type { ReactNode } from 'react'
 
+import { cn } from '#/lib/cn'
+
 /** Kapsi, Kurnia's pill-capsule mascot. Drawn on a 200×240 canvas. */
 export type MascotPose = 'wave' | 'lab' | 'walk' | 'grad' | 'trophy' | 'mail'
 
@@ -17,6 +19,20 @@ const PINK = '#FF9EC4'
 
 /* Rotating or scaling an SVG part around its own box needs `transform-box: fill-box`. */
 const BLINK_CLASS = 'origin-center animate-blink [transform-box:fill-box]'
+const TWINKLE_CLASS = 'origin-center animate-twinkle [transform-box:fill-box]'
+
+/**
+ * Idle motion for the whole figure, anchored at the feet so Kapsi stays planted. The walking pose
+ * already bobs, so it has none. Hovering swaps it for a jump (`.kapsi:hover .kapsi-idle` in styles.css).
+ */
+const IDLE_CLASS: Record<MascotPose, string | null> = {
+  wave: 'animate-kapsi-breathe',
+  lab: 'animate-kapsi-breathe [animation-delay:-0.8s]',
+  walk: null,
+  grad: 'animate-kapsi-breathe [animation-delay:-1.6s]',
+  trophy: 'animate-kapsi-hop',
+  mail: 'animate-kapsi-breathe [animation-delay:-2.4s]',
+}
 
 interface MascotProps {
   pose: MascotPose
@@ -33,9 +49,13 @@ export function Mascot({ pose, className, title }: MascotProps) {
   const a11y = title ? { role: 'img', 'aria-labelledby': titleId } : { 'aria-hidden': true, focusable: false }
 
   return (
-    <svg viewBox="0 0 200 240" className={className} data-pose={pose} {...a11y}>
+    <svg viewBox="0 0 200 240" className={cn('kapsi', className)} data-pose={pose} {...a11y}>
       {title ? <title id={titleId}>{title}</title> : null}
-      {renderPose(pose, clipId)}
+      {IDLE_CLASS[pose] ? (
+        <g className={cn('kapsi-idle origin-[100px_222px]', IDLE_CLASS[pose])}>{renderPose(pose, clipId)}</g>
+      ) : (
+        renderPose(pose, clipId)
+      )}
     </svg>
   )
 }
@@ -58,8 +78,8 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
               opacity={0.5}
             />
           </g>
-          <Sparkle x={30} y={60} scale={1.1} />
-          <Sparkle x={176} y={190} scale={0.7} color={MINT} />
+          <Sparkle x={30} y={60} scale={1.1} className={TWINKLE_CLASS} />
+          <Sparkle x={176} y={190} scale={0.7} color={MINT} className={cn(TWINKLE_CLASS, '[animation-delay:-1.6s]')} />
         </>
       )
     case 'lab':
@@ -67,7 +87,10 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
         <>
           <Arm x1={56} y1={132} x2={38} y2={158} />
           <Body clipId={clipId} accessory={<Goggles />} />
-          <Flask />
+          {/* Kapsi swirls the flask around the hand holding it. */}
+          <g className="origin-[158px_150px] animate-kapsi-swirl">
+            <Flask />
+          </g>
           <Arm x1={144} y1={130} x2={158} y2={150} />
         </>
       )
@@ -91,9 +114,12 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
         <>
           <Arm x1={56} y1={132} x2={38} y2={158} />
           <Body clipId={clipId} accessory={<GradCap />} />
-          <g transform="rotate(-20 165 150)">
-            <rect x={150} y={142} width={34} height={14} rx={7} fill="#FFF7E0" stroke={INK} strokeWidth={2} />
-            <rect x={164} y={141} width={6} height={16} fill={PINK} />
+          {/* The diploma waves from the hand. */}
+          <g className="origin-[160px_150px] animate-kapsi-sway">
+            <g transform="rotate(-20 165 150)">
+              <rect x={150} y={142} width={34} height={14} rx={7} fill="#FFF7E0" stroke={INK} strokeWidth={2} />
+              <rect x={164} y={141} width={6} height={16} fill={PINK} />
+            </g>
           </g>
           <Arm x1={144} y1={130} x2={160} y2={150} />
         </>
@@ -101,13 +127,20 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
     case 'trophy':
       return (
         <>
-          {CONFETTI.map(([x, y, fill, r]) => (
-            <rect key={`${x}-${y}`} x={x} y={y} width={6} height={10} rx={2} fill={fill} transform={`rotate(${r} ${x} ${y})`} />
+          {CONFETTI.map(([x, y, fill, r], i) => (
+            <g key={`${x}-${y}`} className={TWINKLE_CLASS} style={{ animationDelay: `${i * -0.6}s` }}>
+              <rect x={x} y={y} width={6} height={10} rx={2} fill={fill} transform={`rotate(${r} ${x} ${y})`} />
+            </g>
           ))}
           <Body clipId={clipId} eyes="happy" mouth="open" accessory={<Crown />} />
           <path d="M62 120 L140 178 L130 186 L56 132z" fill={VIO} opacity={0.9} />
-          <Arm x1={56} y1={126} x2={30} y2={90} />
-          <Arm x1={144} y1={126} x2={170} y2={90} />
+          {/* Both arms pump in a cheer. */}
+          <g className="origin-[56px_126px] animate-kapsi-pump-l">
+            <Arm x1={56} y1={126} x2={30} y2={90} />
+          </g>
+          <g className="origin-[144px_126px] animate-kapsi-pump-r">
+            <Arm x1={144} y1={126} x2={170} y2={90} />
+          </g>
         </>
       )
     case 'mail':
@@ -116,10 +149,15 @@ function renderPose(pose: MascotPose, clipId: string): ReactNode {
           <Body clipId={clipId} />
           <Arm x1={56} y1={130} x2={80} y2={150} />
           <Arm x1={144} y1={130} x2={120} y2={150} />
-          <g transform="translate(78 140)">
-            <rect width={44} height={30} rx={5} fill="#fff" stroke={INK} strokeWidth={2.5} />
-            <path d="M2 3 l20 15 20 -15" stroke={INK} strokeWidth={2.5} fill="none" strokeLinejoin="round" />
-            <path d="M22 -10 c-3 -6 -11 -3 -8 3 l8 7 8 -7 c3 -6 -5 -9 -8 -3z" fill={PINK} />
+          {/* The letter rocks gently while its heart beats. */}
+          <g className="origin-[100px_155px] animate-kapsi-tilt">
+            <g transform="translate(78 140)">
+              <rect width={44} height={30} rx={5} fill="#fff" stroke={INK} strokeWidth={2.5} />
+              <path d="M2 3 l20 15 20 -15" stroke={INK} strokeWidth={2.5} fill="none" strokeLinejoin="round" />
+              <g className="origin-center animate-kapsi-heartbeat [transform-box:fill-box]">
+                <path d="M22 -10 c-3 -6 -11 -3 -8 3 l8 7 8 -7 c3 -6 -5 -9 -8 -3z" fill={PINK} />
+              </g>
+            </g>
           </g>
         </>
       )
@@ -237,13 +275,24 @@ function Arm({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: numbe
   )
 }
 
-function Sparkle({ x, y, scale = 1, color = YEL }: { x: number; y: number; scale?: number; color?: string }) {
+interface SparkleProps {
+  x: number
+  y: number
+  scale?: number
+  color?: string
+  className?: string
+}
+
+/* The wrapper carries any animation: a CSS transform would replace the path's own `transform`. */
+function Sparkle({ x, y, scale = 1, color = YEL, className }: SparkleProps) {
   return (
-    <path
-      transform={`translate(${x} ${y}) scale(${scale})`}
-      d="M0 -10 C1 -3 3 -1 10 0 C3 1 1 3 0 10 C-1 3 -3 1 -10 0 C-3 -1 -1 -3 0 -10z"
-      fill={color}
-    />
+    <g className={className}>
+      <path
+        transform={`translate(${x} ${y}) scale(${scale})`}
+        d="M0 -10 C1 -3 3 -1 10 0 C3 1 1 3 0 10 C-1 3 -3 1 -10 0 C-3 -1 -1 -3 0 -10z"
+        fill={color}
+      />
+    </g>
   )
 }
 
@@ -272,19 +321,38 @@ function Flask() {
       <path d="M6 36 h22 l5 9 a3 3 0 0 1 -3 4 h-26 a3 3 0 0 1 -3 -4z" fill={MINT} />
       <circle cx={14} cy={42} r={2} fill="#fff" />
       <circle cx={21} cy={39} r={1.5} fill="#fff" />
-      <circle cx={20} cy={-8} r={3} fill={MINT} opacity={0.7} />
-      <circle cx={13} cy={-17} r={2} fill={MINT} opacity={0.5} />
+      {/* Bubbles rise out of the flask. */}
+      {FLASK_BUBBLES.map(([cx, r, delay]) => (
+        <circle
+          key={cx}
+          cx={cx}
+          cy={-4}
+          r={r}
+          fill={MINT}
+          opacity={0.7}
+          className="animate-bubble"
+          style={{ animationDelay: `${delay}s` }}
+        />
+      ))}
     </g>
   )
 }
+
+const FLASK_BUBBLES: ReadonlyArray<readonly [number, number, number]> = [
+  [20, 3, 0],
+  [13, 2, -0.8],
+  [17, 2.5, -1.6],
+]
 
 function GradCap() {
   return (
     <>
       <path d="M100 22 l46 16 -46 16 -46 -16z" fill={INK} />
       <path d="M76 44 v12 q24 12 48 0 v-12 l-24 9z" fill="#3B2A7A" />
-      <path d="M140 40 v22" stroke={YEL} strokeWidth={3} />
-      <circle cx={140} cy={64} r={4.5} fill={YEL} />
+      <g className="origin-[140px_40px] animate-kapsi-tassel">
+        <path d="M140 40 v22" stroke={YEL} strokeWidth={3} />
+        <circle cx={140} cy={64} r={4.5} fill={YEL} />
+      </g>
     </>
   )
 }
