@@ -281,7 +281,8 @@ const SIDE_STEP = { mobile: 62, desktop: 84 }
 
 /**
  * Kapsi walks the path after the mouse: it heads for where the path reaches the pointer's height,
- * lingers on any stop nearby, and goes straight to a stop that is hovered, focused or opened. It starts
+ * lingers on any stop nearby, and goes straight to a stop that is hovered, focused or opened. When the
+ * pointer leaves the map for the open card, Kapsi goes back to that card's stop. It starts
  * at the current stop and says something while it stands near one. With reduced motion it hops
  * instead of walking.
  */
@@ -297,6 +298,7 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, map, pathRef }: Kapsi
   const geometry = useRef<{ samples: PathSample[]; stopLengths: number[]; total: number } | null>(null)
   const size = useRef({ width: 0, height: 0 })
   const lastLength = useRef(0)
+  const selectedIndexRef = useRef(selectedIndex)
   const figureRef = useRef<HTMLDivElement>(null)
   const bubbleRef = useRef<HTMLParagraphElement>(null)
   // The map clips its content, so near the top edge the bubble drops below Kapsi instead.
@@ -415,20 +417,30 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, map, pathRef }: Kapsi
       walkTo(dwellAtStops(geo.stopLengths, lengthAtHeight(geo.samples, height), geo.total * DWELL_RADIUS))
     }
 
+    // Leaving the map (e.g. towards the open card beside it) would strand Kapsi wherever the pointer
+    // crossed the edge; send it back to the open stop instead.
+    const onPointerLeave = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return
+      if (selectedIndexRef.current !== -1) walkToStop(selectedIndexRef.current)
+    }
+
     const onFocusIn = (event: FocusEvent) => {
       const stop = stopIndexOf(event.target)
       if (stop !== null) walkToStop(stop)
     }
 
     map.addEventListener('pointermove', onPointerMove)
+    map.addEventListener('pointerleave', onPointerLeave)
     map.addEventListener('focusin', onFocusIn)
     return () => {
       map.removeEventListener('pointermove', onPointerMove)
+      map.removeEventListener('pointerleave', onPointerLeave)
       map.removeEventListener('focusin', onFocusIn)
     }
   }, [map, walkTo, walkToStop])
 
   useEffect(() => {
+    selectedIndexRef.current = selectedIndex
     if (selectedIndex !== -1) walkToStop(selectedIndex)
   }, [selectedIndex, walkToStop])
 
