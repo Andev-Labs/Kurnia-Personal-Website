@@ -22,11 +22,8 @@ export function Education() {
           periodClassName="bg-butter-100 text-[#7a5a00]"
           title={m.education_bachelor_degree()}
           school="Binawan University"
+          logo="/images/logos/binawan-university.webp"
         >
-          {/*
-           * TODO(Kurnia): confirm the status sentence below ("SKL issued, graduation December 2026") and make it
-           * match the CV, which only says "Binawan University, 2022–2026". Kept as-is until confirmed.
-           */}
           <p className="text-pretty">
             <RichText message={m.education_bachelor_status} />
           </p>
@@ -47,7 +44,11 @@ export function Education() {
           periodClassName="bg-mint-100 text-[#1f6b51]"
           title={m.education_vocational_major()}
           school="SMK-SMAK Bogor"
+          logo="/images/logos/smak-bogor.webp"
         >
+          <p className="text-pretty">
+            <RichText message={m.education_vocational_grade} />
+          </p>
           <p className="text-pretty">
             <RichText message={m.education_vocational_dual_system} />
           </p>
@@ -73,15 +74,26 @@ interface SchoolCardProps {
   periodClassName: string
   title: string
   school: string
+  /** Square school logo with a transparent background; decorative, since the school name is printed beside it. */
+  logo: string
   children: ReactNode
 }
 
-function SchoolCard({ period, periodClassName, title, school, children }: SchoolCardProps) {
+function SchoolCard({ period, periodClassName, title, school, logo, children }: SchoolCardProps) {
   return (
     <RevealItem className="flex flex-col rounded-card-lg bg-white p-[26px] shadow-soft">
-      <span className={`mb-3.5 self-start rounded-full px-[13px] py-[7px] text-[12.5px] font-bold ${periodClassName}`}>
-        {period}
-      </span>
+      <div className="mb-3.5 flex items-start justify-between gap-4">
+        <span className={`rounded-full px-[13px] py-[7px] text-[12.5px] font-bold ${periodClassName}`}>{period}</span>
+        <img
+          src={logo}
+          alt=""
+          width={160}
+          height={160}
+          loading="lazy"
+          decoding="async"
+          className="size-16 flex-none object-contain"
+        />
+      </div>
       <h3 className="mb-1.5 font-heading font-semibold text-[20px] leading-[1.2]">{title}</h3>
       <p className="mb-4 text-[14.5px] font-bold text-violet">{school}</p>
       <div className="flex flex-1 flex-col gap-3 text-[15px] leading-[1.6]">{children}</div>
