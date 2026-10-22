@@ -95,13 +95,14 @@ interface MapCanvasProps {
 }
 
 function MapCanvas({ stops, interactive, selectedId, onSelect, registerNode }: MapCanvasProps) {
-  const mapRef = useRef<HTMLDivElement>(null)
+  // State, not a ref: Kapsi measures the map in a layout effect, which runs before a parent ref is attached.
+  const [map, setMap] = useState<HTMLDivElement | null>(null)
   const pathRef = useRef<SVGPathElement>(null)
   const currentIndex = stops.findIndex((stop) => stop.kind === 'current')
 
   return (
     <div
-      ref={mapRef}
+      ref={setMap}
       className="relative h-[1160px] overflow-hidden rounded-card-lg shadow-soft sm:h-[1060px] lg:h-[920px]"
     >
       <JourneyLandscape />
@@ -138,12 +139,12 @@ function MapCanvas({ stops, interactive, selectedId, onSelect, registerNode }: M
         ))}
       </ol>
 
-      {interactive ? (
+      {interactive && map ? (
         <KapsiWalker
           stops={stops}
           currentIndex={currentIndex}
           selectedIndex={stops.findIndex((stop) => stop.id === selectedId)}
-          mapRef={mapRef}
+          map={map}
           pathRef={pathRef}
         />
       ) : null}
@@ -263,13 +264,17 @@ interface KapsiWalkerProps {
   currentIndex: number
   /** The stop whose card is open, or -1. */
   selectedIndex: number
-  mapRef: RefObject<HTMLDivElement | null>
+  map: HTMLDivElement
   pathRef: RefObject<SVGPathElement | null>
 }
 
 /** Share of the path around each stop where Kapsi lingers, and where it speaks. */
 const DWELL_RADIUS = 0.07
 const BUBBLE_RADIUS = 0.01
+
+/** Space between the bubble and Kapsi (matches `calc(100%+4px)`), and the least room kept from the map edge. */
+const BUBBLE_GAP = 4
+const BUBBLE_MARGIN = 8
 
 /** Kapsi steps away from the path by this much, towards the outer edge, so it never covers a stop. */
 const SIDE_STEP = { mobile: 62, desktop: 84 }
@@ -280,7 +285,7 @@ const SIDE_STEP = { mobile: 62, desktop: 84 }
  * at the current stop and says something while it stands near one. With reduced motion it hops
  * instead of walking.
  */
-function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: KapsiWalkerProps) {
+function KapsiWalker({ stops, currentIndex, selectedIndex, map, pathRef }: KapsiWalkerProps) {
   const reduceMotion = useReducedMotion() ?? false
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -292,6 +297,18 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
   const geometry = useRef<{ samples: PathSample[]; stopLengths: number[]; total: number } | null>(null)
   const size = useRef({ width: 0, height: 0 })
   const lastLength = useRef(0)
+  const figureRef = useRef<HTMLDivElement>(null)
+  const bubbleRef = useRef<HTMLParagraphElement>(null)
+  // The map clips its content, so near the top edge the bubble drops below Kapsi instead.
+  const [bubbleBelow, setBubbleBelow] = useState(false)
+
+  const fitBubble = useCallback(() => {
+    const figure = figureRef.current
+    const bubbleNode = bubbleRef.current
+    if (!figure || !bubbleNode) return
+    const kapsiTop = y.get() - figure.offsetHeight * 0.6
+    setBubbleBelow(kapsiTop - bubbleNode.offsetHeight - BUBBLE_GAP < BUBBLE_MARGIN)
+  }, [y])
 
   const place = useCallback(
     (length: number) => {
@@ -305,6 +322,7 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
       x.set((point.x / MAP_GRID) * width + outward * step)
       y.set((point.y / MAP_GRID) * height)
       setSide(outward < 0 ? 'left' : 'right')
+      fitBubble()
       if (length !== lastLength.current) {
         // Face the way the path runs when walking forward, and the other way when scrolling back up.
         const forward = length > lastLength.current
@@ -323,7 +341,7 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
             : { index: near, visible: true },
       )
     },
-    [pathRef, x, y],
+    [fitBubble, pathRef, x, y],
   )
 
   const target = useMotionValue(0)
@@ -350,9 +368,8 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
 
   useLayoutEffect(() => {
     const path = pathRef.current
-    const map = mapRef.current
     // jsdom (tests) cannot measure SVG paths; Kapsi simply stays hidden there.
-    if (!path || !map || typeof path.getTotalLength !== 'function') return
+    if (!path || typeof path.getTotalLength !== 'function') return
 
     const samples = samplePath(path)
     geometry.current = {
@@ -376,13 +393,10 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
     const observer = new ResizeObserver(measure)
     observer.observe(map)
     return () => observer.disconnect()
-  }, [currentIndex, mapRef, pathRef, place, target, walked])
+  }, [currentIndex, map, pathRef, place, target, walked])
 
   // Follow the mouse over the map; a hovered or focused stop wins over the pointer's height.
   useEffect(() => {
-    const map = mapRef.current
-    if (!map) return
-
     const stopIndexOf = (element: EventTarget | null) => {
       const node = element instanceof Element ? element.closest<HTMLElement>('[data-stop-index]') : null
       return node ? Number(node.dataset.stopIndex) : null
@@ -412,11 +426,14 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
       map.removeEventListener('pointermove', onPointerMove)
       map.removeEventListener('focusin', onFocusIn)
     }
-  }, [mapRef, walkTo, walkToStop])
+  }, [map, walkTo, walkToStop])
 
   useEffect(() => {
     if (selectedIndex !== -1) walkToStop(selectedIndex)
   }, [selectedIndex, walkToStop])
+
+  // A new line of text can change the bubble's height.
+  useLayoutEffect(fitBubble, [bubble.index, fitBubble])
 
   useMotionValueEvent(walked, 'change', place)
 
@@ -429,11 +446,15 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
         ready ? 'opacity-100' : 'opacity-0',
       )}
     >
-      <div className="relative w-[54px] -translate-x-1/2 -translate-y-[60%] sm:w-[70px]">
+      <div ref={figureRef} className="relative w-[54px] -translate-x-1/2 -translate-y-[60%] sm:w-[70px]">
         <p
+          ref={bubbleRef}
           className={cn(
-            'absolute bottom-[calc(100%+4px)] w-max max-w-[128px] rounded-2xl bg-white px-3 py-2 font-heading text-[12.5px] leading-[1.3] font-semibold text-ink shadow-soft transition-opacity duration-300 sm:max-w-[200px]',
-            side === 'left' ? 'left-0 rounded-bl-[6px]' : 'right-0 rounded-br-[6px]',
+            'absolute w-max max-w-[128px] rounded-2xl bg-white px-3 py-2 font-heading text-[12.5px] leading-[1.3] font-semibold text-ink shadow-soft transition-opacity duration-300 sm:max-w-[200px]',
+            bubbleBelow ? 'top-[calc(100%+4px)]' : 'bottom-[calc(100%+4px)]',
+            side === 'left'
+              ? cn('left-0', bubbleBelow ? 'rounded-tl-[6px]' : 'rounded-bl-[6px]')
+              : cn('right-0', bubbleBelow ? 'rounded-tr-[6px]' : 'rounded-br-[6px]'),
             bubble.visible ? 'opacity-100' : 'opacity-0',
           )}
         >
