@@ -95,13 +95,14 @@ interface MapCanvasProps {
 }
 
 function MapCanvas({ stops, interactive, selectedId, onSelect, registerNode }: MapCanvasProps) {
-  const mapRef = useRef<HTMLDivElement>(null)
+  // State, not a ref: Kapsi measures the map in a layout effect, which runs before a parent ref is attached.
+  const [map, setMap] = useState<HTMLDivElement | null>(null)
   const pathRef = useRef<SVGPathElement>(null)
   const currentIndex = stops.findIndex((stop) => stop.kind === 'current')
 
   return (
     <div
-      ref={mapRef}
+      ref={setMap}
       className="relative h-[1160px] overflow-hidden rounded-card-lg shadow-soft sm:h-[1060px] lg:h-[920px]"
     >
       <JourneyLandscape />
@@ -138,12 +139,12 @@ function MapCanvas({ stops, interactive, selectedId, onSelect, registerNode }: M
         ))}
       </ol>
 
-      {interactive ? (
+      {interactive && map ? (
         <KapsiWalker
           stops={stops}
           currentIndex={currentIndex}
           selectedIndex={stops.findIndex((stop) => stop.id === selectedId)}
-          mapRef={mapRef}
+          map={map}
           pathRef={pathRef}
         />
       ) : null}
@@ -263,7 +264,7 @@ interface KapsiWalkerProps {
   currentIndex: number
   /** The stop whose card is open, or -1. */
   selectedIndex: number
-  mapRef: RefObject<HTMLDivElement | null>
+  map: HTMLDivElement
   pathRef: RefObject<SVGPathElement | null>
 }
 
@@ -280,7 +281,7 @@ const SIDE_STEP = { mobile: 62, desktop: 84 }
  * at the current stop and says something while it stands near one. With reduced motion it hops
  * instead of walking.
  */
-function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: KapsiWalkerProps) {
+function KapsiWalker({ stops, currentIndex, selectedIndex, map, pathRef }: KapsiWalkerProps) {
   const reduceMotion = useReducedMotion() ?? false
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -350,9 +351,8 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
 
   useLayoutEffect(() => {
     const path = pathRef.current
-    const map = mapRef.current
     // jsdom (tests) cannot measure SVG paths; Kapsi simply stays hidden there.
-    if (!path || !map || typeof path.getTotalLength !== 'function') return
+    if (!path || typeof path.getTotalLength !== 'function') return
 
     const samples = samplePath(path)
     geometry.current = {
@@ -376,13 +376,10 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
     const observer = new ResizeObserver(measure)
     observer.observe(map)
     return () => observer.disconnect()
-  }, [currentIndex, mapRef, pathRef, place, target, walked])
+  }, [currentIndex, map, pathRef, place, target, walked])
 
   // Follow the mouse over the map; a hovered or focused stop wins over the pointer's height.
   useEffect(() => {
-    const map = mapRef.current
-    if (!map) return
-
     const stopIndexOf = (element: EventTarget | null) => {
       const node = element instanceof Element ? element.closest<HTMLElement>('[data-stop-index]') : null
       return node ? Number(node.dataset.stopIndex) : null
@@ -412,7 +409,7 @@ function KapsiWalker({ stops, currentIndex, selectedIndex, mapRef, pathRef }: Ka
       map.removeEventListener('pointermove', onPointerMove)
       map.removeEventListener('focusin', onFocusIn)
     }
-  }, [mapRef, walkTo, walkToStop])
+  }, [map, walkTo, walkToStop])
 
   useEffect(() => {
     if (selectedIndex !== -1) walkToStop(selectedIndex)
