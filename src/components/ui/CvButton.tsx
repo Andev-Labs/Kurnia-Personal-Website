@@ -9,12 +9,13 @@ interface CvButtonProps {
   onClick?: () => void
 }
 
-/** Downloads the CV PDF. Used in the hero, the navbar (desktop and drawer) and the contact card. */
+/** Opens the CV PDF in a new tab for preview. Used in the hero, the navbar (desktop and drawer) and the contact card. */
 export function CvButton({ variant = 'primary', className, onClick }: CvButtonProps) {
   return (
     <a
       href={CV_PDF_PATH}
-      download
+      target="_blank"
+      rel="noopener"
       type="application/pdf"
       aria-label={m.cv_download_label()}
       onClick={onClick}

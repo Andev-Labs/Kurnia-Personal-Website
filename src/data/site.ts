@@ -13,7 +13,7 @@ export const EMAIL = 'kurniadewi2003@gmail.com'
  */
 export const LINKEDIN_URL = 'https://linkedin.com/in/kurnia-dewi-budicantika-27b1a9216'
 
-/** TODO(Kurnia): put the CV PDF at `public/cv/Kurnia-Dewi-Budi-Cantika-CV.pdf`; until then this link 404s. */
+/** CV PDF (English), opened in a new tab for preview. Replace the file in `public/cv/` to update it. */
 export const CV_PDF_PATH = '/cv/Kurnia-Dewi-Budi-Cantika-CV.pdf'
 
 /**

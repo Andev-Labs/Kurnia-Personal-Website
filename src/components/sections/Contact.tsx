@@ -15,7 +15,6 @@ interface ContactAction {
   detail: string
   icon: ReactNode
   external?: boolean
-  download?: boolean
   ariaLabel?: string
 }
 
@@ -41,7 +40,7 @@ function getActions(): ContactAction[] {
     label: m.cv_download(),
     detail: 'PDF',
     icon: <DownloadIcon />,
-    download: true,
+    external: true,
     ariaLabel: m.cv_download_label(),
   })
   return actions
@@ -110,7 +109,6 @@ export function Contact() {
                 href={action.href}
                 aria-label={action.ariaLabel}
                 {...(action.external ? { target: '_blank', rel: 'noopener' } : {})}
-                {...(action.download ? { download: true, type: 'application/pdf' } : {})}
                 className="lift flex items-center gap-3.5 rounded-2xl border border-white/20 bg-white/10 p-4 text-white transition-colors hover:border-white/40 hover:bg-white/15 hover:text-white print:block"
               >
                 <span
